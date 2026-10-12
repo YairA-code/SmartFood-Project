@@ -568,10 +568,10 @@ export function facts() {
 // הצוות
 // ——————————————————————————————————————
 const TEAM = [
-  { name: 'יאיר פנחס אברישמן', role: 'Founder & CEO', initials: 'יא', hue: 145 },
-  { name: 'ליאם כהן', role: 'Co-Founder & VP', initials: 'לכ', hue: 205 },
-  { name: 'אוהד קראוזמן', role: 'Co-Founder & COO', initials: 'אק', hue: 28 },
-  { name: 'נעה אברהמי', role: 'Head of Product Sourcing & Deputy Inventor', initials: 'נא', hue: 330 },
+  { name: 'יאיר פנחס אברישמן', initials: 'יא', hue: 145 },
+  { name: 'ליאם כהן', initials: 'לכ', hue: 205 },
+  { name: 'אוהד קראוזמן', initials: 'אק', hue: 28 },
+  { name: 'נעה אברהמי', initials: 'נא', hue: 330 },
 ];
 
 export function renderTeam() {
@@ -585,7 +585,6 @@ export function renderTeam() {
             <article class="team-card animate-item" style="--h:${m.hue}">
               <div class="team-avatar" aria-hidden="true">${m.initials}</div>
               <h2 class="team-name">${m.name}</h2>
-              <p class="team-role" dir="ltr" lang="en">${m.role}</p>
             </article>`).join('')}
         </div>
         <section class="prose-card team-about">
