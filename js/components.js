@@ -2,12 +2,12 @@
 // Smart Food — קומפוננטות רינדור
 // ============================================================
 
-import { categories, products, getStats } from './data.js?v=13';
-import { INGREDIENTS, canonicalName } from './ingredients.js?v=13';
-import { escapeHtml } from './utils.js?v=13';
-import { productArt } from './art.js?v=13';
-import { toolCards, TOOLS, facts } from './widgets.js?v=13';
-import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=13';
+import { categories, products, getStats } from './data.js?v=14';
+import { INGREDIENTS, canonicalName } from './ingredients.js?v=14';
+import { escapeHtml } from './utils.js?v=14';
+import { productArt } from './art.js?v=14';
+import { toolCards, TOOLS, facts } from './widgets.js?v=14';
+import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=14';
 
 const CAT_HUE = { snacks: 38, sweets: 18, dairy: 205, drinks: 188, bread: 32, canned: 85, cereals: 46, spreads: 12, meat: 355, frozen: 198, instant: 26, fruits: 130 };
 export const RISK = {
@@ -466,7 +466,7 @@ export function renderProduct(productId) {
             </li>`).join('')}
         </ol>
         <p class="source-note">${product.source
-          ? `מקור רשימת הרכיבים: <a href="${product.source.url}" target="_blank" rel="noopener">${escapeHtml(product.source.label)}</a>. יצרנים מעדכנים מתכונים מדי פעם, ולכן כדאי לבדוק תמיד את התווית שעל האריזה.`
+          ? `מקור רשימת הרכיבים: <a href="${/^https:\/\//.test(product.source.url) ? escapeHtml(product.source.url) : '#'}" target="_blank" rel="noopener noreferrer">${escapeHtml(product.source.label)}</a>. יצרנים מעדכנים מתכונים מדי פעם, ולכן כדאי לבדוק תמיד את התווית שעל האריזה.`
           : 'מוצר כללי: רשימת הרכיבים מתארת את המוצר הבסיסי, בלי מותג מסוים.'}</p>
       </section>
 

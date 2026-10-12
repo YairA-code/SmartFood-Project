@@ -3,11 +3,11 @@
 // תובנות מהמאגר, ודף הצוות
 // ============================================================
 
-import { products, categories } from './data.js?v=13';
-import { INGREDIENTS, getIngredient, canonicalName } from './ingredients.js?v=13';
-import { NOVA_GROUPS, getNova, getScore, getAlternatives, lookupIngredient, classifyItems, scoreItems, novaReason } from './nova.js?v=13';
-import { escapeHtml } from './utils.js?v=13';
-import { art, breadcrumb, novaBadge, scoreChip, renderProductCard, RISK, ROLE, catOf, ingLink } from './components.js?v=13';
+import { products, categories } from './data.js?v=14';
+import { INGREDIENTS, getIngredient, canonicalName } from './ingredients.js?v=14';
+import { NOVA_GROUPS, getNova, getScore, getAlternatives, lookupIngredient, classifyItems, scoreItems, novaReason } from './nova.js?v=14';
+import { escapeHtml } from './utils.js?v=14';
+import { art, breadcrumb, novaBadge, scoreChip, renderProductCard, RISK, ROLE, catOf, ingLink } from './components.js?v=14';
 
 const byId = id => products.find(p => p.id === id);
 const pageHero = (icon, title, text) => `

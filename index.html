@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light dark">
+  <!-- מדיניות אבטחה: רק קבצים מהאתר עצמו, בלי סקריפטים מוטמעים ובלי פניות לשרתים חיצוניים -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <script src="js/boot.js?v=14"></script>
   <title>Smart Food | מה באמת יש בתווית</title>
   <meta name="description" content="Smart Food מנתח מוצרי מזון מהסופר לפי מדד NOVA: דרגת העיבוד, הסבר פשוט לכל רכיב וחלופות פשוטות יותר.">
   <link rel="canonical" href="https://smart-food-israel-app.surge.sh/">
@@ -19,42 +23,25 @@
   <link rel="icon" type="image/png" href="img/icon.png">
   <link rel="apple-touch-icon" href="img/icon.png">
 
-  <script>
-    // ערכת הנושא נקבעת לפני הציור הראשון, כדי שלא יהיה הבהוב
-    try {
-      var t = localStorage.getItem('smart-food-theme');
-      if (!t && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) t = 'dark';
-      if (t) document.documentElement.setAttribute('data-theme', t);
-    } catch (e) {}
-  </script>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap"></noscript>
-  <link rel="stylesheet" href="css/styles.css?v=13">
+  <link rel="preload" href="fonts/rubik-hebrew-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/styles.css?v=14">
 
   <!-- טעינה מקבילה של כל המודולים, במקום אחד אחרי השני -->
-  <link rel="modulepreload" href="js/app.js?v=13">
-  <link rel="modulepreload" href="js/components.js?v=13">
-  <link rel="modulepreload" href="js/widgets.js?v=13">
-  <link rel="modulepreload" href="js/art.js?v=13">
-  <link rel="modulepreload" href="js/nova.js?v=13">
-  <link rel="modulepreload" href="js/data.js?v=13">
-  <link rel="modulepreload" href="js/products.js?v=13">
-  <link rel="modulepreload" href="js/ingredients.js?v=13">
-  <link rel="modulepreload" href="js/utils.js?v=13">
+  <link rel="modulepreload" href="js/app.js?v=14">
+  <link rel="modulepreload" href="js/components.js?v=14">
+  <link rel="modulepreload" href="js/widgets.js?v=14">
+  <link rel="modulepreload" href="js/art.js?v=14">
+  <link rel="modulepreload" href="js/nova.js?v=14">
+  <link rel="modulepreload" href="js/data.js?v=14">
+  <link rel="modulepreload" href="js/products.js?v=14">
+  <link rel="modulepreload" href="js/ingredients.js?v=14">
+  <link rel="modulepreload" href="js/utils.js?v=14">
 </head>
 <body>
   <div id="error-display" role="alert" hidden>
     משהו השתבש בטעינת הדף. נסו לרענן את העמוד.
   </div>
-  <script>
-    window.addEventListener('error', function () {
-      var box = document.getElementById('error-display');
-      if (box) box.hidden = false;
-    });
-  </script>
   <div id="app">
     <div class="boot" aria-busy="true">
       <img src="img/art/herb.webp" alt="" width="56" height="56">
@@ -62,6 +49,6 @@
     </div>
   </div>
   <noscript><p class="noscript">האתר דורש JavaScript כדי לפעול.</p></noscript>
-  <script type="module" src="js/app.js?v=13"></script>
+  <script type="module" src="js/app.js?v=14"></script>
 </body>
 </html>

@@ -2,18 +2,23 @@
 // Smart Food — אפליקציה ראשית + ניתוב
 // ============================================================
 
-import { products } from './data.js?v=13';
-import { debounce, fillContactLinks } from './utils.js?v=13';
-import { getNova, getScore } from './nova.js?v=13';
+import { products } from './data.js?v=14';
+import { debounce, fillContactLinks } from './utils.js?v=14';
+import { getNova, getScore } from './nova.js?v=14';
 import {
   renderHeader, renderFooter, renderHome, renderCategory, renderProduct,
   renderCategoriesPage, renderAbout, renderNotFound, renderSearchResults,
   renderProductCard, renderNova, renderAllProducts, renderCompare, renderIngredients, renderIngredient,
-} from './components.js?v=13';
+} from './components.js?v=14';
 import {
   renderTools, renderLabel, initLabel, renderVs, initVs, renderQuiz, initQuiz,
   renderBasket, initBasket, renderInsights, renderTeam, toggleBasket, inBasket, basketCount, onBasket, facts,
-} from './widgets.js?v=13';
+} from './widgets.js?v=14';
+
+// פענוח בטוח של הכתובת: כתובת פגומה לא תפיל את האתר
+function safeDecode(str) {
+  try { return decodeURIComponent(str); } catch (e) { return ''; }
+}
 
 const TITLES = {
   home: 'Smart Food | מה באמת יש בתווית',
@@ -49,7 +54,7 @@ class SmartFoodApp {
   }
 
   route() {
-    const hash = decodeURIComponent(window.location.hash || '#/');
+    const hash = safeDecode(window.location.hash || '#/') || '#/404';
     const wrapper = document.getElementById('page-wrapper');
     let html, title;
 
@@ -175,7 +180,7 @@ class SmartFoodApp {
   initCategoryFilters() {
     const grid = document.getElementById('products-grid');
     if (!grid) return;
-    const id = decodeURIComponent(location.hash).replace('#/category/', '');
+    const id = safeDecode(location.hash).replace('#/category/', '');
     const list = products.filter(p => p.category === id);
     let filter = 'all';
     const sortSel = document.getElementById('sort-select');
