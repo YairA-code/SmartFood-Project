@@ -72,7 +72,6 @@
 ├── img/
 │   ├── icon.png        סמל האתר
 │   └── art/            איורי Fluent Emoji בפורמט WebP
-└── CNAME               כתובת האתר ב-Surge
 ```
 
 האתר בנוי מ-HTML, CSS ו-JavaScript בלבד, בלי ספריות ובלי שלב בנייה.
@@ -97,6 +96,10 @@ python3 -m http.server 8080
 ואז לפתוח בדפדפן את http://localhost:8080
 
 ## העלאה לאוויר
+
+**GitHub Pages:** ב-Settings → Pages בוחרים את הענף `main` ואת התיקייה הראשית. האתר יעלה בכתובת https://yaira-code.github.io/SmartFood-Project/ ויתעדכן מעצמו בכל דחיפה.
+
+**Surge:**
 
 ```bash
 npx surge . smart-food-israel-app.surge.sh
