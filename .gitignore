@@ -1,0 +1,10 @@
+# קבצים שלא נכנסים למאגר
+.DS_Store
+Thumbs.db
+node_modules/
+*.zip
+*.log
+*.py
+.env
+.env.*
+.surge/

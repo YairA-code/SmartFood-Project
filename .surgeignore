@@ -1,0 +1,6 @@
+# קבצים שלא עולים לאתר
+README.md
+.gitignore
+.github
+*.zip
+*.py
