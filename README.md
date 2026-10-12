@@ -6,7 +6,7 @@
 
 פרויקט סיום בקורס **מבוא לבינה מלאכותית**, BSc במערכות מידע.
 
-🔗 **האתר באוויר:** https://smart-food-israel-app.surge.sh
+🔗 **האתר באוויר:** https://yaira-code.github.io/SmartFood-Project/
 
 ---
 
