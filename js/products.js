@@ -4,8 +4,8 @@
 // מוצרים טריים או כלליים (פירות, ירקות, שמנים) מסומנים כ"מוצר כללי".
 // ============================================================
 
-import { EXTRA } from './products-extra.js?v=15';
-import { BARCODES } from './barcodes.js?v=15';
+import { EXTRA, EXTRA_FD } from './products-extra.js?v=16';
+import { BARCODES } from './barcodes.js?v=16';
 
 const FD = 'https://www.foodsdictionary.co.il/Products/';
 const FP = 'https://foodiepedia.co.il/product/';
@@ -1044,5 +1044,5 @@ export const products = [
 ];
 
 // הרחבת המאגר וברקודים (ראו products-extra.js ו-barcodes.js)
-products.push(...EXTRA);
+products.push(...EXTRA, ...EXTRA_FD);
 products.forEach(p => { if (BARCODES[p.id]) p.barcodes = [...(p.barcodes || []), ...BARCODES[p.id]]; });
