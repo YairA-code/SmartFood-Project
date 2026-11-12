@@ -629,3 +629,120 @@ a.stat-item:hover { background: var(--bg-soft); }
 .toolbar-all .search-inline { flex: 1 1 100%; }
 .toolbar-all .search-inline input { width: 100%; }
 .page-hero .btn { margin-top: 14px; }
+
+
+/* ============================================================
+   סורק ברקוד
+   ============================================================ */
+.scan-ico { width: 1.25em; height: 1.25em; flex: none; display: inline-block; border-radius: 3px;
+  background:
+    linear-gradient(90deg, currentColor 0 12%, transparent 12% 20%, currentColor 20% 26%, transparent 26% 38%, currentColor 38% 54%, transparent 54% 62%, currentColor 62% 68%, transparent 68% 78%, currentColor 78% 100%) center / 100% 62% no-repeat; }
+.btn-scan { background: var(--ink); color: var(--bg); padding: 14px 26px; font-size: 1.05rem; box-shadow: var(--shadow); }
+[data-theme="dark"] .btn-scan { background: var(--brand); color: #0b1a10; }
+.hero-scan { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 18px; }
+.hero-scan-hint { color: var(--muted); font-size: .92rem; flex: 1 1 180px; }
+.hero-links { margin-top: 14px; }
+
+.page-hero.compact { padding: 12px 24px 20px; }
+.scan-box { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); }
+.scan-view { position: relative; aspect-ratio: 4 / 3; border-radius: 14px; overflow: hidden; background: #0c130f; display: grid; place-items: center; }
+.scan-view video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .3s; }
+.scan-view.live video { opacity: 1; }
+.scan-frame { position: absolute; inset: 22% 9%; border-radius: 14px; box-shadow: 0 0 0 100vmax rgba(0, 0, 0, .38); outline: 3px solid rgba(255, 255, 255, .9); outline-offset: -3px; opacity: 0; transition: opacity .3s; overflow: hidden; }
+.scan-view.live .scan-frame { opacity: 1; }
+.scan-line { position: absolute; inset-inline: 6%; top: 50%; height: 2px; background: #ef4444; box-shadow: 0 0 10px #ef4444; animation: scan-sweep 2.2s ease-in-out infinite; }
+@keyframes scan-sweep { 0%, 100% { transform: translateY(-46px); } 50% { transform: translateY(46px); } }
+.scan-idle { position: relative; z-index: 2; display: grid; justify-items: center; gap: 14px; padding: 20px; text-align: center; color: #d8e3db; }
+.scan-idle[hidden] { display: none; }
+.scan-idle .small { max-width: 30ch; opacity: .8; }
+.scan-idle-ico { width: 92px; height: 60px; color: #fff; opacity: .9;
+  background: linear-gradient(90deg, currentColor 0 6%, transparent 6% 10%, currentColor 10% 13%, transparent 13% 19%, currentColor 19% 27%, transparent 27% 31%, currentColor 31% 34%, transparent 34% 41%, currentColor 41% 44%, transparent 44% 48%, currentColor 48% 58%, transparent 58% 63%, currentColor 63% 66%, transparent 66% 72%, currentColor 72% 80%, transparent 80% 84%, currentColor 84% 87%, transparent 87% 93%, currentColor 93% 100%); }
+.scan-status { min-height: 1.6em; margin: 10px 4px 0; color: var(--ink-2); font-size: .95rem; text-align: center; }
+.scan-controls { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 8px; }
+.scan-controls [hidden] { display: none; }
+.scan-file { cursor: pointer; }
+.scan-file:focus-within { outline: 3px solid var(--brand); outline-offset: 2px; }
+#scan-torch[aria-pressed="true"] { background: var(--brand-soft); }
+.scan-manual { margin: 20px 0 8px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
+.scan-manual label { display: block; font-weight: 700; margin-bottom: 10px; }
+.scan-manual-row { display: flex; gap: 8px; }
+.scan-manual input { flex: 1; min-width: 0; padding: 12px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface-2); font-size: 1.05rem; letter-spacing: .04em; text-align: left; }
+.scan-manual input:focus { outline: 2px solid var(--brand); outline-offset: 1px; }
+.scan-error { color: var(--danger); font-size: .9rem; margin-top: 10px; }
+
+.barcode-loading { display: grid; justify-items: center; gap: 14px; padding: 64px 16px; color: var(--muted); }
+.spinner { width: 38px; height: 38px; border-radius: 50%; border: 4px solid var(--line); border-top-color: var(--brand); animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.barcode-head { display: flex; gap: 16px; align-items: center; margin: 8px 0 14px; }
+.barcode-img { width: 96px; height: 96px; object-fit: contain; border-radius: 14px; background: #fff; border: 1px solid var(--line); flex: none; }
+.barcode-h { font-size: clamp(1.4rem, 5vw, 2rem); font-weight: 800; letter-spacing: -.01em; line-height: 1.25; }
+.barcode-note { background: var(--caution-bg); color: var(--ink); border-radius: 14px; padding: 12px 16px; font-size: .92rem; margin-bottom: 18px; }
+.barcode-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 18px 0 8px; }
+.page-barcode .section-head { margin-top: 28px; }
+
+/* ============================================================
+   סרגל ניווט תחתון לטלפון
+   ============================================================ */
+.tabbar { display: none; }
+@media (max-width: 768px) {
+  body { padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px)); }
+  .tabbar {
+    display: grid; grid-template-columns: repeat(5, 1fr); align-items: end;
+    position: fixed; inset-inline: 0; bottom: 0; z-index: 90;
+    padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px));
+    background: color-mix(in srgb, var(--surface) 94%, transparent);
+    backdrop-filter: saturate(1.4) blur(14px); -webkit-backdrop-filter: saturate(1.4) blur(14px);
+    border-top: 1px solid var(--line);
+  }
+  .tab-link { display: grid; justify-items: center; gap: 1px; padding: 4px 2px; min-height: 52px; font-size: .72rem; font-weight: 600; color: var(--muted); border-radius: 12px; -webkit-tap-highlight-color: transparent; }
+  .tab-ico { font-size: 1.3rem; line-height: 1.3; filter: grayscale(.9); opacity: .75; transition: filter .2s, opacity .2s; }
+  .tab-link.active { color: var(--brand); }
+  .tab-link.active .tab-ico { filter: none; opacity: 1; }
+  .tab-fab { width: 54px; height: 54px; margin-top: -26px; border-radius: 50%; background: var(--brand); color: #fff; display: grid; place-items: center; font-size: 1.25rem; box-shadow: 0 6px 16px color-mix(in srgb, var(--brand) 45%, transparent); border: 4px solid var(--bg); }
+  [data-theme="dark"] .tab-fab { color: #0b1a10; }
+  .tab-scan { color: var(--ink-2); }
+
+  /* התאמות כלליות לטלפון */
+  .header-inner { padding: 8px 16px; gap: 10px; }
+  .logo { font-size: 1.2rem; }
+  .main-nav { top: 57px; max-height: calc(100dvh - 57px - 70px); overflow-y: auto; }
+  .hero-inner { padding: 22px 18px 76px; }
+  .hero-art { display: none; }
+  .hero-title { font-size: clamp(2.1rem, 10vw, 2.8rem); }
+  .hero-subtitle { font-size: 1rem; }
+  .hero-scan .btn-scan { width: 100%; justify-content: center; padding: 16px; font-size: 1.1rem; }
+  .hero-scan-hint { text-align: center; flex-basis: 100%; }
+  .hero-links { display: flex; flex-wrap: nowrap; gap: 8px; overflow-x: auto; scrollbar-width: none; margin-inline: -18px; padding-inline: 18px; }
+  .hero-links::-webkit-scrollbar { display: none; }
+  .hero-links .btn { flex: none; }
+  .section { padding: 36px 16px; }
+  .section-head { margin-bottom: 20px; }
+  .steps { gap: 10px; }
+  .step-card { display: grid; grid-template-columns: auto 1fr; column-gap: 12px; align-items: center; text-align: start; padding: 14px 16px; }
+  .step-card .step-num { grid-row: span 2; margin: 0; }
+  .step-card p { grid-column: 2; }
+  .tools-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .tool-card { padding: 14px; }
+  .tool-card p { font-size: .82rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .categories-grid { gap: 10px; }
+  .category-card { padding: 14px 12px; }
+  .category-desc { display: none; }
+  .page-hero { padding: 16px 18px 20px; }
+  .page-hero-icon { font-size: 2.2rem; }
+  .btn { min-height: 44px; }
+  .filter-btn, select, input[type="search"] { min-height: 42px; }
+  input, select, textarea { font-size: 16px !important; } /* מונע זום אוטומטי ב-iPhone */
+  .product-actions { justify-content: center; }
+  .product-actions .btn { flex: 1 1 auto; justify-content: center; }
+  .ing-row { padding: 12px 14px; }
+  .main-footer { padding-bottom: 8px; }
+  .scan-view { aspect-ratio: 3 / 4; max-height: 56dvh; width: 100%; }
+  .scan-frame { inset: 34% 8%; }
+}
+@media (max-width: 380px) {
+  .products-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .tools-grid { grid-template-columns: 1fr; }
+}
+@media (hover: none) {
+  .btn:hover, .icon-btn:hover { transform: none; box-shadow: none; }
+}

@@ -2,18 +2,19 @@
 // Smart Food — אפליקציה ראשית + ניתוב
 // ============================================================
 
-import { products } from './data.js?v=14';
-import { debounce, fillContactLinks } from './utils.js?v=14';
-import { getNova, getScore } from './nova.js?v=14';
+import { products } from './data.js?v=15';
+import { debounce, fillContactLinks } from './utils.js?v=15';
+import { getNova, getScore } from './nova.js?v=15';
 import {
   renderHeader, renderFooter, renderHome, renderCategory, renderProduct,
   renderCategoriesPage, renderAbout, renderNotFound, renderSearchResults,
   renderProductCard, renderNova, renderAllProducts, renderCompare, renderIngredients, renderIngredient,
-} from './components.js?v=14';
+} from './components.js?v=15';
 import {
   renderTools, renderLabel, initLabel, renderVs, initVs, renderQuiz, initQuiz,
   renderBasket, initBasket, renderInsights, renderTeam, toggleBasket, inBasket, basketCount, onBasket, facts,
-} from './widgets.js?v=14';
+} from './widgets.js?v=15';
+import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=15';
 
 // פענוח בטוח של הכתובת: כתובת פגומה לא תפיל את האתר
 function safeDecode(str) {
@@ -35,6 +36,8 @@ const TITLES = {
   basket: 'הסל שלי | Smart Food',
   insights: 'תובנות מהמאגר | Smart Food',
   team: 'הצוות | Smart Food',
+  scan: 'סריקת ברקוד | Smart Food',
+  barcode: 'תוצאת סריקה | Smart Food',
 };
 
 class SmartFoodApp {
@@ -57,6 +60,7 @@ class SmartFoodApp {
     const hash = safeDecode(window.location.hash || '#/') || '#/404';
     const wrapper = document.getElementById('page-wrapper');
     let html, title;
+    stopScan();
 
     if (hash === '#/' || hash === '#') { html = renderHome(); this.page = 'home'; }
     else if (hash === '#/categories') { html = renderCategoriesPage(); this.page = 'categories'; }
@@ -70,6 +74,8 @@ class SmartFoodApp {
     else if (hash === '#/quiz') { html = renderQuiz(); this.page = 'quiz'; }
     else if (hash === '#/basket') { html = renderBasket(); this.page = 'basket'; }
     else if (hash === '#/insights') { html = renderInsights(); this.page = 'insights'; }
+    else if (hash === '#/scan') { html = renderScan(); this.page = 'scan'; }
+    else if (hash.startsWith('#/barcode/')) { html = renderBarcode(hash.slice(10)); this.page = 'barcode'; }
     else if (hash === '#/team') { html = renderTeam(); this.page = 'team'; }
     else if (hash === '#/random') {
       const p = products[Math.floor(Math.random() * products.length)];
@@ -103,6 +109,8 @@ class SmartFoodApp {
     if (this.page === 'ingredients') this.initIngredientFilters();
     if (this.page === 'products') this.initAllProducts();
     if (this.page === 'label') initLabel();
+    if (this.page === 'scan') initScan();
+    if (this.page === 'barcode') initBarcode(hash.slice(10), () => this.animateElements());
     if (this.page === 'vs') initVs();
     if (this.page === 'quiz') initQuiz();
     if (this.page === 'basket') initBasket(() => { const y = window.scrollY; this.route(); window.scrollTo(0, y); });
@@ -113,9 +121,10 @@ class SmartFoodApp {
   }
 
   updateActiveNav() {
-    const map = { products: 'categories', category: 'categories', ingredient: 'ingredients', label: 'tools', vs: 'tools', quiz: 'tools', basket: 'tools', insights: 'tools' };
+    const map = { barcode: 'scan', products: 'categories', category: 'categories', ingredient: 'ingredients', label: 'tools', vs: 'tools', quiz: 'tools', basket: 'tools', insights: 'tools' };
     const current = map[this.page] || this.page;
-    document.querySelectorAll('.nav-link').forEach(link => {
+    document.querySelectorAll('.nav-link, .tab-link').forEach(link => {
+      if (link.classList.contains('tab-link')) { const t = link.dataset.page; const on = t === this.page || (t === 'products' && ['categories', 'category', 'product'].includes(this.page)) || (t === 'scan' && this.page === 'barcode') || (t === 'tools' && current === 'tools') || (t === 'ingredients' && current === 'ingredients'); link.classList.toggle('active', on); if (on) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current'); return; }
       const active = link.dataset.page === current;
       link.classList.toggle('active', active);
       if (active) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current');
