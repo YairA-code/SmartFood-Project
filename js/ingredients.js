@@ -11,6 +11,8 @@
 // המזון והמחקר הקיים. זה מידע לימודי ולא ייעוץ רפואי.
 // ============================================================
 
+import { MORE_INGREDIENTS } from './ingredients-more.js?v=17';
+
 const W = 'whole', C = 'culinary', P = 'processed', A = 'additive', M = 'marker';
 const S = 'safe', CA = 'caution', D = 'danger';
 const e = (type, risk, nova, reason) => ({ type, risk, nova, reason });
@@ -691,6 +693,9 @@ export const INGREDIENTS = {
 };
 
 // הסרת אחוזים מהשם, כדי ש"בוטנים טחונים (54%)" יתאים ל"בוטנים טחונים"
+// רכיבים של המוצרים שנוספו בהרחבה (ראו ingredients-more.js)
+Object.assign(INGREDIENTS, MORE_INGREDIENTS);
+
 export function canonicalName(raw) {
   return String(raw)
     .replace(/\s*\((\d+(\.\d+)?)%\)\s*/g, ' ')
