@@ -346,14 +346,14 @@ function offProductHTML(code, p) {
       </div>
     </section>
     <p class="barcode-note">המוצר הזה לא נמצא במאגר שנבדק על ידינו. הנתונים מגיעים מהמאגר הפתוח Open Food Facts, שנכתב על ידי מתנדבים, והניתוח נעשה אוטומטית. כדאי להשוות לרשימת הרכיבים שעל האריזה.</p>
+    ${similar.length ? `
+      <div class="section-head start"><h2 class="section-title">אולי זה אחד מאלה?</h2><p class="section-subtitle">מוצרים דומים מהמאגר שלנו, עם רשימת רכיבים שנבדקה והסבר לכל רכיב</p></div>
+      <div class="products-grid">${similar.map(renderProductCard).join('')}</div>` : ''}
     ${result ? labelResultHTML(result) : `
       <div class="empty-note">
         <p>למוצר הזה אין רשימת רכיבים בעברית במאגר הפתוח. אפשר להעתיק אותה מהאריזה אל בודק התווית.</p>
         <div class="barcode-actions"><a class="btn btn-primary btn-sm" href="#/label">🔬 בודק התווית</a></div>
       </div>`}
-    ${similar.length ? `
-      <div class="section-head start"><h2 class="section-title">מוצרים דומים שבדקנו</h2><p class="section-subtitle">מהמאגר שלנו, עם רשימת רכיבים מאומתת</p></div>
-      <div class="products-grid">${similar.map(renderProductCard).join('')}</div>` : ''}
     <p class="source-note">מקור הנתונים: <a href="${OFF_PAGE}${escapeHtml(code)}" target="_blank" rel="noopener noreferrer">Open Food Facts</a> (רישיון ODbL).</p>
     <div class="barcode-actions">${again}</div>`;
 }
