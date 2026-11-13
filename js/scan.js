@@ -5,10 +5,10 @@
 // (ללא מפתח API וללא הרשמה), ורשימת הרכיבים שלו מנותחת בדפדפן.
 // ============================================================
 
-import { products } from './data.js?v=18';
-import { escapeHtml } from './utils.js?v=18';
-import { breadcrumb, renderProductCard } from './components.js?v=18';
-import { analyzeLabel, labelResultHTML } from './widgets.js?v=18';
+import { products } from './data.js?v=19';
+import { escapeHtml } from './utils.js?v=19';
+import { breadcrumb, renderProductCard } from './components.js?v=19';
+import { analyzeLabel, labelResultHTML } from './widgets.js?v=19';
 
 const OFF_API = 'https://world.openfoodfacts.org/api/v2/product/';
 const OFF_PAGE = 'https://world.openfoodfacts.org/product/';

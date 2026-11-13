@@ -2,13 +2,13 @@
 // Smart Food — קומפוננטות רינדור
 // ============================================================
 
-import { categories, products, getStats } from './data.js?v=18';
-import { INGREDIENTS, canonicalName } from './ingredients.js?v=18';
-import { escapeHtml } from './utils.js?v=18';
-import { productArt } from './art.js?v=18';
-import { toolCards, TOOLS, facts } from './widgets.js?v=18';
-import { scanButton } from './scan.js?v=18';
-import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=18';
+import { categories, products, getStats } from './data.js?v=19';
+import { INGREDIENTS, canonicalName } from './ingredients.js?v=19';
+import { escapeHtml } from './utils.js?v=19';
+import { productArt } from './art.js?v=19';
+import { toolCards, TOOLS, facts } from './widgets.js?v=19';
+import { scanButton } from './scan.js?v=19';
+import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=19';
 
 const CAT_HUE = { snacks: 38, sweets: 18, dairy: 205, drinks: 188, bread: 32, canned: 85, cereals: 46, spreads: 12, meat: 355, frozen: 198, instant: 26, fruits: 130 };
 export const RISK = {

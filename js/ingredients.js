@@ -11,7 +11,7 @@
 // המזון והמחקר הקיים. זה מידע לימודי ולא ייעוץ רפואי.
 // ============================================================
 
-import { MORE_INGREDIENTS } from './ingredients-more.js?v=18';
+import { MORE_INGREDIENTS } from './ingredients-more.js?v=19';
 
 const W = 'whole', C = 'culinary', P = 'processed', A = 'additive', M = 'marker';
 const S = 'safe', CA = 'caution', D = 'danger';
