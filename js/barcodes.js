@@ -79,4 +79,5 @@ export const BARCODES = {
   white_cheese9: ['7290000048192'],
   jasmine_rice: ['7290100700396'],
   kabanos: ['7296073222262'],
+  shkedei_marak: ['7290000063133'],
 };
