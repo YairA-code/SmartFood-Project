@@ -5,7 +5,7 @@
 // האיורים כלליים ולא מעתיקים לוגו או עיצוב של יצרן.
 // ============================================================
 
-import { escapeHtml } from './utils.js?v=14';
+import { escapeHtml } from './utils.js?v=17';
 
 // סוג האריזה לכל מוצר
 const PACK = {
@@ -178,7 +178,7 @@ const SHAPES = {
 
 // פיצול שם המוצר לשתי שורות לכל היותר
 function labelLines(p) {
-  const name = SHORT[p.id] || p.name;
+  const name = SHORT[p.id] || p.short || p.name;
   const words = name.split(' ');
   if (name.length <= 11 || words.length === 1) return [name];
   let best = [name], bestDiff = Infinity;
@@ -213,7 +213,7 @@ function labelSVG(p, [x, y, w, h], icon) {
 // ——— רינדור ———
 export function productArt(p, cls = '') {
   const [main, sub] = p.art || [];
-  const type = PACK[p.id];
+  const type = PACK[p.id] || p.pack;
   const h = hueOf(p);
 
   // מוצר טרי בלי אריזה, או תצוגה קטנה מאוד: רק האיור

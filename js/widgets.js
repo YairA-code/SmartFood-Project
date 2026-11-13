@@ -3,11 +3,11 @@
 // תובנות מהמאגר, ודף הצוות
 // ============================================================
 
-import { products, categories } from './data.js?v=14';
-import { INGREDIENTS, getIngredient, canonicalName } from './ingredients.js?v=14';
-import { NOVA_GROUPS, getNova, getScore, getAlternatives, lookupIngredient, classifyItems, scoreItems, novaReason } from './nova.js?v=14';
-import { escapeHtml } from './utils.js?v=14';
-import { art, breadcrumb, novaBadge, scoreChip, renderProductCard, RISK, ROLE, catOf, ingLink } from './components.js?v=14';
+import { products, categories } from './data.js?v=17';
+import { INGREDIENTS, getIngredient, canonicalName } from './ingredients.js?v=17';
+import { NOVA_GROUPS, getNova, getScore, getAlternatives, lookupIngredient, classifyItems, scoreItems, novaReason } from './nova.js?v=17';
+import { escapeHtml } from './utils.js?v=17';
+import { art, breadcrumb, novaBadge, scoreChip, renderProductCard, RISK, ROLE, catOf, ingLink } from './components.js?v=17';
 
 const byId = id => products.find(p => p.id === id);
 const pageHero = (icon, title, text) => `
@@ -21,6 +21,7 @@ const pageHero = (icon, title, text) => `
 // מרכז הכלים
 // ——————————————————————————————————————
 export const TOOLS = [
+  { href: '#/scan', icon: '📷', title: 'סריקת ברקוד', text: 'סורקים את הברקוד שעל האריזה במצלמת הטלפון, ומגיעים ישר לדף המוצר.' },
   { href: '#/label', icon: '🔬', title: 'בודק התווית', text: 'מדביקים רשימת רכיבים מכל מוצר, ומקבלים סיווג NOVA, ציון עיבוד והסבר לכל רכיב.' },
   { href: '#/vs', icon: '⚖️', title: 'השוואה חופשית', text: 'בוחרים שני מוצרים מהמאגר ורואים אותם זה לצד זה, רכיב מול רכיב.' },
   { href: '#/quiz', icon: '🎯', title: 'חידון NOVA', text: 'עשר שאלות: נחשו כמה מעובד כל מוצר, ובדקו כמה טוב אתם מכירים את המדף.' },
@@ -162,7 +163,7 @@ export function renderLabel() {
     </main>`;
 }
 
-function labelResultHTML(r) {
+export function labelResultHTML(r) {
   if (!r) return '<div class="empty-note">לא נמצאו רכיבים. הדביקו רשימה שהרכיבים בה מופרדים בפסיקים.</div>';
   const { items, nova, score } = r;
   const C = 2 * Math.PI * 54;

@@ -4,6 +4,10 @@
 // מוצרים טריים או כלליים (פירות, ירקות, שמנים) מסומנים כ"מוצר כללי".
 // ============================================================
 
+import { EXTRA, EXTRA_FD } from './products-extra.js?v=17';
+import { BARCODES } from './barcodes.js?v=17';
+import { MORE } from './products-more.js?v=17';
+
 const FD = 'https://www.foodsdictionary.co.il/Products/';
 const FP = 'https://foodiepedia.co.il/product/';
 const src = (label, url) => ({ label, url });
@@ -1039,3 +1043,7 @@ export const products = [
     summary: 'דג טרי בלי תוספות, עשיר באומגה 3 ובחלבון.',
   },
 ];
+
+// הרחבת המאגר וברקודים (ראו products-extra.js ו-barcodes.js)
+products.push(...EXTRA, ...EXTRA_FD, ...MORE);
+products.forEach(p => { if (BARCODES[p.id]) p.barcodes = [...(p.barcodes || []), ...BARCODES[p.id]]; });
