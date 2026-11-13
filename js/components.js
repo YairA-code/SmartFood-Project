@@ -2,13 +2,13 @@
 // Smart Food — קומפוננטות רינדור
 // ============================================================
 
-import { categories, products, getStats } from './data.js?v=17';
-import { INGREDIENTS, canonicalName } from './ingredients.js?v=17';
-import { escapeHtml } from './utils.js?v=17';
-import { productArt } from './art.js?v=17';
-import { toolCards, TOOLS, facts } from './widgets.js?v=17';
-import { scanButton } from './scan.js?v=17';
-import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=17';
+import { categories, products, getStats } from './data.js?v=18';
+import { INGREDIENTS, canonicalName } from './ingredients.js?v=18';
+import { escapeHtml } from './utils.js?v=18';
+import { productArt } from './art.js?v=18';
+import { toolCards, TOOLS, facts } from './widgets.js?v=18';
+import { scanButton } from './scan.js?v=18';
+import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=18';
 
 const CAT_HUE = { snacks: 38, sweets: 18, dairy: 205, drinks: 188, bread: 32, canned: 85, cereals: 46, spreads: 12, meat: 355, frozen: 198, instant: 26, fruits: 130 };
 export const RISK = {
@@ -208,6 +208,14 @@ export function renderHome() {
 
       <section class="section">
         <div class="section-head">
+          <h2 class="section-title">קטגוריות</h2>
+          <p class="section-subtitle">בחרו קטגוריה וגלו מה יש במוצרים שאתם קונים</p>
+        </div>
+        ${renderCategoryGrid()}
+      </section>
+
+      <section class="section section-alt">
+        <div class="section-head">
           <h2 class="section-title">איך זה עובד</h2>
           <p class="section-subtitle">שלושה צעדים מהמדף להחלטה</p>
         </div>
@@ -218,7 +226,7 @@ export function renderHome() {
         </div>
       </section>
 
-      <section class="section section-alt">
+      <section class="section">
         <div class="section-head">
           <h2 class="section-title">כלים חכמים</h2>
           <p class="section-subtitle">לבדוק תווית, להשוות, לשחק ולבנות סל קניות</p>
@@ -231,7 +239,7 @@ export function renderHome() {
         </div>
       </section>
 
-      <section class="section">
+      <section class="section section-alt">
         <div class="section-head">
           <h2 class="section-title">כמה מעובד המאגר שלנו?</h2>
           <p class="section-subtitle">כל מוצר מסווג לפי מדד NOVA הבינלאומי, לפי רשימת הרכיבים שלו</p>
@@ -245,7 +253,7 @@ export function renderHome() {
         <div class="center-cta"><a href="#/nova" class="btn btn-ghost">מה זה מדד NOVA?</a></div>
       </section>
 
-      <section class="section section-alt">
+      <section class="section">
         <div class="section-head">
           <h2 class="section-title">מעובד מול פשוט</h2>
           <p class="section-subtitle">אותו צורך, רשימת רכיבים אחרת לגמרי</p>
@@ -259,14 +267,6 @@ export function renderHome() {
             </a>`).join('')}
         </div>
         <div class="center-cta"><a href="#/compare" class="btn btn-primary">לכל ${comparePairs.length} ההשוואות</a></div>
-      </section>
-
-      <section class="section">
-        <div class="section-head">
-          <h2 class="section-title">קטגוריות</h2>
-          <p class="section-subtitle">בחרו קטגוריה וגלו מה יש במוצרים שאתם קונים</p>
-        </div>
-        ${renderCategoryGrid()}
       </section>
 
       <section class="section section-alt">
@@ -291,7 +291,8 @@ function renderCategoryGrid() {
             <span class="category-icon" aria-hidden="true">${c.icon}</span>
             <h3 class="category-name">${c.name}</h3>
             <p class="category-desc">${c.description}</p>
-            <span class="category-count">${list.length} מוצרים${ultra ? ` · ${ultra} אולטרה-מעובדים` : ''}</span>
+            <span class="category-count">${list.length} מוצרים</span>
+            ${ultra ? `<span class="category-ultra">${ultra} אולטרה-מעובדים</span>` : ''}
           </a>`;
       }).join('')}
     </div>`;
