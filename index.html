@@ -2,41 +2,45 @@
 <html lang="he" dir="rtl" data-theme="light">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
-  <!-- מדיניות אבטחה: רק קבצים מהאתר עצמו, בלי סקריפטים מוטמעים ובלי פניות לשרתים חיצוניים -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <!-- מדיניות אבטחה: קוד רק מהאתר עצמו, בלי סקריפטים מוטמעים. הפנייה החיצונית היחידה: בדיקת ברקוד מול המאגר הפתוח Open Food Facts -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://images.openfoodfacts.org; font-src 'self'; connect-src 'self' https://world.openfoodfacts.org; media-src 'self' blob: mediastream:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
-  <script src="js/boot.js?v=14"></script>
+  <script src="js/boot.js?v=17"></script>
   <title>Smart Food | מה באמת יש בתווית</title>
   <meta name="description" content="Smart Food מנתח מוצרי מזון מהסופר לפי מדד NOVA: דרגת העיבוד, הסבר פשוט לכל רכיב וחלופות פשוטות יותר.">
-  <link rel="canonical" href="https://smart-food-israel-app.surge.sh/">
+  <link rel="canonical" href="https://yaira-code.github.io/SmartFood-Project/">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="he_IL">
   <meta property="og:site_name" content="Smart Food">
-  <meta property="og:url" content="https://smart-food-israel-app.surge.sh/">
+  <meta property="og:url" content="https://yaira-code.github.io/SmartFood-Project/">
   <meta property="og:title" content="Smart Food | מה באמת יש בתווית">
   <meta property="og:description" content="ניתוח מוצרי מזון לפי מדד NOVA: דרגת עיבוד, הסבר לכל רכיב וחלופות פשוטות.">
-  <meta property="og:image" content="https://smart-food-israel-app.surge.sh/img/icon.png">
+  <meta property="og:image" content="https://yaira-code.github.io/SmartFood-Project/img/icon.png">
   <meta name="twitter:card" content="summary">
   <meta name="theme-color" content="#14532d">
   <link rel="icon" type="image/png" href="img/icon.png">
   <link rel="apple-touch-icon" href="img/icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="SmartFood">
 
 
   <link rel="preload" href="fonts/rubik-hebrew-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/styles.css?v=14">
+  <link rel="stylesheet" href="css/styles.css?v=17">
 
   <!-- טעינה מקבילה של כל המודולים, במקום אחד אחרי השני -->
-  <link rel="modulepreload" href="js/app.js?v=14">
-  <link rel="modulepreload" href="js/components.js?v=14">
-  <link rel="modulepreload" href="js/widgets.js?v=14">
-  <link rel="modulepreload" href="js/art.js?v=14">
-  <link rel="modulepreload" href="js/nova.js?v=14">
-  <link rel="modulepreload" href="js/data.js?v=14">
-  <link rel="modulepreload" href="js/products.js?v=14">
-  <link rel="modulepreload" href="js/ingredients.js?v=14">
-  <link rel="modulepreload" href="js/utils.js?v=14">
+  <link rel="modulepreload" href="js/app.js?v=17">
+  <link rel="modulepreload" href="js/components.js?v=17">
+  <link rel="modulepreload" href="js/widgets.js?v=17">
+  <link rel="modulepreload" href="js/art.js?v=17">
+  <link rel="modulepreload" href="js/nova.js?v=17">
+  <link rel="modulepreload" href="js/data.js?v=17">
+  <link rel="modulepreload" href="js/products.js?v=17">
+  <link rel="modulepreload" href="js/ingredients.js?v=17">
+  <link rel="modulepreload" href="js/utils.js?v=17">
+  <link rel="modulepreload" href="js/scan.js?v=17">
 </head>
 <body>
   <div id="error-display" role="alert" hidden>
@@ -49,6 +53,6 @@
     </div>
   </div>
   <noscript><p class="noscript">האתר דורש JavaScript כדי לפעול.</p></noscript>
-  <script type="module" src="js/app.js?v=14"></script>
+  <script type="module" src="js/app.js?v=17"></script>
 </body>
 </html>

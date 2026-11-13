@@ -2,12 +2,13 @@
 // Smart Food — קומפוננטות רינדור
 // ============================================================
 
-import { categories, products, getStats } from './data.js?v=14';
-import { INGREDIENTS, canonicalName } from './ingredients.js?v=14';
-import { escapeHtml } from './utils.js?v=14';
-import { productArt } from './art.js?v=14';
-import { toolCards, TOOLS, facts } from './widgets.js?v=14';
-import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=14';
+import { categories, products, getStats } from './data.js?v=17';
+import { INGREDIENTS, canonicalName } from './ingredients.js?v=17';
+import { escapeHtml } from './utils.js?v=17';
+import { productArt } from './art.js?v=17';
+import { toolCards, TOOLS, facts } from './widgets.js?v=17';
+import { scanButton } from './scan.js?v=17';
+import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=17';
 
 const CAT_HUE = { snacks: 38, sweets: 18, dairy: 205, drinks: 188, bread: 32, canned: 85, cereals: 46, spreads: 12, meat: 355, frozen: 198, instant: 26, fruits: 130 };
 export const RISK = {
@@ -79,6 +80,13 @@ export function renderHeader() {
         </div>
       </div>
     </header>
+    <nav class="tabbar" aria-label="ניווט מהיר">
+      <a href="#/" class="tab-link" data-page="home"><span class="tab-ico" aria-hidden="true">🏠</span>בית</a>
+      <a href="#/products" class="tab-link" data-page="products"><span class="tab-ico" aria-hidden="true">🛒</span>מוצרים</a>
+      <a href="#/scan" class="tab-link tab-scan" data-page="scan" aria-label="סריקת ברקוד"><span class="tab-fab" aria-hidden="true"><span class="scan-ico"></span></span>סריקה</a>
+      <a href="#/tools" class="tab-link" data-page="tools"><span class="tab-ico" aria-hidden="true">🧰</span>כלים</a>
+      <a href="#/ingredients" class="tab-link" data-page="ingredients"><span class="tab-ico" aria-hidden="true">📖</span>מילון</a>
+    </nav>
   `;
 }
 
@@ -105,6 +113,7 @@ export function renderFooter() {
         <div class="footer-col">
           <h2 class="footer-h">לגלות עוד</h2>
           <ul>
+            <li><a href="#/scan">סריקת ברקוד</a></li>
             <li><a href="#/products">כל המוצרים</a></li>
             <li><a href="#/compare">מעובד מול פשוט</a></li>
             <li><a href="#/tools">כלים</a></li>
@@ -162,11 +171,16 @@ export function renderHome() {
               <label for="global-search" class="visually-hidden">חיפוש מוצר, מותג או רכיב</label>
               <div class="search-wrapper">
                 <span class="search-icon" aria-hidden="true">🔍</span>
-                <input type="search" id="global-search" class="search-input" placeholder="חפשו מוצר, מותג או רכיב, למשל: במבה, E621" autocomplete="off" />
+                <input type="search" id="global-search" class="search-input" placeholder="חפשו מוצר, מותג, רכיב או ברקוד" autocomplete="off" />
               </div>
               <div class="search-results" id="search-results" role="listbox"></div>
             </div>
+            <div class="hero-scan">
+              ${scanButton()}
+              <span class="hero-scan-hint">עומדים מול המדף? סרקו את האריזה וקבלו תשובה מיד</span>
+            </div>
             <div class="hero-links">
+              <a href="#/products" class="btn btn-ghost btn-sm">🛒 כל המוצרים</a>
               <a href="#/random" class="btn btn-ghost btn-sm">🎲 מוצר אקראי</a>
               <a href="#/label" class="btn btn-ghost btn-sm">🔬 בדיקת תווית</a>
               <a href="#/quiz" class="btn btn-ghost btn-sm">🎯 חידון</a>
@@ -718,6 +732,7 @@ export function renderAbout() {
         <section class="prose-card">
           <h2>🔎 מאיפה המידע</h2>
           <p>רשימות הרכיבים של המוצרים הממותגים נבדקו מול מקורות ציבוריים (FoodsDictionary, Foodiepedia ואתרי היצרנים), והקישור למקור מופיע בדף של כל מוצר. יצרנים מעדכנים מתכונים מדי פעם, ולכן כדאי לבדוק תמיד גם את התווית שעל האריזה.</p>
+          <p>חלק מהמוצרים, והברקודים שמשמשים את הסורק, מגיעים מהמאגר הפתוח <a href="https://world.openfoodfacts.org" target="_blank" rel="noopener noreferrer">Open Food Facts</a> (רישיון ODbL), שנכתב על ידי מתנדבים. המקור מצוין בדף של כל מוצר.</p>
           <p>ההסברים על הרכיבים מבוססים על עמדות רשויות המזון (כמו רשות הבטיחות במזון האירופית וארגון הבריאות העולמי) ועל המחקר הקיים.</p>
         </section>
         <section class="prose-card">
@@ -734,6 +749,11 @@ export function renderAbout() {
           <p class="muted">BSc במערכות מידע, הפקולטה למנהל עסקים.</p>
           <p class="muted small">האיורים באתר: Microsoft Fluent Emoji, ברישיון MIT.</p>
         </section>
+        <section class="prose-card">
+          <h2>🔒 פרטיות</h2>
+          <p>האתר לא אוסף מידע אישי, אין בו הרשמה, עוגיות או מעקב. הסל וערכת הנושא נשמרים רק במכשיר שלכם.</p>
+          <p>תמונת המצלמה בסורק הברקוד מעובדת במכשיר בלבד. כשסורקים מוצר שלא נמצא במאגר שלנו, מספר הברקוד (ורק הוא) נשלח למאגר הפתוח Open Food Facts כדי לחפש את המוצר.</p>
+        </section>
         <section class="prose-card disclaimer">
           <h2>⚠️ הבהרה חשובה</h2>
           <p>המידע באתר מוצג <strong>למטרות לימודיות בלבד</strong> במסגרת פרויקט אקדמי, ואינו ייעוץ רפואי או תזונתי. לכל שאלה בריאותית יש לפנות לרופא או לדיאטנית.</p>
@@ -749,6 +769,7 @@ export function renderAbout() {
 export function renderSearchResults(query) {
   const q = (query || '').trim().toLowerCase();
   if (!q) return '';
+  if (/^\d{8,14}$/.test(q)) return `<a href="#/barcode/${q}" class="search-result-item" role="option"><span class="search-ing-icon" aria-hidden="true">📷</span><span class="search-result-info"><span class="search-result-name">חיפוש לפי ברקוד ${q}</span><span class="search-result-brand">לחצו כדי לבדוק את המוצר</span></span></a>`;
   const starts = products.filter(p => p.name.toLowerCase().startsWith(q));
   const rest = products.filter(p => !starts.includes(p) && (p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q) || p.ingredients.some(i => i.toLowerCase().includes(q))));
   const prods = [...starts, ...rest].slice(0, 6);
