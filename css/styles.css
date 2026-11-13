@@ -741,8 +741,15 @@ a.stat-item:hover { background: var(--bg-soft); }
 }
 @media (max-width: 380px) {
   .products-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-  .tools-grid { grid-template-columns: 1fr; }
+  .tools-grid { gap: 8px; }
+  .tool-card { padding: 12px 12px 38px; }
+  .tool-card h3 { font-size: 1rem; }
+  .tool-card p { -webkit-line-clamp: 2; }
 }
 @media (hover: none) {
   .btn:hover, .icon-btn:hover { transform: none; box-shadow: none; }
 }
+
+/* מספר המוצרים האולטרה-מעובדים בכרטיס קטגוריה, בשורה משלו */
+.category-ultra { display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: .78rem; color: var(--ink-2); position: relative; }
+.category-ultra::before { content: ''; flex: none; width: 8px; height: 8px; border-radius: 50%; background: #b42318; }
