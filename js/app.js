@@ -2,19 +2,19 @@
 // Smart Food — אפליקציה ראשית + ניתוב
 // ============================================================
 
-import { products } from './data.js?v=21';
-import { debounce, fillContactLinks } from './utils.js?v=21';
-import { getNova, getScore } from './nova.js?v=21';
+import { products } from './data.js?v=22';
+import { debounce, fillContactLinks } from './utils.js?v=22';
+import { getNova, getScore } from './nova.js?v=22';
 import {
   renderHeader, renderFooter, renderHome, renderCategory, renderProduct,
   renderCategoriesPage, renderAbout, renderNotFound, renderSearchResults,
   renderProductCard, renderNova, renderAllProducts, renderCompare, renderIngredients, renderIngredient,
-} from './components.js?v=21';
+} from './components.js?v=22';
 import {
   renderTools, renderLabel, initLabel, renderVs, initVs, renderQuiz, initQuiz,
-  renderBasket, initBasket, renderInsights, renderTeam, toggleBasket, inBasket, basketCount, onBasket, facts,
-} from './widgets.js?v=21';
-import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=21';
+  renderBasket, initBasket, renderInsights, renderTeam, renderCalcPage, initCalculators, toggleBasket, inBasket, basketCount, onBasket, facts,
+} from './widgets.js?v=22';
+import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=22';
 
 // פענוח בטוח של הכתובת: כתובת פגומה לא תפיל את האתר
 function safeDecode(str) {
@@ -22,6 +22,7 @@ function safeDecode(str) {
 }
 
 const TITLES = {
+  calculators: 'מחשבונים | Smart Food',
   home: 'Smart Food | מה באמת יש בתווית',
   categories: 'קטגוריות | Smart Food',
   compare: 'מעובד מול פשוט | Smart Food',
@@ -77,6 +78,7 @@ class SmartFoodApp {
     else if (hash === '#/scan') { html = renderScan(); this.page = 'scan'; }
     else if (hash.startsWith('#/barcode/')) { html = renderBarcode(hash.slice(10)); this.page = 'barcode'; }
     else if (hash === '#/team') { html = renderTeam(); this.page = 'team'; }
+    else if (hash === '#/calculators') { html = renderCalcPage(); this.page = 'calculators'; }
     else if (hash === '#/random') {
       const p = products[Math.floor(Math.random() * products.length)];
       location.replace(`#/product/${p.id}`);
@@ -109,6 +111,7 @@ class SmartFoodApp {
     if (this.page === 'ingredients') this.initIngredientFilters();
     if (this.page === 'products') this.initAllProducts();
     if (this.page === 'label') initLabel();
+    if (this.page === 'calculators') initCalculators();
     if (this.page === 'scan') initScan();
     if (this.page === 'barcode') initBarcode(hash.slice(10), () => this.animateElements());
     if (this.page === 'vs') initVs();
@@ -121,7 +124,7 @@ class SmartFoodApp {
   }
 
   updateActiveNav() {
-    const map = { barcode: 'scan', products: 'categories', category: 'categories', ingredient: 'ingredients', label: 'tools', vs: 'tools', quiz: 'tools', basket: 'tools', insights: 'tools' };
+    const map = { barcode: 'scan', products: 'categories', category: 'categories', ingredient: 'ingredients', label: 'tools', calculators: 'tools', vs: 'tools', quiz: 'tools', basket: 'tools', insights: 'tools' };
     const current = map[this.page] || this.page;
     document.querySelectorAll('.nav-link, .tab-link').forEach(link => {
       if (link.classList.contains('tab-link')) { const t = link.dataset.page; const on = t === this.page || (t === 'products' && ['categories', 'category', 'product'].includes(this.page)) || (t === 'scan' && this.page === 'barcode') || (t === 'tools' && current === 'tools') || (t === 'ingredients' && current === 'ingredients'); link.classList.toggle('active', on); if (on) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current'); return; }
@@ -274,8 +277,10 @@ class SmartFoodApp {
     if (!('IntersectionObserver' in window)) { items.forEach(el => el.classList.add('visible')); return; }
     const obs = new IntersectionObserver(entries => entries.forEach(en => {
       if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); }
-    }), { threshold: 0.05 });
+    }), { threshold: 0.01, rootMargin: '0px 0px 160px 0px' });
     items.forEach(el => obs.observe(el));
+    // רשת ביטחון: אם הדפדפן לא מדווח על גלילה (למשל בלשונית ברקע), התוכן לא יישאר מוסתר
+    setTimeout(() => items.forEach(el => { if (el.isConnected) el.classList.add('visible'); }), 2500);
   }
 
   initTheme() {

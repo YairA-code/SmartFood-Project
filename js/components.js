@@ -2,13 +2,13 @@
 // Smart Food — קומפוננטות רינדור
 // ============================================================
 
-import { categories, products, getStats } from './data.js?v=21';
-import { INGREDIENTS, canonicalName } from './ingredients.js?v=21';
-import { escapeHtml } from './utils.js?v=21';
-import { productArt } from './art.js?v=21';
-import { toolCards, TOOLS, facts } from './widgets.js?v=21';
-import { scanButton } from './scan.js?v=21';
-import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=21';
+import { categories, products, getStats } from './data.js?v=22';
+import { INGREDIENTS, canonicalName } from './ingredients.js?v=22';
+import { escapeHtml } from './utils.js?v=22';
+import { productArt } from './art.js?v=22';
+import { toolCards, TOOLS, facts } from './widgets.js?v=22';
+import { scanButton } from './scan.js?v=22';
+import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=22';
 
 const CAT_HUE = { snacks: 38, sweets: 18, dairy: 205, drinks: 188, bread: 32, canned: 85, cereals: 46, spreads: 12, meat: 355, frozen: 198, instant: 26, fruits: 130 };
 export const RISK = {
@@ -99,7 +99,7 @@ export function renderFooter() {
             <img src="img/art/herb.webp" alt="" class="logo-mark" width="32" height="32">
             <span class="logo-text">Smart<span class="logo-highlight">Food</span></span>
           </a>
-          <p>פרויקט אקדמי שמנתח מוצרי מזון בשוק הישראלי לפי מדד NOVA. המידע לימודי בלבד ואינו ייעוץ רפואי או תזונתי.</p>
+          <p>מה באמת יש בתווית: ניתוח של מוצרי מזון מהסופר בישראל לפי מדד NOVA, עם הסבר פשוט לכל רכיב. המידע כללי ואינו ייעוץ רפואי או תזונתי.</p>
           <p class="footer-mail">חסר מוצר? כתבו לנו: <a data-mail href="#/team">צרו קשר</a></p>
         </div>
         <div class="footer-col">
@@ -120,12 +120,13 @@ export function renderFooter() {
             <li><a href="#/team">הצוות</a></li>
             <li><a href="#/nova">מה זה מדד NOVA?</a></li>
             <li><a href="#/ingredients">מילון רכיבים</a></li>
-            <li><a href="#/about">אודות הפרויקט</a></li>
+            <li><a href="#/calculators">מחשבונים</a></li>
+            <li><a href="#/about">אודות</a></li>
           </ul>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>© ${new Date().getFullYear()} Smart Food · פרויקט סיום בקורס מבוא לבינה מלאכותית · איורים: Microsoft Fluent Emoji (רישיון MIT)</p>
+        <p>© ${new Date().getFullYear()} Smart Food · כל הזכויות שמורות · איורים: Microsoft Fluent Emoji (רישיון MIT)</p>
       </div>
     </footer>
   `;
@@ -696,7 +697,7 @@ export function renderIngredient(key) {
           </div>
           <p class="ing-type">${escapeHtml(d.type)} · ${ROLE[d.nova]}${d.nova === 'marker' ? ' <span class="nova-marker">מאפיין מזון אולטרה-מעובד</span>' : ''}</p>
           <p class="lead">${escapeHtml(d.reason)}</p>
-          <p class="muted small">רמת הסיכון מתייחסת לרכיב בכמויות הרגילות במזון, לפי עמדת רשויות המזון והמחקר הקיים. זה מידע לימודי ולא ייעוץ רפואי.</p>
+          <p class="muted small">רמת הסיכון מתייחסת לרכיב בכמויות הרגילות במזון, לפי עמדת רשויות המזון והמחקר הקיים. זה מידע כללי ולא ייעוץ רפואי.</p>
         </div>
       </section>
       <section class="container">
@@ -711,53 +712,63 @@ export function renderIngredient(key) {
 // אודות
 // ——————————————————————————————————————
 export function renderAbout() {
+  const stats = getStats();
   return `
     <main class="page" id="page-content">
       ${breadcrumb([['אודות']])}
       <section class="page-hero">
         <span class="page-hero-icon" aria-hidden="true">🥦</span>
         <h1>אודות Smart Food</h1>
-        <p>פרויקט סיום בקורס "מבוא לבינה מלאכותית"</p>
+        <p>לדעת מה אנחנו מכניסים לפה, ומה אנחנו נותנים לילדים שלנו</p>
       </section>
       <div class="container about-grid">
+        <section class="prose-card about-lead">
+          <h2>🎯 למה אנחנו כאן</h2>
+          <p>רשימת הרכיבים על האריזה אמורה לספר לנו מה יש באוכל. בפועל היא כתובה באותיות קטנות, מלאה במספרי E ובשמות כימיים, ורובנו מוותרים עליה ומכניסים את המוצר לעגלה.</p>
+          <p>הקמנו את Smart Food בגלל הפער הזה. ריכזנו במקום אחד את רוב סוגי החומרים שנמצאים במזון, והסברנו כל אחד מהם בשפה פשוטה, כדי שכל אחד יוכל לדעת מה הוא מכניס לפה שלו ולפה של הילדים שלו.</p>
+          <p>אנחנו לא אומרים לכם מה לאכול. אנחנו רוצים שתבחרו כשאתם יודעים.</p>
+        </section>
         <section class="prose-card">
-          <h2>🎯 מטרת הפרויקט</h2>
-          <p>תווית הרכיבים בסופר מלאה במספרי E ובשמות כימיים שקשה להבין. Smart Food מנגיש את מדד NOVA הבינלאומי: לכל מוצר מוצגים דרגת העיבוד שלו, הסבר פשוט לכל רכיב וחלופה פשוטה יותר.</p>
-          <p>קהל היעד: צרכנים שרוצים לקנות בצורה מודעת יותר, הורים, וכל מי שרוצה להבין את התווית בלי ידע מוקדם בכימיה.</p>
+          <h2>🛒 מה תמצאו כאן</h2>
+          <ul>
+            <li><strong>${stats.totalProducts} מוצרים</strong> מהסופר, ולכל אחד רשימת הרכיבים המלאה והסבר לכל רכיב.</li>
+            <li><strong>סריקת ברקוד:</strong> סורקים את האריזה בטלפון ומגיעים ישר לדף המוצר.</li>
+            <li><strong>מילון רכיבים:</strong> מה כל חומר עושה במוצר, ומה ידוע עליו.</li>
+            <li><strong>חלופות:</strong> לכל מוצר מעובד מוצע מוצר פשוט יותר מאותו סוג.</li>
+            <li><strong>כלים:</strong> בודק תווית לכל מוצר שלא נמצא אצלנו, השוואה בין מוצרים ומחשבונים.</li>
+          </ul>
         </section>
         <section class="prose-card">
           <h2>🧭 שני מדדים לכל מוצר</h2>
           <p><strong>מדד NOVA (1 עד 4)</strong> הוא סיווג בינלאומי לפי מידת העיבוד התעשייתי. <a href="#/nova">הסבר מלא</a>.</p>
           <p><strong>ציון העיבוד (1 עד 10)</strong> מפרט יותר, ומבדיל בין מוצרים באותה קבוצה לפי מספר הסמנים התעשייתיים ולפי רכיבים בעייתיים.</p>
+          <p>שני המדדים מחושבים מרשימת הרכיבים בלבד. הם הערכה שלנו, ולא סיווג רשמי של גוף כלשהו.</p>
         </section>
         <section class="prose-card">
           <h2>🔎 מאיפה המידע</h2>
-          <p>רשימות הרכיבים של המוצרים הממותגים נבדקו מול מקורות ציבוריים (FoodsDictionary, Foodiepedia ואתרי היצרנים), והקישור למקור מופיע בדף של כל מוצר. יצרנים מעדכנים מתכונים מדי פעם, ולכן כדאי לבדוק תמיד גם את התווית שעל האריזה.</p>
-          <p>חלק מהמוצרים, והברקודים שמשמשים את הסורק, מגיעים מהמאגר הפתוח <a href="https://world.openfoodfacts.org" target="_blank" rel="noopener noreferrer">Open Food Facts</a> (רישיון ODbL), שנכתב על ידי מתנדבים. המקור מצוין בדף של כל מוצר.</p>
+          <p>רשימות הרכיבים של המוצרים הממותגים נלקחו ממקורות ציבוריים (FoodsDictionary, Foodiepedia ואתרי היצרנים), והקישור למקור מופיע בדף של כל מוצר.</p>
+          <p>חלק מהמוצרים והברקודים מגיעים מהמאגר הפתוח <a href="https://world.openfoodfacts.org" target="_blank" rel="noopener noreferrer">Open Food Facts</a> (רישיון ODbL), שנכתב על ידי מתנדבים. ברקודים נוספים הותאמו מקובצי המחירים שרשתות השיווק מפרסמות לפי חוק שקיפות המחירים.</p>
           <p>ההסברים על הרכיבים מבוססים על עמדות רשויות המזון (כמו רשות הבטיחות במזון האירופית וארגון הבריאות העולמי) ועל המחקר הקיים.</p>
         </section>
         <section class="prose-card">
-          <h2>🤖 איך בנינו את האתר</h2>
-          <ul>
-            <li><strong>ChatGPT / Claude</strong>: ניתוח וסיווג רכיבי המזון, ניסוח הסברים פשוטים ובניית מאגר המוצרים</li>
-            <li><strong>Cursor / v0</strong>: בניית קוד הממשק (HTML, CSS ו-JavaScript) ועיצוב כרטיסי המוצר</li>
-            <li><strong>בקרה אנושית</strong>: כל סיווג והסבר שה-AI הפיק נבדק, אומת והוגה על ידי חבר צוות לפני שנכנס לאתר</li>
-          </ul>
+          <h2>🤝 שקיפות</h2>
+          <p>ההסברים והסיווגים באתר נכתבו בעזרת כלי בינה מלאכותית, על בסיס המקורות שלמעלה. עשינו מאמץ לדייק, אבל ייתכנו טעויות.</p>
+          <p>יצרנים מעדכנים מתכונים מדי פעם, ולכן <strong>התווית שעל האריזה היא שקובעת</strong>. מצאתם טעות או מוצר שהשתנה? <a data-mail href="#/team">כתבו לנו</a> ונתקן.</p>
+          <p>אין באתר פרסומות.</p>
         </section>
         <section class="prose-card">
           <h2>👥 הצוות</h2>
-          <p>יאיר פנחס אברישמן, ליאם כהן, אוהד קראוזמן ונעה אברהמי. <a href="#/team">לדף הצוות</a></p>
-          <p class="muted">BSc במערכות מידע, הפקולטה למנהל עסקים.</p>
+          <p>יאיר אברישמן, ליאם כהן, אוהד קראוזמן ונעה אברהמי. <a href="#/team">לדף הצוות</a></p>
           <p class="muted small">האיורים באתר: Microsoft Fluent Emoji, ברישיון MIT.</p>
         </section>
         <section class="prose-card">
           <h2>🔒 פרטיות</h2>
-          <p>האתר לא אוסף מידע אישי, אין בו הרשמה, עוגיות או מעקב. הסל וערכת הנושא נשמרים רק במכשיר שלכם.</p>
+          <p>האתר לא אוסף מידע אישי, אין בו הרשמה, עוגיות או מעקב. הסל וערכת הנושא נשמרים רק במכשיר שלכם, והמחשבונים מחשבים במכשיר בלבד.</p>
           <p>תמונת המצלמה בסורק הברקוד מעובדת במכשיר בלבד. כשסורקים מוצר שלא נמצא במאגר שלנו, מספר הברקוד (ורק הוא) נשלח למאגר הפתוח Open Food Facts כדי לחפש את המוצר.</p>
         </section>
         <section class="prose-card disclaimer">
           <h2>⚠️ הבהרה חשובה</h2>
-          <p>המידע באתר מוצג <strong>למטרות לימודיות בלבד</strong> במסגרת פרויקט אקדמי, ואינו ייעוץ רפואי או תזונתי. לכל שאלה בריאותית יש לפנות לרופא או לדיאטנית.</p>
+          <p>המידע באתר הוא <strong>מידע כללי בלבד</strong>, ואינו ייעוץ רפואי או תזונתי. לכל שאלה בריאותית יש לפנות לרופא או לדיאטנית.</p>
         </section>
       </div>
     </main>
