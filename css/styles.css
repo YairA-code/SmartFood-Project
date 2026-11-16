@@ -391,7 +391,7 @@ ul, ol { list-style: none; }
 .footer-bottom { border-top: 1px solid var(--line); text-align: center; padding: 16px 24px; color: var(--muted); font-size: .82rem; }
 
 /* ——— Animation ——— */
-.animate-item { opacity: 0; transform: translateY(14px); transition: opacity .5s var(--ease), transform .5s var(--ease); }
+.animate-item { opacity: 0; transform: translateY(10px); transition: opacity .35s var(--ease), transform .35s var(--ease); }
 .animate-item.visible { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -753,3 +753,41 @@ a.stat-item:hover { background: var(--bg-soft); }
 /* מספר המוצרים האולטרה-מעובדים בכרטיס קטגוריה, בשורה משלו */
 .category-ultra { display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: .78rem; color: var(--ink-2); position: relative; }
 .category-ultra::before { content: ''; flex: none; width: 8px; height: 8px; border-radius: 50%; background: #b42318; }
+
+/* תפקיד בכרטיס צוות */
+.team-role { position: relative; font-size: .9rem; font-weight: 600; color: var(--brand-ink); background: var(--brand-soft); padding: 3px 12px; border-radius: 999px; }
+[data-theme="dark"] .team-role { color: var(--brand); }
+.about-lead { grid-column: 1 / -1; }
+.about-lead p { font-size: 1.06rem; line-height: 1.8; }
+
+/* מחשבונים */
+.calc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; align-items: start; }
+.calc-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 12px; }
+.calc-card h2 { font-size: 1.2rem; }
+.calc-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: end; }
+.calc-form .btn { grid-column: 1 / -1; justify-content: center; min-height: 46px; }
+.calc-field { display: flex; flex-direction: column; gap: 6px; font-size: .9rem; font-weight: 600; min-width: 0; }
+.calc-input { display: flex; align-items: center; gap: 8px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 0 12px; min-height: 46px; }
+.calc-input:focus-within { outline: 2px solid var(--brand); outline-offset: 1px; }
+.calc-input input, .calc-input select { flex: 1; min-width: 0; width: 100%; border: 0; background: transparent; color: var(--ink); font: inherit; font-size: 1rem; padding: 10px 0; outline: none; }
+.calc-input select option { color: #111; }
+.calc-input em { font-style: normal; font-weight: 400; font-size: .8rem; color: var(--ink-2); white-space: nowrap; }
+.calc-result:empty { display: none; }
+.calc-result { border-radius: 12px; padding: 14px 16px; border: 1px solid var(--line); background: var(--surface-2); line-height: 1.6; }
+.calc-result.ok { border-color: #0f7a4f; }
+.calc-result.warn { border-color: #e86a12; }
+.calc-result.bad { border-color: #b42318; }
+.calc-big { font-size: 1.6rem; font-weight: 800; line-height: 1.25; }
+.calc-spoons { font-size: 1.15rem; letter-spacing: 2px; overflow-wrap: anywhere; }
+.calc-disclaimer { margin-top: 22px; }
+@media (max-width: 860px) { .calc-grid { grid-template-columns: 1fr; } }
+@media (max-width: 380px) { .calc-form { grid-template-columns: 1fr; } }
+
+/* דף הצוות בטלפון: שני כרטיסים בשורה */
+@media (max-width: 768px) {
+  .team-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .team-card { padding: 20px 10px; }
+  .team-avatar { width: 68px; height: 68px; font-size: 1.4rem; }
+  .team-name { font-size: 1rem; }
+  .team-role { font-size: .8rem; padding: 3px 9px; }
+}

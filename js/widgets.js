@@ -3,11 +3,12 @@
 // תובנות מהמאגר, ודף הצוות
 // ============================================================
 
-import { products, categories } from './data.js?v=21';
-import { INGREDIENTS, getIngredient, canonicalName } from './ingredients.js?v=21';
-import { NOVA_GROUPS, getNova, getScore, getAlternatives, lookupIngredient, classifyItems, scoreItems, novaReason } from './nova.js?v=21';
-import { escapeHtml } from './utils.js?v=21';
-import { art, breadcrumb, novaBadge, scoreChip, renderProductCard, RISK, ROLE, catOf, ingLink } from './components.js?v=21';
+import { products, categories } from './data.js?v=22';
+import { INGREDIENTS, getIngredient, canonicalName } from './ingredients.js?v=22';
+import { NOVA_GROUPS, getNova, getScore, getAlternatives, lookupIngredient, classifyItems, scoreItems, novaReason } from './nova.js?v=22';
+import { escapeHtml } from './utils.js?v=22';
+import { art, breadcrumb, novaBadge, scoreChip, renderProductCard, RISK, ROLE, catOf, ingLink } from './components.js?v=22';
+import { renderCalculators, initCalculators } from './calculators.js?v=22';
 
 const byId = id => products.find(p => p.id === id);
 const pageHero = (icon, title, text) => `
@@ -23,6 +24,7 @@ const pageHero = (icon, title, text) => `
 export const TOOLS = [
   { href: '#/scan', icon: '📷', title: 'סריקת ברקוד', text: 'סורקים את הברקוד שעל האריזה במצלמת הטלפון, ומגיעים ישר לדף המוצר.' },
   { href: '#/label', icon: '🔬', title: 'בודק התווית', text: 'מדביקים רשימת רכיבים מכל מוצר, ומקבלים סיווג NOVA, ציון עיבוד והסבר לכל רכיב.' },
+  { href: '#/calculators', icon: '🧮', title: 'מחשבונים', text: 'כפיות סוכר במוצר, BMI, צריכת קלוריות יומית ויחס מותניים-ירכיים, לפי נוסחאות מקובלות.' },
   { href: '#/vs', icon: '⚖️', title: 'השוואה חופשית', text: 'בוחרים שני מוצרים מהמאגר ורואים אותם זה לצד זה, רכיב מול רכיב.' },
   { href: '#/quiz', icon: '🎯', title: 'חידון NOVA', text: 'עשר שאלות: נחשו כמה מעובד כל מוצר, ובדקו כמה טוב אתם מכירים את המדף.' },
   { href: '#/basket', icon: '🛒', title: 'הסל שלי', text: 'מוסיפים מוצרים לסל ומקבלים ציון עיבוד לכל הסל, עם הצעות להחלפה.' },
@@ -207,7 +209,7 @@ export function labelResultHTML(r) {
           <p class="ing-reason">${escapeHtml(i.reason)}</p>
         </li>`).join('')}
     </ol>
-    <p class="source-note">זו הערכה אוטומטית לפי רשימת הרכיבים בלבד, ולא סיווג רשמי. מידע לימודי ולא ייעוץ תזונתי.</p>`;
+    <p class="source-note">זו הערכה אוטומטית לפי רשימת הרכיבים בלבד, ולא סיווג רשמי. מידע כללי ולא ייעוץ תזונתי.</p>`;
 }
 
 export function initLabel() {
@@ -569,10 +571,10 @@ export function facts() {
 // הצוות
 // ——————————————————————————————————————
 const TEAM = [
-  { name: 'יאיר פנחס אברישמן', initials: 'יא', hue: 145 },
-  { name: 'ליאם כהן', initials: 'לכ', hue: 205 },
-  { name: 'אוהד קראוזמן', initials: 'אק', hue: 28 },
-  { name: 'נעה אברהמי', initials: 'נא', hue: 330 },
+  { name: 'יאיר אברישמן', role: 'CEO', initials: 'יא', hue: 145 },
+  { name: 'ליאם כהן', role: 'Co-Founder', initials: 'לכ', hue: 205 },
+  { name: 'אוהד קראוזמן', role: 'Co-Founder', initials: 'אק', hue: 28 },
+  { name: 'נעה אברהמי', role: 'מנהלת מוצרים', initials: 'נא', hue: 330 },
 ];
 
 export function renderTeam() {
@@ -586,13 +588,18 @@ export function renderTeam() {
             <article class="team-card animate-item" style="--h:${m.hue}">
               <div class="team-avatar" aria-hidden="true">${m.initials}</div>
               <h2 class="team-name">${m.name}</h2>
+              <p class="team-role">${m.role}</p>
             </article>`).join('')}
         </div>
         <section class="prose-card team-about">
-          <h2>על הפרויקט</h2>
-          <p>Smart Food נבנה כפרויקט סיום בקורס "מבוא לבינה מלאכותית", במסגרת התואר BSc במערכות מידע. המטרה: להפוך את תווית הרכיבים למשהו שכל אחד יכול להבין.</p>
-          <p class="muted">חסר לכם מוצר באתר? כתבו לנו: <a data-mail href="#/team">צרו קשר</a></p>
+          <h2>למה הקמנו את Smart Food</h2>
+          <p>רובנו לא יודעים מה באמת יש באוכל שאנחנו קונים. הקמנו את Smart Food כדי שכל אחד יוכל לקרוא תווית רכיבים ולהבין אותה, בלי תואר בכימיה.</p>
+          <p class="muted">חסר לכם מוצר באתר? מצאתם טעות? כתבו לנו: <a data-mail href="#/team">צרו קשר</a></p>
         </section>
       </div>
     </main>`;
 }
+
+// דף המחשבונים (ראו calculators.js)
+export const renderCalcPage = () => renderCalculators(breadcrumb, pageHero);
+export { initCalculators };
