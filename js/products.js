@@ -4,9 +4,9 @@
 // מוצרים טריים או כלליים (פירות, ירקות, שמנים) מסומנים כ"מוצר כללי".
 // ============================================================
 
-import { EXTRA, EXTRA_FD } from './products-extra.js?v=20';
-import { BARCODES } from './barcodes.js?v=20';
-import { MORE } from './products-more.js?v=20';
+import { EXTRA, EXTRA_FD } from './products-extra.js?v=21';
+import { BARCODES } from './barcodes.js?v=21';
+import { MORE } from './products-more.js?v=21';
 
 const FD = 'https://www.foodsdictionary.co.il/Products/';
 const FP = 'https://foodiepedia.co.il/product/';
