@@ -791,3 +791,11 @@ a.stat-item:hover { background: var(--bg-soft); }
   .team-name { font-size: 1rem; }
   .team-role { font-size: .8rem; padding: 3px 9px; }
 }
+
+/* תמונת אריזה אמיתית במקום איור */
+.art-photo { background: #fff; }
+.art-photo::after { display: none; }
+.art-photo img { position: relative; z-index: 1; width: 100%; height: 100%; object-fit: contain; padding: 8%; transition: transform .4s var(--ease); }
+.art-photo.art-xs img, .art-photo.art-mini img { padding: 5%; }
+.product-card:hover .art-photo img { transform: scale(1.04); }
+.photo-credit { font-size: .78rem; color: var(--ink-2); margin-top: 8px; text-align: center; }

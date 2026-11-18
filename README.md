@@ -69,6 +69,7 @@
 │   ├── products-extra.js  מוצרים שנוספו מהמאגר הפתוח Open Food Facts
 │   ├── products-more.js   הרחבה נוספת: מוצרים שנבדקו מול FoodsDictionary, ומוצרים טריים
 │   ├── barcodes.js     ברקודים של המוצרים שבמאגר
+│   ├── photos.js       אילו מוצרים יש להם תמונה, ומאיזה ברקוד היא נלקחה
 │   ├── vendor/         ספריית ZXing לקריאת ברקודים (רישיון Apache 2.0), נטענת רק בדפדפן בלי קורא ברקודים מובנה
 │   ├── ingredients.js  מילון הרכיבים
 │   ├── ingredients-more.js  תוספת למילון, לרכיבים של המוצרים שבהרחבה
@@ -78,7 +79,8 @@
 ├── fonts/              הגופן Rubik, מאוחסן באתר עצמו
 ├── img/
 │   ├── icon.png        סמל האתר
-│   └── art/            איורי Fluent Emoji בפורמט WebP
+│   ├── art/            איורי Fluent Emoji בפורמט WebP
+│   └── products/       תמונות אריזה של המוצרים
 ```
 
 האתר בנוי מ-HTML, CSS ו-JavaScript בלבד, בלי שלב בנייה. הספרייה החיצונית היחידה היא ZXing לקריאת ברקודים, והיא מאוחסנת באתר עצמו.
@@ -134,6 +136,7 @@ npx surge . smart-food-israel-app.surge.sh
 
 ## קרדיטים
 
+- **תמונות מוצרים:** מתנדבי [Open Food Facts](https://world.openfoodfacts.org), ברישיון CC BY-SA 3.0. כל תמונה נמצאה לפי הברקוד של המוצר ונבדקה ידנית. מוצר בלי תמונה מוצג באיור.
 - **איורים:** [Microsoft Fluent Emoji](https://github.com/microsoft/fluentui-emoji), ברישיון MIT. הרישיון המלא נמצא בקובץ `img/art/LICENSE`.
 - **קריאת ברקודים:** [ZXing](https://github.com/zxing-js/library), ברישיון Apache 2.0. הרישיון המלא נמצא בקובץ `js/vendor/ZXING-LICENSE`.
 - **נתוני מוצרים וברקודים:** [Open Food Facts](https://world.openfoodfacts.org), ברישיון Open Database License.
