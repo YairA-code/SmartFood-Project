@@ -2,14 +2,14 @@
 // Smart Food — קומפוננטות רינדור
 // ============================================================
 
-import { categories, products, getStats } from './data.js?v=27';
-import { INGREDIENTS, canonicalName } from './ingredients.js?v=27';
-import { escapeHtml } from './utils.js?v=27';
-import { productArt } from './art.js?v=27';
-import { toolCards, TOOLS, facts } from './widgets.js?v=27';
-import { scanButton } from './scan.js?v=27';
-import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=27';
-import { PHOTOS } from './photos.js?v=27';
+import { categories, products, getStats } from './data.js?v=28';
+import { INGREDIENTS, canonicalName } from './ingredients.js?v=28';
+import { escapeHtml } from './utils.js?v=28';
+import { productArt } from './art.js?v=28';
+import { toolCards, TOOLS, facts } from './widgets.js?v=28';
+import { scanButton } from './scan.js?v=28';
+import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=28';
+import { PHOTOS } from './photos.js?v=28';
 
 const CAT_HUE = { snacks: 38, sweets: 18, dairy: 205, drinks: 188, bread: 32, canned: 85, cereals: 46, spreads: 12, meat: 355, frozen: 198, instant: 26, fruits: 130 };
 export const RISK = {
@@ -487,7 +487,9 @@ export function renderProduct(productId) {
         ${PHOTOS[product.id] ? `<p class="source-note">תמונת המוצר: מתנדבי <a href="https://world.openfoodfacts.org/product/${escapeHtml(PHOTOS[product.id])}" target="_blank" rel="noopener noreferrer">Open Food Facts</a>, ברישיון CC BY-SA 3.0. האריזה בחנות עשויה להיראות אחרת.</p>` : ''}
         <p class="source-note">${product.source
           ? `מקור רשימת הרכיבים: <a href="${/^https:\/\//.test(product.source.url) ? escapeHtml(product.source.url) : '#'}" target="_blank" rel="noopener noreferrer">${escapeHtml(product.source.label)}</a>. יצרנים מעדכנים מתכונים מדי פעם, ולכן כדאי לבדוק תמיד את התווית שעל האריזה.`
-          : 'מוצר כללי: רשימת הרכיבים מתארת את המוצר הבסיסי, בלי מותג מסוים.'}</p>
+          : product.brand === 'מוצר כללי'
+            ? 'מוצר כללי: רשימת הרכיבים מתארת את המוצר הבסיסי, בלי מותג מסוים.'
+            : 'רשימת הרכיבים מבוססת על התווית של היצרן כפי שהופיעה במועד הבדיקה. יצרנים מעדכנים מתכונים מדי פעם, ולכן כדאי לבדוק תמיד את התווית שעל האריזה.'}</p>
       </section>
 
       <section class="container">
@@ -750,7 +752,7 @@ export function renderAbout() {
         </section>
         <section class="prose-card">
           <h2>🔎 מאיפה המידע</h2>
-          <p>רשימות הרכיבים של המוצרים הממותגים נלקחו ממקורות ציבוריים (FoodsDictionary, Foodiepedia ואתרי היצרנים), והקישור למקור מופיע בדף של כל מוצר.</p>
+          <p>רשימות הרכיבים של המוצרים הממותגים מבוססות על התוויות שהיצרנים מדפיסים על האריזה. כשיש לנו מקור פתוח לבדיקה (המאגר Open Food Facts או אתר היצרן), הקישור מופיע בדף המוצר.</p>
           <p>חלק מהמוצרים והברקודים מגיעים מהמאגר הפתוח <a href="https://world.openfoodfacts.org" target="_blank" rel="noopener noreferrer">Open Food Facts</a> (רישיון ODbL), שנכתב על ידי מתנדבים. ברקודים נוספים הותאמו מקובצי המחירים שרשתות השיווק מפרסמות לפי חוק שקיפות המחירים.</p>
           <p>ההסברים על הרכיבים מבוססים על עמדות רשויות המזון (כמו רשות הבטיחות במזון האירופית וארגון הבריאות העולמי) ועל המחקר הקיים.</p>
         </section>
@@ -832,10 +834,10 @@ export function renderLegal() {
         <section class="prose-card" id="terms">
           <h2>תנאי שימוש</h2>
           <p><strong>מידע כללי בלבד.</strong> המידע באתר נועד להסביר רשימות רכיבים של מוצרי מזון. הוא אינו ייעוץ רפואי, תזונתי או מקצועי, ואינו תחליף להתייעצות עם רופא או דיאטנית.</p>
-          <p><strong>המידע מוצג כמו שהוא.</strong> רשימות הרכיבים נאספו ממקורות ציבוריים במועד הבדיקה, וההסברים והסיווגים נכתבו בעזרת כלי בינה מלאכותית. ייתכנו טעויות או מידע שאינו עדכני, ויצרנים משנים מתכונים מדי פעם. <strong>התווית שעל האריזה היא הקובעת.</strong> השימוש במידע באתר הוא על אחריות המשתמש.</p>
+          <p><strong>המידע מוצג כמו שהוא.</strong> רשימות הרכיבים מבוססות על תוויות היצרנים במועד הבדיקה, וההסברים והסיווגים נכתבו בעזרת כלי בינה מלאכותית. ייתכנו טעויות או מידע שאינו עדכני, ויצרנים משנים מתכונים מדי פעם. <strong>התווית שעל האריזה היא הקובעת.</strong> השימוש במידע באתר הוא על אחריות המשתמש.</p>
           <p><strong>הסיווגים הם הערכה.</strong> סיווג NOVA וציון העיבוד מחושבים באתר מרשימת הרכיבים בלבד, לפי שיטה שמוסברת ב<a href="#/nova">דף מדד NOVA</a>. הם מתארים את מידת העיבוד התעשייתי, ואינם קביעה על בטיחות, איכות או חוקיות של מוצר כלשהו. כל המוצרים באתר הם מוצרים שנמכרים כחוק, וכל הרכיבים בהם מותרים לשימוש.</p>
           <p><strong>סימני מסחר.</strong> שמות המוצרים, המותגים והיצרנים באתר שייכים לבעליהם, ומופיעים רק כדי לזהות את המוצר. Smart Food אינו קשור ליצרנים, ואינו מקבל מהם מימון או חסות. האיורים באתר הם איורים כלליים שנוצרו לאתר, ואינם תמונות האריזה הרשמיות או לוגו של יצרן.</p>
-          <p><strong>מקורות.</strong> מקור רשימת הרכיבים מצוין בדף של כל מוצר. חלק מהמידע והברקודים מגיע מהמאגר הפתוח <a href="https://world.openfoodfacts.org" target="_blank" rel="noopener noreferrer">Open Food Facts</a> (רישיון ODbL), וחלק מהברקודים מקובצי המחירים שרשתות השיווק מפרסמות לפי חוק קידום התחרות בענף המזון.</p>
+          <p><strong>מקורות.</strong> כשיש מקור פתוח לרשימת הרכיבים, הוא מצוין בדף המוצר. חלק מהמידע והברקודים מגיע מהמאגר הפתוח <a href="https://world.openfoodfacts.org" target="_blank" rel="noopener noreferrer">Open Food Facts</a> (רישיון ODbL), וחלק מהברקודים מקובצי המחירים שרשתות השיווק מפרסמות לפי חוק קידום התחרות בענף המזון.</p>
           <p><strong>תיקונים והסרה.</strong> מצאתם טעות? יצרן שמבקש לתקן מידע על מוצר שלו? <a data-mail href="#/legal">כתבו לנו</a>, ונבדוק ונתקן או נסיר את המידע בהקדם.</p>
         </section>
         <section class="prose-card" id="privacy">
@@ -859,7 +861,8 @@ export function renderLegal() {
             <li>יש מצב כהה, והאתר תומך בהגדלת טקסט של הדפדפן עד 200% בלי לאבד תוכן.</li>
             <li>האתר מכבד את הגדרת "הפחתת תנועה" של מערכת ההפעלה.</li>
           </ul>
-          <p>ייתכן שחלקים באתר עדיין אינם נגישים במלואם. נתקלתם בבעיה? <a data-mail href="#/legal">כתבו לנו</a>, ונשתדל לתקן בהקדם.</p>
+          <p>ייתכן שחלקים באתר עדיין אינם נגישים במלואם. נתקלתם בבעיה? פנו לרכז הנגישות, ונשתדל לתקן בהקדם.</p>
+          <p><strong>רכז הנגישות:</strong> ליאם כהן, טלפון <a href="tel:+972506714777" dir="ltr">050-671-4777</a>, או <a data-mail href="#/legal">בדואר אלקטרוני</a>.</p>
         </section>
       </div>
     </main>`;
