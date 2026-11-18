@@ -213,4 +213,13 @@ export const BARCODES = {
   tahini: ['7290011723200'],
   amba: ['7290010154036'],
   knorr_chicken_soup: ['7290107645584'],
+  challah: ['7290017947372'],
+  goat_yogurt: ['7290116935522'],
+  tomato_soup: ['7290112490209'],
+  eggplant_mayo: ['7290106577503'],
+  lasagna: ['8076809523738'],
+  mayo_light: ['8715700110158'],
+  kitkat: ['40052403'],
+  orbit: ['4009900403023'],
+  must_gum: ['7290112332875'],
 };
