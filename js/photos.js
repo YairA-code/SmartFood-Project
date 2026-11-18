@@ -147,4 +147,9 @@ export const PHOTOS = {
   cooking_cream: '7290004137021',
   prili_pineapple: '72961520',
   jasmine_rice: '7290100700396',
+  cornflakes: '7290112494351',
+  hummus: '7290105964564',
+  tuna_water: '7290005287251',
+  mushroom_soup: '7290000070322',
+  lachmit: '7290000075204',
 };
