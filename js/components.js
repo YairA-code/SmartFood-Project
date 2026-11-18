@@ -2,14 +2,14 @@
 // Smart Food — קומפוננטות רינדור
 // ============================================================
 
-import { categories, products, getStats } from './data.js?v=26';
-import { INGREDIENTS, canonicalName } from './ingredients.js?v=26';
-import { escapeHtml } from './utils.js?v=26';
-import { productArt } from './art.js?v=26';
-import { toolCards, TOOLS, facts } from './widgets.js?v=26';
-import { scanButton } from './scan.js?v=26';
-import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=26';
-import { PHOTOS } from './photos.js?v=26';
+import { categories, products, getStats } from './data.js?v=27';
+import { INGREDIENTS, canonicalName } from './ingredients.js?v=27';
+import { escapeHtml } from './utils.js?v=27';
+import { productArt } from './art.js?v=27';
+import { toolCards, TOOLS, facts } from './widgets.js?v=27';
+import { scanButton } from './scan.js?v=27';
+import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=27';
+import { PHOTOS } from './photos.js?v=27';
 
 const CAT_HUE = { snacks: 38, sweets: 18, dairy: 205, drinks: 188, bread: 32, canned: 85, cereals: 46, spreads: 12, meat: 355, frozen: 198, instant: 26, fruits: 130 };
 export const RISK = {
@@ -123,11 +123,13 @@ export function renderFooter() {
             <li><a href="#/ingredients">מילון רכיבים</a></li>
             <li><a href="#/calculators">מחשבונים</a></li>
             <li><a href="#/about">אודות</a></li>
+            <li><a href="#/legal">תנאי שימוש ופרטיות</a></li>
+            <li><a href="#/legal">הצהרת נגישות</a></li>
           </ul>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>© ${new Date().getFullYear()} Smart Food · כל הזכויות שמורות · איורים: Microsoft Fluent Emoji (רישיון MIT)</p>
+        <p>© ${new Date().getFullYear()} Smart Food · כל הזכויות שמורות · שמות המוצרים והמותגים שייכים לבעליהם, והאתר אינו קשור ליצרנים · איורים: Microsoft Fluent Emoji (רישיון MIT)</p>
       </div>
     </footer>
   `;
@@ -814,6 +816,53 @@ export function breadcrumb(parts) {
       <a href="#/">דף הבית</a>
       ${parts.map(([label, href]) => `<span aria-hidden="true">›</span>${href ? `<a href="${href}">${escapeHtml(label)}</a>` : `<span aria-current="page">${escapeHtml(label)}</span>`}`).join('')}
     </nav>`;
+}
+
+// ——— תנאי שימוש, פרטיות והצהרת נגישות ———
+export function renderLegal() {
+  return `
+    <main class="page" id="page-content">
+      ${breadcrumb([['תנאי שימוש, פרטיות ונגישות']])}
+      <section class="page-hero">
+        <span class="page-hero-icon" aria-hidden="true">📜</span>
+        <h1>תנאי שימוש, פרטיות ונגישות</h1>
+        <p>עודכן לאחרונה: נובמבר 2026</p>
+      </section>
+      <div class="container narrow legal">
+        <section class="prose-card" id="terms">
+          <h2>תנאי שימוש</h2>
+          <p><strong>מידע כללי בלבד.</strong> המידע באתר נועד להסביר רשימות רכיבים של מוצרי מזון. הוא אינו ייעוץ רפואי, תזונתי או מקצועי, ואינו תחליף להתייעצות עם רופא או דיאטנית.</p>
+          <p><strong>המידע מוצג כמו שהוא.</strong> רשימות הרכיבים נאספו ממקורות ציבוריים במועד הבדיקה, וההסברים והסיווגים נכתבו בעזרת כלי בינה מלאכותית. ייתכנו טעויות או מידע שאינו עדכני, ויצרנים משנים מתכונים מדי פעם. <strong>התווית שעל האריזה היא הקובעת.</strong> השימוש במידע באתר הוא על אחריות המשתמש.</p>
+          <p><strong>הסיווגים הם הערכה.</strong> סיווג NOVA וציון העיבוד מחושבים באתר מרשימת הרכיבים בלבד, לפי שיטה שמוסברת ב<a href="#/nova">דף מדד NOVA</a>. הם מתארים את מידת העיבוד התעשייתי, ואינם קביעה על בטיחות, איכות או חוקיות של מוצר כלשהו. כל המוצרים באתר הם מוצרים שנמכרים כחוק, וכל הרכיבים בהם מותרים לשימוש.</p>
+          <p><strong>סימני מסחר.</strong> שמות המוצרים, המותגים והיצרנים באתר שייכים לבעליהם, ומופיעים רק כדי לזהות את המוצר. Smart Food אינו קשור ליצרנים, ואינו מקבל מהם מימון או חסות. האיורים באתר הם איורים כלליים שנוצרו לאתר, ואינם תמונות האריזה הרשמיות או לוגו של יצרן.</p>
+          <p><strong>מקורות.</strong> מקור רשימת הרכיבים מצוין בדף של כל מוצר. חלק מהמידע והברקודים מגיע מהמאגר הפתוח <a href="https://world.openfoodfacts.org" target="_blank" rel="noopener noreferrer">Open Food Facts</a> (רישיון ODbL), וחלק מהברקודים מקובצי המחירים שרשתות השיווק מפרסמות לפי חוק קידום התחרות בענף המזון.</p>
+          <p><strong>תיקונים והסרה.</strong> מצאתם טעות? יצרן שמבקש לתקן מידע על מוצר שלו? <a data-mail href="#/legal">כתבו לנו</a>, ונבדוק ונתקן או נסיר את המידע בהקדם.</p>
+        </section>
+        <section class="prose-card" id="privacy">
+          <h2>פרטיות</h2>
+          <ul>
+            <li>האתר לא אוסף מידע אישי. אין בו הרשמה, עוגיות, פרסומות או כלי מעקב וסטטיסטיקה.</li>
+            <li>הסל, ערכת הנושא והגדרות דומות נשמרים רק בדפדפן שלכם (localStorage), ולא נשלחים לשום מקום. אפשר למחוק אותם בכל רגע דרך הגדרות הדפדפן.</li>
+            <li>המחשבונים ובודק התווית מחשבים במכשיר שלכם בלבד.</li>
+            <li>תמונת המצלמה בסורק הברקוד מעובדת במכשיר בלבד, ולא נשמרת ולא נשלחת.</li>
+            <li>כשסורקים ברקוד של מוצר שלא נמצא במאגר שלנו, מספר הברקוד (ורק הוא) נשלח למאגר הפתוח Open Food Facts כדי לחפש את המוצר. הבקשה נשלחת בלי עוגיות ובלי פרטים מזהים.</li>
+            <li>האתר מאוחסן ב-GitHub Pages, שעשויה לשמור יומני גישה טכניים (כמו כתובת IP) לפי <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer">מדיניות הפרטיות של GitHub</a>.</li>
+          </ul>
+        </section>
+        <section class="prose-card" id="accessibility">
+          <h2>הצהרת נגישות</h2>
+          <p>אנחנו רוצים שכל אחד יוכל להשתמש באתר. עשינו מאמץ להנגיש אותו לפי הנחיות תקן ישראלי 5568 (המבוסס על WCAG 2.0 ברמה AA). בין השאר:</p>
+          <ul>
+            <li>האתר מוגדר בעברית ומימין לשמאל, עם כותרות במבנה היררכי וקישור לדילוג לתוכן הראשי.</li>
+            <li>אפשר לנווט בכל האתר במקלדת, ורכיבים אינטראקטיביים מסומנים בפוקוס ברור.</li>
+            <li>תמונות ואיורים דקורטיביים מוסתרים מקוראי מסך, ולכפתורים יש תיאור טקסטואלי.</li>
+            <li>יש מצב כהה, והאתר תומך בהגדלת טקסט של הדפדפן עד 200% בלי לאבד תוכן.</li>
+            <li>האתר מכבד את הגדרת "הפחתת תנועה" של מערכת ההפעלה.</li>
+          </ul>
+          <p>ייתכן שחלקים באתר עדיין אינם נגישים במלואם. נתקלתם בבעיה? <a data-mail href="#/legal">כתבו לנו</a>, ונשתדל לתקן בהקדם.</p>
+        </section>
+      </div>
+    </main>`;
 }
 
 export function renderNotFound() {

@@ -3,12 +3,12 @@
 // תובנות מהמאגר, ודף הצוות
 // ============================================================
 
-import { products, categories } from './data.js?v=26';
-import { INGREDIENTS, getIngredient, canonicalName } from './ingredients.js?v=26';
-import { NOVA_GROUPS, getNova, getScore, getAlternatives, lookupIngredient, classifyItems, scoreItems, novaReason } from './nova.js?v=26';
-import { escapeHtml } from './utils.js?v=26';
-import { art, breadcrumb, novaBadge, scoreChip, renderProductCard, RISK, ROLE, catOf, ingLink } from './components.js?v=26';
-import { renderCalculators, initCalculators } from './calculators.js?v=26';
+import { products, categories } from './data.js?v=27';
+import { INGREDIENTS, getIngredient, canonicalName } from './ingredients.js?v=27';
+import { NOVA_GROUPS, getNova, getScore, getAlternatives, lookupIngredient, classifyItems, scoreItems, novaReason } from './nova.js?v=27';
+import { escapeHtml } from './utils.js?v=27';
+import { art, breadcrumb, novaBadge, scoreChip, renderProductCard, RISK, ROLE, catOf, ingLink } from './components.js?v=27';
+import { renderCalculators, initCalculators } from './calculators.js?v=27';
 
 const byId = id => products.find(p => p.id === id);
 const pageHero = (icon, title, text) => `
@@ -562,7 +562,7 @@ export function facts() {
     `"חומרי טעם וריח" מופיעים ב-${flavor} מוצרים. היצרן לא חייב לפרט מה הם.`,
     `מונוסודיום גלוטמט (E621) נמצא ב-${msg} מוצרים במאגר, בעיקר בחטיפים מלוחים ובמנות מוכנות.`,
     `ל-${single} מוצרים במאגר יש רכיב אחד בלבד, כמו חלב, עדשים ודבש.`,
-    'אבקת "מרק בטעם עוף" של אסם לא מכילה עוף: הרכיב הראשון שלה הוא מלח.',
+    'לפי רשימת הרכיבים, באבקת "מרק בטעם עוף" של אסם אין עוף, והרכיב הראשון הוא מלח.',
     'גם שוקולד מריר 70% מסווג כאולטרה-מעובד אם הוסיפו לו ונילין, חומר טעם תעשייתי.',
   ];
 }
