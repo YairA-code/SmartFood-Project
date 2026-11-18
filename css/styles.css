@@ -799,3 +799,28 @@ a.stat-item:hover { background: var(--bg-soft); }
 .art-photo.art-xs img, .art-photo.art-mini img { padding: 5%; }
 .product-card:hover .art-photo img { transform: scale(1.04); }
 .photo-credit { font-size: .78rem; color: var(--ink-2); margin-top: 8px; text-align: center; }
+
+/* דף תנאי שימוש, פרטיות ונגישות */
+.legal { display: grid; gap: 18px; }
+.legal .prose-card h2 { margin-bottom: 10px; }
+.legal .prose-card p, .legal .prose-card li { line-height: 1.75; }
+.legal .prose-card ul { padding-inline-start: 20px; display: grid; gap: 6px; }
+
+/* הגדלת טקסט עד 200% בטלפון: הכותרת והסרגל התחתון מתכווצים במקום לגלוש לצדדים */
+.header-inner, .logo { min-width: 0; }
+.logo-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.header-actions { flex-shrink: 0; }
+@media (max-width: 768px) {
+  .tabbar { max-width: 100vw; box-sizing: border-box; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .tabbar > * { min-width: 0; }
+  .tab-link { min-width: 0; overflow: hidden; }
+  .tab-link span:last-child { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
+
+/* large text (200% zoom): let cards shrink and wrap instead of widening the page */
+@media (max-width: 768px) {
+  .teaser-card { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); }
+  .teaser-card > *, .hero-text, .prose-card { min-width: 0; }
+  .prose-card, .hero-text, .teaser-card { overflow-wrap: anywhere; }
+  .nova-badge { white-space: normal; }
+}

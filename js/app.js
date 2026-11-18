@@ -2,19 +2,19 @@
 // Smart Food — אפליקציה ראשית + ניתוב
 // ============================================================
 
-import { products } from './data.js?v=26';
-import { debounce, fillContactLinks } from './utils.js?v=26';
-import { getNova, getScore } from './nova.js?v=26';
+import { products } from './data.js?v=27';
+import { debounce, fillContactLinks } from './utils.js?v=27';
+import { getNova, getScore } from './nova.js?v=27';
 import {
   renderHeader, renderFooter, renderHome, renderCategory, renderProduct,
   renderCategoriesPage, renderAbout, renderNotFound, renderSearchResults,
-  renderProductCard, renderNova, renderAllProducts, renderCompare, renderIngredients, renderIngredient,
-} from './components.js?v=26';
+  renderProductCard, renderNova, renderAllProducts, renderCompare, renderIngredients, renderIngredient, renderLegal,
+} from './components.js?v=27';
 import {
   renderTools, renderLabel, initLabel, renderVs, initVs, renderQuiz, initQuiz,
   renderBasket, initBasket, renderInsights, renderTeam, renderCalcPage, initCalculators, toggleBasket, inBasket, basketCount, onBasket, facts,
-} from './widgets.js?v=26';
-import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=26';
+} from './widgets.js?v=27';
+import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=27';
 
 // פענוח בטוח של הכתובת: כתובת פגומה לא תפיל את האתר
 function safeDecode(str) {
@@ -22,6 +22,7 @@ function safeDecode(str) {
 }
 
 const TITLES = {
+  legal: 'תנאי שימוש, פרטיות ונגישות | Smart Food',
   calculators: 'מחשבונים | Smart Food',
   home: 'Smart Food | מה באמת יש בתווית',
   categories: 'קטגוריות | Smart Food',
@@ -47,6 +48,14 @@ class SmartFoodApp {
     this.page = '';
     this.root.innerHTML = renderHeader() + '<div id="page-wrapper" tabindex="-1"></div>' + renderFooter();
     window.addEventListener('hashchange', () => this.route());
+    // קישור "דלג לתוכן": מעביר את הפוקוס לתוכן בלי לשנות את הכתובת (שינוי כתובת היה מוביל ל"הדף לא נמצא")
+    document.addEventListener('click', e => {
+      const skip = e.target.closest('.skip-link');
+      if (!skip) return;
+      e.preventDefault();
+      const target = document.getElementById('page-content') || document.getElementById('page-wrapper');
+      if (target) { if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1'); target.focus(); }
+    });
     this.initTheme();
     this.initMobileMenu();
     onBasket(() => this.updateBasketCount());
@@ -78,6 +87,7 @@ class SmartFoodApp {
     else if (hash === '#/scan') { html = renderScan(); this.page = 'scan'; }
     else if (hash.startsWith('#/barcode/')) { html = renderBarcode(hash.slice(10)); this.page = 'barcode'; }
     else if (hash === '#/team') { html = renderTeam(); this.page = 'team'; }
+    else if (hash === '#/legal') { html = renderLegal(); this.page = 'legal'; }
     else if (hash === '#/calculators') { html = renderCalcPage(); this.page = 'calculators'; }
     else if (hash === '#/random') {
       const p = products[Math.floor(Math.random() * products.length)];
