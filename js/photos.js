@@ -152,4 +152,11 @@ export const PHOTOS = {
   tuna_water: '7290005287251',
   mushroom_soup: '7290000070322',
   lachmit: '7290000075204',
+  muller_protein_berries: '7290102399819',
+  yotvata_pro_coffee: '7290110577254',
+  branflakes_crunchim: '7290000168173',
+  heinz_mayo_spread: '8715700110141',
+  yotvata_milk3: '7290003029815',
+  bd_peanut_butter: '7290000446547',
+  nescafe_red_mug: '7290000061764',
 };
