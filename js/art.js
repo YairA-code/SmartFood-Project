@@ -5,11 +5,13 @@
 // האיורים כלליים ולא מעתיקים לוגו או עיצוב של יצרן.
 // ============================================================
 
-import { escapeHtml } from './utils.js?v=24';
-import { PHOTOS } from './photos.js?v=24';
+import { escapeHtml } from './utils.js?v=25';
+import { PHOTOS } from './photos.js?v=25';
 
 // סוג האריזה לכל מוצר
 const PACK = {
+  // אריזות שתוקנו לפי האריזה בחנות
+  shokolit: 'jar', mushroom_soup: 'jar', coconut_oil: 'jar',
   bamba: 'bag', bamba_nougat: 'bag', bisli_grill: 'bag', bisli_pizza: 'bag', bisli_onion: 'bag',
   tapuchips: 'bag', doritos: 'bag', beigeleh: 'bag', apropo: 'bag', cheetos: 'bag', rice_cakes: 'sleeve',
   mekupelet: 'bar', pesek_zman: 'bar', kif_kef: 'bar', chocolate_cow: 'bar', taami: 'bar', splendid_dark: 'bar',
@@ -36,7 +38,7 @@ const PACK = {
   danone_pro_vanilla: 'cup', whipping_cream: 'carton', soy_drink: 'carton', almond_drink: 'carton', soda: 'bottle', black_tea: 'box',
   instant_coffee: 'jar', flour: 'pouch', sugar: 'pouch', salt: 'pouch', white_beans: 'tin', olives: 'jar', pickles: 'jar', tuna_water: 'tin',
   pasta_sauce: 'jar', shkedei_marak: 'box', burger_buns: 'loaf', rye_bread: 'loaf', matzot: 'box', ice_cream: 'tub', jachnun: 'pouch',
-  mixed_veg: 'pouch', peas_carrots: 'pouch', cup_pasta: 'cupnoodle', onion_soup: 'pouch', cornflakes_whole: 'box', ground_beef: 'tray', salmon: 'tray',
+  mixed_veg: 'pouch', peas_carrots: 'pouch', cup_pasta: 'cupnoodle', onion_soup: 'jar', cornflakes_whole: 'box', ground_beef: 'tray', salmon: 'tray',
 };
 
 
