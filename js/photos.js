@@ -159,4 +159,8 @@ export const PHOTOS = {
   yotvata_milk3: '7290003029815',
   bd_peanut_butter: '7290000446547',
   nescafe_red_mug: '7290000061764',
+  go_protein_mango: '7290116934402',
+  go_soy_protein: '7290110325305',
+  danone_light_vanilla: '7290112346773',
+  pistachio_paste: '7290011498368',
 };
