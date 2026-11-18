@@ -5,8 +5,9 @@
 // האיורים כלליים ולא מעתיקים לוגו או עיצוב של יצרן.
 // ============================================================
 
-import { escapeHtml } from './utils.js?v=25';
-import { PHOTOS } from './photos.js?v=25';
+import { escapeHtml } from './utils.js?v=26';
+import { PHOTOS } from './photos.js?v=26';
+import { COLORS } from './colors.js?v=26';
 
 // סוג האריזה לכל מוצר
 const PACK = {
@@ -75,6 +76,33 @@ const CAT_HUE = { snacks: 38, sweets: 18, dairy: 205, drinks: 188, bread: 32, ca
 const hash = s => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
 export const hueOf = p => (CAT_HUE[p.category] ?? 120);
 const packHue = p => (hueOf(p) + (hash(p.id) % 44) - 22 + 360) % 360;
+
+// צבעי האריזה: לפי colors.js, ואם אין, לפי גוון הקטגוריה
+const hex2hsl = hex => {
+  const n = parseInt(hex.slice(1), 16), r = (n >> 16) / 255, g = ((n >> 8) & 255) / 255, b = (n & 255) / 255;
+  const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2;
+  let h = 0, s = 0;
+  if (mx !== mn) {
+    const d = mx - mn; s = l > .5 ? d / (2 - mx - mn) : d / (mx + mn);
+    h = mx === r ? (g - b) / d + (g < b ? 6 : 0) : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; h *= 60;
+  }
+  return [Math.round(h), Math.round(s * 100), Math.round(l * 100)];
+};
+const shade = ([h, s, l], dl) => `hsl(${h} ${s}% ${Math.max(4, Math.min(97, l + dl))}%)`;
+function packColors(p) {
+  const c = COLORS[p.id];
+  if (!c) {
+    const ph = packHue(p);
+    return { base: `hsl(${ph} 62% 50%)`, light: `hsl(${ph} 70% 64%)`, dark: `hsl(${ph} 58% 36%)`, g0: `hsl(${ph} 58% 42%)`, g1: `hsl(${ph} 66% 56%)`, g2: `hsl(${ph} 58% 40%)` };
+  }
+  const m = hex2hsl(c[0]), acc = c[1] ? hex2hsl(c[1]) : null;
+  return {
+    edge: m[2] > 80 && acc ? shade(acc, 0) : null,
+    band: acc && acc[2] < 85 ? shade(acc, 0) : shade(m, m[2] > 70 ? -45 : -14),
+    base: c[0], light: shade(m, m[2] > 80 ? -4 : 12), dark: acc ? shade(acc, 0) : shade(m, -16),
+    g0: shade(m, -9), g1: shade(m, 5), g2: shade(m, -11),
+  };
+}
 
 let uid = 0;
 const PACK_SCALE = {bag: 1.08, sleeve: 1.05, bar: 1.15, box: 1.08, loaf: 1.0, pouch: 1.08, bottle: 1.0, squeeze: 1.08, can: 1.15, tin: 1.25, cup: 1.2, cupnoodle: 1.15, tub: 1.25, jar: 1.2, carton: 1.1, block: 1.2, tray: 1.08};
@@ -194,19 +222,30 @@ function labelLines(p) {
   return best;
 }
 
-function labelSVG(p, [x, y, w, h], icon) {
+function labelSVG(p, [x, y, w, h], icon, edge, band) {
   const lines = labelLines(p);
   const longest = Math.max(...lines.map(l => l.length));
   const small = h < 50;
   const iconS = small || !icon ? 0 : Math.min(30, h * 0.32);
   const brandFs = small ? 0 : 11;
-  const room = h - 10 - iconS - (iconS ? 3 : 0) - (brandFs ? brandFs + 3 : 0);
+  const room = h - 10 - iconS - (iconS ? 3 : 0) - (brandFs ? brandFs + (band ? 8 : 3) : 0);
   const fs = Math.max(9, Math.min(small ? 17 : 24, (w * 0.9) / (longest * 0.56), room / (lines.length * 1.08)));
-  const blockH = iconS + (iconS ? 3 : 0) + (brandFs ? brandFs + 3 : 0) + lines.length * fs * 1.08;
+  const blockH = iconS + (iconS ? 3 : 0) + (brandFs ? brandFs + (band ? 8 : 3) : 0) + lines.length * fs * 1.08;
   let cy = y + (h - blockH) / 2;
-  let out = `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${small ? 6 : 10}" fill="#fffdf7" opacity=".97"/>`;
+  // באריזה בהירה התווית מקבלת מסגרת בצבע המשני, כדי שתבלוט
+  let out = `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${small ? 6 : 10}" fill="#fffdf7" opacity=".97"${edge ? ` stroke="${edge}" stroke-width="3"` : ''}/>`;
   if (iconS) { out += `<image href="img/art/${icon}.webp" x="${x + w / 2 - iconS / 2}" y="${cy}" width="${iconS}" height="${iconS}"/>`; cy += iconS + 3; }
-  if (brandFs && p.brand !== 'מוצר כללי') { out += `<text x="${x + w / 2}" y="${cy + brandFs * 0.85}" font-size="${brandFs}" fill="#6b7280" text-anchor="middle" direction="rtl" font-weight="500">${escapeHtml(p.brand)}</text>`; cy += brandFs + 3; }
+  if (brandFs && p.brand !== 'מוצר כללי') {
+    if (band) {
+      // פס בצבע המותג עם שם היצרן, כמו על האריזה (בלי להעתיק לוגו)
+      out += `<rect x="${x + 4}" y="${cy - 2}" width="${w - 8}" height="${brandFs + 7}" rx="4" fill="${band}"/>`;
+      out += `<text x="${x + w / 2}" y="${cy + brandFs * 0.85 + 1}" font-size="${brandFs}" fill="#fff" text-anchor="middle" direction="rtl" font-weight="700">${escapeHtml(p.brand)}</text>`;
+      cy += brandFs + 8;
+    } else {
+      out += `<text x="${x + w / 2}" y="${cy + brandFs * 0.85}" font-size="${brandFs}" fill="#6b7280" text-anchor="middle" direction="rtl" font-weight="500">${escapeHtml(p.brand)}</text>`;
+      cy += brandFs + 3;
+    }
+  }
   lines.forEach((l, i) => {
     out += `<text x="${x + w / 2}" y="${cy + fs * (0.86 + i * 1.08)}" font-size="${fs.toFixed(1)}" fill="#1f2a24" text-anchor="middle" direction="rtl" font-weight="800">${escapeHtml(l)}</text>`;
   });
@@ -236,7 +275,7 @@ export function productArt(p, cls = '') {
   }
 
   const s = SHAPES[type]();
-  const ph = packHue(p);
+  const pc = packColors(p);
   const id = `pk${++uid}`;
   const [fx, fy, fs] = s.front;
   const ground = s.ground || 272;
@@ -246,10 +285,10 @@ export function productArt(p, cls = '') {
   const labelIcon = sub && sub !== 'sparkles' ? sub : null;
   return `
     <div class="art art-pack ${cls}" style="--h:${h}" aria-hidden="true">
-      <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid meet" style="--pk:hsl(${ph} 62% 50%);--pk-light:hsl(${ph} 70% 64%);--pk-dark:hsl(${ph} 58% 36%)">
+      <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid meet" style="--pk:${pc.base};--pk-light:${pc.light};--pk-dark:${pc.dark}">
         <defs>
           <linearGradient id="${id}" x1="0" x2="1" y1="0" y2="0">
-            <stop offset="0" stop-color="hsl(${ph} 58% 42%)"/><stop offset=".45" stop-color="hsl(${ph} 66% 56%)"/><stop offset="1" stop-color="hsl(${ph} 58% 40%)"/>
+            <stop offset="0" stop-color="${pc.g0}"/><stop offset=".45" stop-color="${pc.g1}"/><stop offset="1" stop-color="${pc.g2}"/>
           </linearGradient>
         </defs>
         <ellipse cx="220" cy="${ground + 6}" rx="130" ry="12" fill="#000" opacity=".12"/>
@@ -258,7 +297,7 @@ export function productArt(p, cls = '') {
           <path d="${s.path}" fill="url(#${id})"/>
           ${type !== 'tub' ? s.extra : ''}
           <path d="${s.path}" fill="none" stroke="#000" stroke-opacity=".12" stroke-width="2"/>
-          ${labelSVG(p, s.label, s.frontOnTop ? null : labelIcon)}
+          ${labelSVG(p, s.label, s.frontOnTop ? null : labelIcon, pc.edge, pc.band)}
         </g>
         ${main ? `<image class="front" href="img/art/${main}.webp" x="${fx}" y="${fy}" width="${fs}" height="${fs}"/>` : ''}
         ${s.frontOnTop && labelIcon ? `<image href="img/art/${labelIcon}.webp" x="${fx + fs - 18}" y="${fy + 6}" width="40" height="40"/>` : ''}
