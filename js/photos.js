@@ -189,4 +189,5 @@ export const PHOTOS = {
   actimel: '7290006664655',
   white_chocolate: '7290112348548',
   tabasco: '011210000094',
+  tuna_olive_oil: '7290013847645',
 };
