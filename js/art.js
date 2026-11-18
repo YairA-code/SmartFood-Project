@@ -5,7 +5,8 @@
 // האיורים כלליים ולא מעתיקים לוגו או עיצוב של יצרן.
 // ============================================================
 
-import { escapeHtml } from './utils.js?v=22';
+import { escapeHtml } from './utils.js?v=23';
+import { PHOTOS } from './photos.js?v=23';
 
 // סוג האריזה לכל מוצר
 const PACK = {
@@ -212,6 +213,13 @@ function labelSVG(p, [x, y, w, h], icon) {
 
 // ——— רינדור ———
 export function productArt(p, cls = '') {
+  // תמונת אריזה אמיתית, אם יש (ראו photos.js). בלי תמונה מוצג האיור.
+  if (PHOTOS[p.id]) {
+    return `
+      <div class="art art-photo ${cls}" style="--h:${hueOf(p)}">
+        <img src="img/products/${p.id}.jpg" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async" width="400" height="400">
+      </div>`;
+  }
   const [main, sub] = p.art || [];
   const type = PACK[p.id] || p.pack;
   const h = hueOf(p);
