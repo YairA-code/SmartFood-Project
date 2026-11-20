@@ -2,14 +2,14 @@
 // Smart Food — קומפוננטות רינדור
 // ============================================================
 
-import { categories, products, getStats } from './data.js?v=29';
-import { escapeHtml } from './utils.js?v=29';
-import { productArt } from './art.js?v=29';
-import { toolCards, TOOLS, facts } from './widgets.js?v=29';
-import { scanButton } from './scan.js?v=29';
-import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=29';
-import { PHOTOS } from './photos.js?v=29';
-import { attachProducts, allTerms, findTerms, termSearchText } from './glossary.js?v=29';
+import { categories, products, getStats } from './data.js?v=30';
+import { escapeHtml } from './utils.js?v=30';
+import { productArt } from './art.js?v=30';
+import { toolCards, TOOLS, facts } from './widgets.js?v=30';
+import { scanButton } from './scan.js?v=30';
+import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=30';
+import { PHOTOS } from './photos.js?v=30';
+import { attachProducts, allTerms, findTerms, termSearchText } from './glossary.js?v=30';
 
 const CAT_HUE = { snacks: 38, sweets: 18, dairy: 205, drinks: 188, bread: 32, canned: 85, cereals: 46, spreads: 12, meat: 355, frozen: 198, instant: 26, fruits: 130 };
 export const RISK = {
@@ -467,6 +467,7 @@ export function renderProduct(productId) {
           <h2 class="section-title">ניתוח הרכיבים</h2>
           <p class="section-subtitle">${items.length} רכיבים, לפי הסדר שבתווית (מהכמות הגדולה לקטנה)</p>
         </div>
+        ${product.unverified ? `<p class="unverified-note" role="note"><strong>לא אומת מול מקור עדכני.</strong> רשימת הרכיבים מבוססת על התווית כפי שהופיעה בעבר, ולא מצאנו מקור פתוח כדי לאמת אותה. ייתכן שהמתכון השתנה, ולכן התווית שעל האריזה היא הקובעת.</p>` : ''}
         <div class="risk-summary">
           <span class="count-badge risk-safe">${counts.safe} בטוחים</span>
           <span class="count-badge risk-caution">${counts.caution} במידה</span>
@@ -489,7 +490,7 @@ export function renderProduct(productId) {
           ? `מקור רשימת הרכיבים: <a href="${/^https:\/\//.test(product.source.url) ? escapeHtml(product.source.url) : '#'}" target="_blank" rel="noopener noreferrer">${escapeHtml(product.source.label)}</a>. יצרנים מעדכנים מתכונים מדי פעם, ולכן כדאי לבדוק תמיד את התווית שעל האריזה.`
           : product.brand === 'מוצר כללי'
             ? 'מוצר כללי: רשימת הרכיבים מתארת את המוצר הבסיסי, בלי מותג מסוים.'
-            : 'רשימת הרכיבים מבוססת על התווית של היצרן כפי שהופיעה במועד הבדיקה. יצרנים מעדכנים מתכונים מדי פעם, ולכן כדאי לבדוק תמיד את התווית שעל האריזה.'}</p>
+            : 'רשימת הרכיבים מבוססת על התווית של היצרן כפי שהופיעה בעבר, ועוד לא אומתה מול מקור פתוח עדכני. מצאתם הבדל? כתבו לנו ונתקן.'}</p>
       </section>
 
       <section class="container">
@@ -842,7 +843,7 @@ export function renderLegal() {
           <p><strong>המידע מוצג כמו שהוא.</strong> רשימות הרכיבים מבוססות על תוויות היצרנים במועד הבדיקה, וההסברים והסיווגים נכתבו בעזרת כלי בינה מלאכותית. ייתכנו טעויות או מידע שאינו עדכני, ויצרנים משנים מתכונים מדי פעם. <strong>התווית שעל האריזה היא הקובעת.</strong> השימוש במידע באתר הוא על אחריות המשתמש.</p>
           <p><strong>הסיווגים הם הערכה.</strong> סיווג NOVA וציון העיבוד מחושבים באתר מרשימת הרכיבים בלבד, לפי שיטה שמוסברת ב<a href="#/nova">דף מדד NOVA</a>. הם מתארים את מידת העיבוד התעשייתי, ואינם קביעה על בטיחות, איכות או חוקיות של מוצר כלשהו. כל המוצרים באתר הם מוצרים שנמכרים כחוק, וכל הרכיבים בהם מותרים לשימוש.</p>
           <p><strong>סימני מסחר.</strong> שמות המוצרים, המותגים והיצרנים באתר שייכים לבעליהם, ומופיעים רק כדי לזהות את המוצר. Smart Food אינו קשור ליצרנים, ואינו מקבל מהם מימון או חסות. האיורים באתר הם איורים כלליים שנוצרו לאתר, ואינם תמונות האריזה הרשמיות או לוגו של יצרן.</p>
-          <p><strong>מקורות.</strong> כשיש מקור פתוח לרשימת הרכיבים, הוא מצוין בדף המוצר. חלק מהמידע והברקודים מגיע מהמאגר הפתוח <a href="https://world.openfoodfacts.org" target="_blank" rel="noopener noreferrer">Open Food Facts</a> (רישיון ODbL), וחלק מהברקודים מקובצי המחירים שרשתות השיווק מפרסמות לפי חוק קידום התחרות בענף המזון.</p>
+          <p><strong>מקורות.</strong> כשיש מקור פתוח לרשימת הרכיבים, הוא מצוין בדף המוצר. מוצרים שרשימת הרכיבים שלהם עוד לא אומתה מול מקור עדכני מסומנים בדף המוצר בהערה בולטת. חלק מהמידע והברקודים מגיע מהמאגר הפתוח <a href="https://world.openfoodfacts.org" target="_blank" rel="noopener noreferrer">Open Food Facts</a> (רישיון ODbL), וחלק מהברקודים מקובצי המחירים שרשתות השיווק מפרסמות לפי חוק קידום התחרות בענף המזון.</p>
           <p><strong>תיקונים והסרה.</strong> מצאתם טעות? יצרן שמבקש לתקן מידע על מוצר שלו? <a data-mail href="#/legal">כתבו לנו</a>, ונבדוק ונתקן או נסיר את המידע בהקדם.</p>
         </section>
         <section class="prose-card" id="privacy">
