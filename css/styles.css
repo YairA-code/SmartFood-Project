@@ -825,3 +825,5 @@ a.stat-item:hover { background: var(--bg-soft); }
   .prose-card, .hero-text, .teaser-card { overflow-wrap: anywhere; }
   .nova-badge { white-space: normal; }
 }
+
+.unverified-note { margin: 0 0 16px; padding: 12px 16px; border-radius: 12px; border: 1px solid color-mix(in srgb, var(--caution) 45%, transparent); background: color-mix(in srgb, var(--caution-bg) 60%, var(--surface)); color: var(--ink); font-size: .92rem; line-height: 1.6; }
