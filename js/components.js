@@ -2,14 +2,14 @@
 // Smart Food — קומפוננטות רינדור
 // ============================================================
 
-import { categories, products, getStats } from './data.js?v=28';
-import { INGREDIENTS, canonicalName } from './ingredients.js?v=28';
-import { escapeHtml } from './utils.js?v=28';
-import { productArt } from './art.js?v=28';
-import { toolCards, TOOLS, facts } from './widgets.js?v=28';
-import { scanButton } from './scan.js?v=28';
-import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=28';
-import { PHOTOS } from './photos.js?v=28';
+import { categories, products, getStats } from './data.js?v=29';
+import { escapeHtml } from './utils.js?v=29';
+import { productArt } from './art.js?v=29';
+import { toolCards, TOOLS, facts } from './widgets.js?v=29';
+import { scanButton } from './scan.js?v=29';
+import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=29';
+import { PHOTOS } from './photos.js?v=29';
+import { attachProducts, allTerms, findTerms, termSearchText } from './glossary.js?v=29';
 
 const CAT_HUE = { snacks: 38, sweets: 18, dairy: 205, drinks: 188, bread: 32, canned: 85, cereals: 46, spreads: 12, meat: 355, frozen: 198, instant: 26, fruits: 130 };
 export const RISK = {
@@ -628,19 +628,29 @@ export function renderNova() {
 // ——————————————————————————————————————
 // מילון רכיבים
 // ——————————————————————————————————————
-function ingredientUsage() {
-  const map = new Map();
-  products.forEach(p => p.ingredients.forEach(i => {
-    const key = INGREDIENTS[i] ? i : canonicalName(i);
-    if (!map.has(key)) map.set(key, []);
-    if (!map.get(key).includes(p)) map.get(key).push(p);
-  }));
-  return map;
+let termsReady = false;
+function terms() {
+  if (!termsReady) { attachProducts(products); termsReady = true; }
+  return allTerms().sort((a, b) => a.name.localeCompare(b.name, 'he'));
+}
+const eLabel = t => t.e.length ? (t.e.length > 3 ? `${t.e[0]}–${t.e[t.e.length - 1]}` : t.e.join(', ')) : '';
+const countLabel = n => `מופיע ב-${n} ${n === 1 ? 'מוצר' : 'מוצרים'}`;
+
+function termCard(t, tag = 'h3') {
+  return `
+    <a class="ing-card animate-item" href="${ingLink(t.id)}" data-role="${t.nova}" data-search="${escapeHtml(termSearchText(t))}">
+      <div class="ing-card-head">
+        <${tag}>${escapeHtml(t.name)}${t.e.length ? ` <span class="ing-e" dir="ltr">${escapeHtml(eLabel(t))}</span>` : ''}</${tag}>
+        <span class="ing-risk ${RISK[t.risk].cls}">${RISK[t.risk].label}</span>
+      </div>
+      <p class="ing-type">${escapeHtml(t.type)} · ${ROLE[t.nova]}</p>
+      <p class="ing-reason">${escapeHtml(t.reason)}</p>
+      <p class="muted small">${countLabel(t.products.size)}</p>
+    </a>`;
 }
 
 export function renderIngredients() {
-  const usage = ingredientUsage();
-  const keys = [...usage.keys()].sort((a, b) => a.localeCompare(b, 'he'));
+  const list = terms();
   const roles = ['marker', 'additive', 'culinary', 'processed', 'whole'];
   return `
     <main class="page" id="page-content">
@@ -648,7 +658,7 @@ export function renderIngredients() {
       <section class="page-hero">
         <span class="page-hero-icon" aria-hidden="true">📖</span>
         <h1>מילון רכיבים</h1>
-        <p>${keys.length} רכיבים מכל המוצרים באתר, עם הסבר פשוט לכל אחד</p>
+        <p>${list.length} רכיבים מכל המוצרים באתר, כל אחד פעם אחת ועם הסבר פשוט</p>
       </section>
       <div class="container">
         <div class="toolbar">
@@ -660,54 +670,48 @@ export function renderIngredients() {
             ${roles.map(r => `<button class="filter-btn" data-role="${r}">${ROLE[r]}</button>`).join('')}
           </div>
         </div>
-        <p class="muted" id="ing-count">${keys.length} רכיבים</p>
-        <div class="ing-grid" id="ing-grid">
-          ${keys.map(k => {
-            const d = INGREDIENTS[k];
-            const list = usage.get(k);
-            return `
-              <a class="ing-card animate-item" href="${ingLink(k)}" data-role="${d.nova}" data-search="${escapeHtml((k + ' ' + d.type + ' ' + d.reason).toLowerCase())}">
-                <div class="ing-card-head">
-                  <h3>${escapeHtml(k)}</h3>
-                  <span class="ing-risk ${RISK[d.risk].cls}">${RISK[d.risk].label}</span>
-                </div>
-                <p class="ing-type">${escapeHtml(d.type)} · ${ROLE[d.nova]}</p>
-                <p class="ing-reason">${escapeHtml(d.reason)}</p>
-                <p class="muted small">מופיע ב-${list.length} ${list.length === 1 ? 'מוצר' : 'מוצרים'}</p>
-              </a>`;
-          }).join('')}
-        </div>
+        <p class="muted" id="ing-count">${list.length} רכיבים</p>
+        <div class="ing-grid" id="ing-grid">${list.map(t => termCard(t)).join('')}</div>
       </div>
     </main>
   `;
 }
 
 export function renderIngredient(key) {
-  if (!INGREDIENTS[key]) {
-    const k = key.trim();
-    key = Object.keys(INGREDIENTS).find(x => x.trim() === k)
-      || Object.keys(INGREDIENTS).find(x => x.startsWith(k + ' (') || x.replace(/\s*\(.*\)$/, '') === k)
-      || key;
-  }
-  const d = INGREDIENTS[key];
-  if (!d) return renderNotFound();
-  const list = ingredientUsage().get(key) || [];
-  return `
+  terms();
+  const found = findTerms(key).filter(t => t && t.products.size);
+  if (!found.length) return renderNotFound();
+  if (found.length > 1) {
+    return `
     <main class="page" id="page-content">
       ${breadcrumb([['מילון רכיבים', '#/ingredients'], [key]])}
+      <section class="page-hero">
+        <h1>${escapeHtml(key)}</h1>
+        <p>על התווית כתובים כאן ${found.length} חומרים. לחצו על כל אחד כדי לקרוא עליו.</p>
+      </section>
+      <div class="container"><div class="ing-grid">${found.map(t => termCard(t, 'h2')).join('')}</div></div>
+    </main>`;
+  }
+  const t = found[0];
+  const list = [...t.products];
+  const forms = t.keys.filter(k => k !== t.name).slice(0, 12);
+  return `
+    <main class="page" id="page-content">
+      ${breadcrumb([['מילון רכיבים', '#/ingredients'], [t.name]])}
       <section class="container">
         <div class="prose-card ingredient-detail">
           <div class="ing-card-head">
-            <h1>${escapeHtml(key)}</h1>
-            <span class="ing-risk ${RISK[d.risk].cls}">${RISK[d.risk].label}</span>
+            <h1>${escapeHtml(t.name)}${t.e.length ? ` <span class="ing-e" dir="ltr">${escapeHtml(t.e.join(', '))}</span>` : ''}</h1>
+            <span class="ing-risk ${RISK[t.risk].cls}">${RISK[t.risk].label}</span>
           </div>
-          <p class="ing-type">${escapeHtml(d.type)} · ${ROLE[d.nova]}${d.nova === 'marker' ? ' <span class="nova-marker">מאפיין מזון אולטרה-מעובד</span>' : ''}</p>
-          <p class="lead">${escapeHtml(d.reason)}</p>
+          <p class="ing-type">${escapeHtml(t.type)} · ${ROLE[t.nova]}${t.nova === 'marker' ? ' <span class="nova-marker">מאפיין מזון אולטרה-מעובד</span>' : ''}</p>
+          <p class="lead">${escapeHtml(t.reason)}</p>
+          ${forms.length ? `<p class="muted small">על התוויות הוא מופיע גם כ: ${forms.map(escapeHtml).join(' · ')}</p>` : ''}
           <p class="muted small">רמת הסיכון מתייחסת לרכיב בכמויות הרגילות במזון, לפי עמדת רשויות המזון והמחקר הקיים. זה מידע כללי ולא ייעוץ רפואי.</p>
         </div>
       </section>
       <section class="container">
-        <div class="section-head start"><h2 class="section-title">מופיע ב-${list.length} ${list.length === 1 ? 'מוצר' : 'מוצרים'}</h2></div>
+        <div class="section-head start"><h2 class="section-title">${countLabel(list.length)}</h2></div>
         <div class="products-grid">${list.map(renderProductCard).join('')}</div>
       </section>
     </main>
@@ -791,7 +795,8 @@ export function renderSearchResults(query) {
   const starts = products.filter(p => p.name.toLowerCase().startsWith(q));
   const rest = products.filter(p => !starts.includes(p) && (p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q) || p.ingredients.some(i => i.toLowerCase().includes(q))));
   const prods = [...starts, ...rest].slice(0, 6);
-  const ings = Object.keys(INGREDIENTS).filter(k => k.toLowerCase().includes(q)).slice(0, 4);
+  const qe = q.replace(/^e[\s-]+(?=\d)/, 'e');
+  const ings = terms().filter(t => termSearchText(t).includes(qe)).slice(0, 4);
 
   if (!prods.length && !ings.length) return `<div class="search-empty">לא נמצאו תוצאות עבור "${escapeHtml(query)}"</div>`;
   return `
@@ -801,10 +806,10 @@ export function renderSearchResults(query) {
         <span class="search-result-info"><span class="search-result-name">${escapeHtml(p.name)}</span><span class="search-result-brand">${escapeHtml(p.brand)}</span></span>
         ${novaBadge(p)}
       </a>`).join('')}
-    ${ings.length ? `<div class="search-group">רכיבים</div>${ings.map(k => `
-      <a href="${ingLink(k)}" class="search-result-item" role="option">
+    ${ings.length ? `<div class="search-group">רכיבים</div>${ings.map(t => `
+      <a href="${ingLink(t.id)}" class="search-result-item" role="option">
         <span class="search-ing-icon" aria-hidden="true">🧪</span>
-        <span class="search-result-info"><span class="search-result-name">${escapeHtml(k)}</span><span class="search-result-brand">${escapeHtml(INGREDIENTS[k].type)}</span></span>
+        <span class="search-result-info"><span class="search-result-name">${escapeHtml(t.name)}</span><span class="search-result-brand">${escapeHtml([eLabel(t), t.type].filter(Boolean).join(' · '))}</span></span>
       </a>`).join('')}` : ''}
   `;
 }

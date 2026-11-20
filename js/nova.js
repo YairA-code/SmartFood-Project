@@ -5,8 +5,8 @@
 // בתפקידו: מזון בסיסי, רכיב בישול, רכיב מעובד, תוסף, או סמן לעיבוד תעשייתי.
 // ============================================================
 
-import { products } from './data.js?v=28';
-import { INGREDIENTS, getIngredient, canonicalName } from './ingredients.js?v=28';
+import { products } from './data.js?v=29';
+import { INGREDIENTS, getIngredient, canonicalName } from './ingredients.js?v=29';
 
 export const NOVA_GROUPS = {
   1: {

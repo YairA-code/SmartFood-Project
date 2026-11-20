@@ -4,9 +4,9 @@
 // מוצרים טריים או כלליים (פירות, ירקות, שמנים) מסומנים כ"מוצר כללי".
 // ============================================================
 
-import { EXTRA, EXTRA_LABEL } from './products-extra.js?v=28';
-import { BARCODES } from './barcodes.js?v=28';
-import { MORE } from './products-more.js?v=28';
+import { EXTRA, EXTRA_LABEL } from './products-extra.js?v=29';
+import { BARCODES } from './barcodes.js?v=29';
+import { MORE } from './products-more.js?v=29';
 
 const src = (label, url) => ({ label, url });
 
