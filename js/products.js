@@ -4,9 +4,9 @@
 // מוצרים טריים או כלליים (פירות, ירקות, שמנים) מסומנים כ"מוצר כללי".
 // ============================================================
 
-import { EXTRA, EXTRA_LABEL } from './products-extra.js?v=31';
-import { BARCODES } from './barcodes.js?v=31';
-import { MORE } from './products-more.js?v=31';
+import { EXTRA, EXTRA_LABEL } from './products-extra.js?v=32';
+import { BARCODES } from './barcodes.js?v=32';
+import { MORE } from './products-more.js?v=32';
 
 const src = (label, url) => ({ label, url });
 
@@ -1108,11 +1108,16 @@ const SHUF_CHECKED = {
   white_cheese9: '48192',
   white_chocolate: '7290112348548',
   yogurt_bio: '57149',
+  broccoli_frozen: '7296073692621',
+  jachnun: '2327028',
+  yogurt_greek: '7290114313360',
 };
 products.forEach(p => { if (SHUF_CHECKED[p.id] && !p.source) p.source = src('שופרסל אונליין', 'https://www.shufersal.co.il/online/he/x/p/P_' + SHUF_CHECKED[p.id]); });
 
 // מוצרים ממותגים שרשימת הרכיבים שלהם עוד לא אומתה מול מקור פתוח עדכני (נבדק בנובמבר 2026)
 const UNVERIFIED = new Set([
+  'vanilla_sugar',
+  'cornflour',
   'abadi_cookies',
   'activia',
   'almond_butter',
@@ -1126,7 +1131,6 @@ const UNVERIFIED = new Set([
   'blintzes',
   'blu_power',
   'breadcrumbs',
-  'broccoli_frozen',
   'brown_sugar',
   'butter',
   'cake_marble',
@@ -1147,7 +1151,6 @@ const UNVERIFIED = new Set([
   'coleslaw',
   'condensed_milk',
   'corn_frozen',
-  'cornflour',
   'couscous_instant',
   'cream_cheese',
   'daniela',
@@ -1179,7 +1182,6 @@ const UNVERIFIED = new Set([
   'hummus_tzabar',
   'ice_coffee',
   'ice_cream_chocolate',
-  'jachnun',
   'jam',
   'kartiv_lemon',
   'kefir',
@@ -1242,12 +1244,10 @@ const UNVERIFIED = new Set([
   'tuna',
   'turkey_pastrami_natural',
   'tzanimim',
-  'vanilla_sugar',
   'veg_hot_dogs',
   'veg_shawarma',
   'water_mineral',
   'whipping_cream',
-  'yogurt_greek',
   'yoplait_strawberry_melon',
 ]);
 products.forEach(p => { if (UNVERIFIED.has(p.id)) p.unverified = true; });
