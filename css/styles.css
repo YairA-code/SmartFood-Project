@@ -376,7 +376,8 @@ ul, ol { list-style: none; }
 .ing-card:hover { transform: translateY(-2px); border-color: var(--brand); }
 .ing-card[hidden] { display: none; }
 .ing-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
-.ing-card h3 { font-size: 1.02rem; font-weight: 700; }
+.ing-card h3, .ing-card h2 { font-size: 1.02rem; font-weight: 700; }
+.ing-e { display: inline-block; font-size: .72rem; font-weight: 700; color: var(--ink-2); background: var(--surface-2, rgba(127,127,127,.12)); border-radius: 6px; padding: 1px 6px; margin-inline-start: 4px; vertical-align: middle; unicode-bidi: isolate; }
 .ing-card .ing-reason { font-size: .9rem; }
 
 /* ——— Footer ——— */

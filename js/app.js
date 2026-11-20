@@ -2,19 +2,19 @@
 // Smart Food — אפליקציה ראשית + ניתוב
 // ============================================================
 
-import { products } from './data.js?v=28';
-import { debounce, fillContactLinks } from './utils.js?v=28';
-import { getNova, getScore } from './nova.js?v=28';
+import { products } from './data.js?v=29';
+import { debounce, fillContactLinks } from './utils.js?v=29';
+import { getNova, getScore } from './nova.js?v=29';
 import {
   renderHeader, renderFooter, renderHome, renderCategory, renderProduct,
   renderCategoriesPage, renderAbout, renderNotFound, renderSearchResults,
   renderProductCard, renderNova, renderAllProducts, renderCompare, renderIngredients, renderIngredient, renderLegal,
-} from './components.js?v=28';
+} from './components.js?v=29';
 import {
   renderTools, renderLabel, initLabel, renderVs, initVs, renderQuiz, initQuiz,
   renderBasket, initBasket, renderInsights, renderTeam, renderCalcPage, initCalculators, toggleBasket, inBasket, basketCount, onBasket, facts,
-} from './widgets.js?v=28';
-import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=28';
+} from './widgets.js?v=29';
+import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=29';
 
 // פענוח בטוח של הכתובת: כתובת פגומה לא תפיל את האתר
 function safeDecode(str) {
@@ -108,7 +108,8 @@ class SmartFoodApp {
     else if (hash.startsWith('#/ingredient/')) {
       const key = hash.slice(13);
       html = renderIngredient(key); this.page = 'ingredient';
-      title = `${key} | מילון רכיבים`;
+      const h1 = html.match(/<h1>([^<]*)/);
+      title = `${h1 ? h1[1].trim() : key} | מילון רכיבים`;
     }
     else { html = renderNotFound(); this.page = '404'; }
 
@@ -264,7 +265,7 @@ class SmartFoodApp {
     const count = document.getElementById('ing-count');
     let role = 'all';
     const apply = () => {
-      const q = input.value.trim().toLowerCase();
+      const q = input.value.trim().toLowerCase().replace(/^e[\s-]+(?=\d)/, 'e');
       let shown = 0;
       cards.forEach(c => {
         const ok = (role === 'all' || c.dataset.role === role) && (!q || c.dataset.search.includes(q));
