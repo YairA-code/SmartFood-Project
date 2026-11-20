@@ -2,19 +2,19 @@
 // Smart Food — אפליקציה ראשית + ניתוב
 // ============================================================
 
-import { products } from './data.js?v=30';
-import { debounce, fillContactLinks } from './utils.js?v=30';
-import { getNova, getScore } from './nova.js?v=30';
+import { products } from './data.js?v=31';
+import { debounce, fillContactLinks } from './utils.js?v=31';
+import { getNova, getScore } from './nova.js?v=31';
 import {
   renderHeader, renderFooter, renderHome, renderCategory, renderProduct,
   renderCategoriesPage, renderAbout, renderNotFound, renderSearchResults,
   renderProductCard, renderNova, renderAllProducts, renderCompare, renderIngredients, renderIngredient, renderLegal,
-} from './components.js?v=30';
+} from './components.js?v=31';
 import {
   renderTools, renderLabel, initLabel, renderVs, initVs, renderQuiz, initQuiz,
   renderBasket, initBasket, renderInsights, renderTeam, renderCalcPage, initCalculators, toggleBasket, inBasket, basketCount, onBasket, facts,
-} from './widgets.js?v=30';
-import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=30';
+} from './widgets.js?v=31';
+import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=31';
 
 // פענוח בטוח של הכתובת: כתובת פגומה לא תפיל את האתר
 function safeDecode(str) {

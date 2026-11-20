@@ -5,9 +5,9 @@
 // האיורים כלליים ולא מעתיקים לוגו או עיצוב של יצרן.
 // ============================================================
 
-import { escapeHtml } from './utils.js?v=30';
-import { PHOTOS } from './photos.js?v=30';
-import { COLORS } from './colors.js?v=30';
+import { escapeHtml } from './utils.js?v=31';
+import { PHOTOS } from './photos.js?v=31';
+import { COLORS } from './colors.js?v=31';
 
 // סוג האריזה לכל מוצר
 const PACK = {
