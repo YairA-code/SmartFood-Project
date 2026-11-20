@@ -55,7 +55,7 @@ export const BARCODES = {
   nutella: ['80176800', '80177173'],
   honey: ['7290110554095'],
   silan: ['7290101551263'],
-  hot_dogs: ['7290012227615'],
+  hot_dogs: ['7290012227615', '7290000537566'],
   chicken_soup: ['7290100685341'],
   // התאמות נוספות מ-Open Food Facts, לפי שם ומותג זהים
   oil_olive: ['7290003427154'],
@@ -130,7 +130,7 @@ export const BARCODES = {
   gilboa: ['7290110324872'],
   soy_dessert: ['7290110329846'],
   turkish_coffee: ['7290005201882', '7290000176062', '7290100852606', '7290107953559'],
-  flour_whole: ['7290002971962'],
+  flour_whole: ['7290002971962', '7290000211374'],
   barilla_spaghetti: ['8076800195057'],
   puff_pastry: ['7290000533353'],
   bisli_falafel: ['7290000066134', '7290000066189'],
@@ -199,7 +199,7 @@ export const BARCODES = {
   pita: ['7290018540329'],
   olives: ['7290113192331'],
   mushroom_soup: ['7290000070322'],
-  coleslaw: ['7290103400255', '7290105968098'],
+  coleslaw: ['7290105968098'],
   lachmit: ['7290000075204'],
   garlic_sauce: ['7290112964472'],
   gelatin: ['7290011254728'],
@@ -233,4 +233,5 @@ export const BARCODES = {
   smoked_salmon: ['7290014435704'],
   turkey_pastrami_natural: ['7290001121849'],
   cauliflower_latkes: ['7290115201536'],
+  potato_bourekas: ['7290002327042'],
 };
