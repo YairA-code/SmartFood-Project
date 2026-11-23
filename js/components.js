@@ -2,15 +2,16 @@
 // Smart Food — קומפוננטות רינדור
 // ============================================================
 
-import { categories, products, getStats } from './data.js?v=34';
-import { escapeHtml } from './utils.js?v=34';
-import { productArt } from './art.js?v=34';
-import { toolCards, TOOLS, facts } from './widgets.js?v=34';
-import { scanButton } from './scan.js?v=34';
-import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=34';
-import { PHOTOS } from './photos.js?v=34';
-import { redFlags } from './verdict.js?v=34';
-import { attachProducts, allTerms, findTerms, termSearchText } from './glossary.js?v=34';
+import { categories, products, getStats } from './data.js?v=35';
+import { escapeHtml } from './utils.js?v=35';
+import { productArt } from './art.js?v=35';
+import { toolCards, TOOLS, facts } from './widgets.js?v=35';
+import { scanButton } from './scan.js?v=35';
+import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=35';
+import { PHOTOS } from './photos.js?v=35';
+import { redFlags } from './verdict.js?v=35';
+import { avoidHTML } from './personal.js?v=35';
+import { attachProducts, allTerms, findTerms, termSearchText } from './glossary.js?v=35';
 
 const CAT_HUE = { snacks: 38, sweets: 18, dairy: 205, drinks: 188, bread: 32, canned: 85, cereals: 46, spreads: 12, meat: 355, frozen: 198, instant: 26, fruits: 130 };
 export const RISK = {
@@ -457,6 +458,7 @@ export function renderProduct(productId) {
             ${flags.length
               ? `<ul class="verdict-flags">${flags.map(f => `<li><span aria-hidden="true">🚩</span> ${escapeHtml(f)}</li>`).join('')}</ul>`
               : `<p class="verdict-ok"><span aria-hidden="true">✅</span> לפי רשימת הרכיבים, אין כאן תוספים שמסומנים אצלנו כבעייתיים.</p>`}
+            ${avoidHTML(items, nova)}
             ${better ? `<a class="verdict-alt" href="#/product/${better.id}"><span>חלופה מעובדת פחות:</span> <strong>${escapeHtml(better.name)}</strong> ${novaBadge(better)}</a>` : ''}
           </div>
           <button class="btn btn-primary btn-sm verdict-share" id="share-card" data-id="${product.id}">📤 שיתוף בוואטסאפ</button>

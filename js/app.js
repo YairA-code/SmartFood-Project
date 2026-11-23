@@ -2,22 +2,23 @@
 // Smart Food — אפליקציה ראשית + ניתוב
 // ============================================================
 
-import { products } from './data.js?v=34';
-import { debounce, fillContactLinks } from './utils.js?v=34';
-import { getNova, getScore, lookupIngredient, getAlternatives } from './nova.js?v=34';
-import { redFlags } from './verdict.js?v=34';
-import { shareCard, SITE_URL } from './share.js?v=34';
-import { registerServiceWorker, initInstallPrompt } from './pwa.js?v=34';
+import { products } from './data.js?v=35';
+import { debounce, fillContactLinks } from './utils.js?v=35';
+import { getNova, getScore, lookupIngredient, getAlternatives } from './nova.js?v=35';
+import { redFlags } from './verdict.js?v=35';
+import { shareCard, SITE_URL } from './share.js?v=35';
+import { registerServiceWorker, initInstallPrompt } from './pwa.js?v=35';
+import { renderPrefs, initPrefs } from './personal.js?v=35';
 import {
   renderHeader, renderFooter, renderHome, renderCategory, renderProduct,
   renderCategoriesPage, renderAbout, renderNotFound, renderSearchResults,
-  renderProductCard, renderNova, renderAllProducts, renderCompare, renderIngredients, renderIngredient, renderLegal,
-} from './components.js?v=34';
+  renderProductCard, renderNova, renderAllProducts, renderCompare, renderIngredients, renderIngredient, renderLegal, breadcrumb,
+} from './components.js?v=35';
 import {
   renderTools, renderLabel, initLabel, renderVs, initVs, renderQuiz, initQuiz,
   renderBasket, initBasket, renderInsights, renderTeam, renderCalcPage, initCalculators, toggleBasket, inBasket, basketCount, onBasket, facts,
-} from './widgets.js?v=34';
-import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=34';
+} from './widgets.js?v=35';
+import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=35';
 
 // פענוח בטוח של הכתובת: כתובת פגומה לא תפיל את האתר
 function safeDecode(str) {
@@ -42,6 +43,7 @@ const TITLES = {
   insights: 'תובנות מהמאגר | Smart Food',
   team: 'הצוות | Smart Food',
   scan: 'סריקת ברקוד | Smart Food',
+  prefs: 'ההעדפות שלי | Smart Food',
   barcode: 'תוצאת סריקה | Smart Food',
 };
 
@@ -88,6 +90,7 @@ class SmartFoodApp {
     else if (hash === '#/basket') { html = renderBasket(); this.page = 'basket'; }
     else if (hash === '#/insights') { html = renderInsights(); this.page = 'insights'; }
     else if (hash === '#/scan') { html = renderScan(); this.page = 'scan'; }
+    else if (hash === '#/prefs') { html = renderPrefs(breadcrumb); this.page = 'prefs'; }
     else if (hash.startsWith('#/barcode/')) { html = renderBarcode(hash.slice(10)); this.page = 'barcode'; }
     else if (hash === '#/team') { html = renderTeam(); this.page = 'team'; }
     else if (hash === '#/legal') { html = renderLegal(); this.page = 'legal'; }
@@ -127,6 +130,7 @@ class SmartFoodApp {
     if (this.page === 'label') initLabel();
     if (this.page === 'calculators') initCalculators();
     if (this.page === 'scan') initScan();
+    if (this.page === 'prefs') initPrefs();
     if (this.page === 'barcode') initBarcode(hash.slice(10), () => this.animateElements());
     if (this.page === 'vs') initVs();
     if (this.page === 'quiz') initQuiz();

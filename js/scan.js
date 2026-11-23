@@ -5,12 +5,14 @@
 // (ללא מפתח API וללא הרשמה), ורשימת הרכיבים שלו מנותחת בדפדפן.
 // ============================================================
 
-import { products } from './data.js?v=34';
-import { escapeHtml } from './utils.js?v=34';
-import { breadcrumb, renderProductCard } from './components.js?v=34';
-import { analyzeLabel, labelResultHTML } from './widgets.js?v=34';
-import { redFlags } from './verdict.js?v=34';
-import { readLabel, myLabel, myLabelCount, saveMyLabel, removeMyLabel, offAddUrl, PIONEER_AT } from './ocr.js?v=34';
+import { products } from './data.js?v=35';
+import { escapeHtml } from './utils.js?v=35';
+import { breadcrumb, renderProductCard } from './components.js?v=35';
+import { analyzeLabel, labelResultHTML } from './widgets.js?v=35';
+import { redFlags } from './verdict.js?v=35';
+import { readLabel, myLabel, myLabelCount, saveMyLabel, removeMyLabel, offAddUrl, PIONEER_AT } from './ocr.js?v=35';
+import { avoidHTML, addHistory, historyHTML, clearHistory } from './personal.js?v=35';
+import { getNova } from './nova.js?v=35';
 
 const OFF_API = 'https://world.openfoodfacts.org/api/v2/product/';
 const OFF_PAGE = 'https://world.openfoodfacts.org/product/';
@@ -106,6 +108,7 @@ export function renderScan() {
           </div>
           <p class="scan-error" id="scan-error" role="alert" hidden></p>
         </form>
+        ${historyHTML(escapeHtml)}
       </div>
     </main>`;
 }
@@ -178,6 +181,7 @@ export function stopScan() {
 const go = code => { stopScan(); location.hash = `#/barcode/${code}`; };
 
 export function initScan() {
+  document.getElementById('history-clear')?.addEventListener('click', () => { clearHistory(); document.getElementById('history')?.remove(); });
   const video = document.getElementById('scan-video');
   const view = document.getElementById('scan-view');
   const status = document.getElementById('scan-status');
@@ -347,8 +351,8 @@ function captureHTML(code, lead) {
 function flagsHTML(r) {
   const flags = redFlags(r.items, r.nova);
   return flags.length
-    ? `<ul class="verdict-flags capture-flags">${flags.map(f => `<li><span aria-hidden="true">🚩</span> ${escapeHtml(f)}</li>`).join('')}</ul>`
-    : '';
+    ? `<ul class="verdict-flags capture-flags">${flags.map(f => `<li><span aria-hidden="true">🚩</span> ${escapeHtml(f)}</li>`).join('')}</ul>${avoidHTML(r.items, r.nova)}`
+    : avoidHTML(r.items, r.nova);
 }
 
 function savedResultHTML(code, entry) {
@@ -472,9 +476,11 @@ export async function initBarcode(raw, onDone) {
   const code = cleanCode(raw);
   if (!validCode(code)) return;
   const local = findByBarcode(code);
-  if (local) { location.replace(`#/product/${local.id}`); return; }
+  if (local) { addHistory({ code, id: local.id, name: local.name, nova: getNova(local).group }); location.replace(`#/product/${local.id}`); return; }
   const mine = myLabel(code);
   if (mine) {
+    const mr = analyzeLabel(mine.text);
+    addHistory({ code, name: mine.name || 'מוצר שהוספתם', nova: mr && mr.nova.group });
     const body = document.getElementById('barcode-body');
     if (body) { body.innerHTML = savedResultHTML(code, mine); initCapture(); if (onDone) onDone(); }
     return;
@@ -490,7 +496,9 @@ export async function initBarcode(raw, onDone) {
     else if (!res.ok) html = notFoundHTML(code, 'offline');
     else {
       const data = await res.json();
-      html = data && data.status === 1 && data.product ? offProductHTML(code, data.product) : notFoundHTML(code);
+      const found = data && data.status === 1 && data.product;
+      html = found ? offProductHTML(code, data.product) : notFoundHTML(code);
+      if (found) addHistory({ code, name: data.product.product_name_he || data.product.product_name || '' });
     }
   } catch (e) { html = notFoundHTML(code, 'offline'); }
   if (location.hash !== here) return;

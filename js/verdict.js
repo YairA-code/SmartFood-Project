@@ -4,21 +4,25 @@
 // כדי שבסופר אפשר יהיה להבין את המוצר בשתי שניות.
 // ============================================================
 
-import { termsOf } from './glossary.js?v=34';
+import { termsOf } from './glossary.js?v=35';
 
 const plural = (n, one, many) => (n === 1 ? one : `${n} ${many}`);
 const short = name => String(name).replace(/\s*\(.*\)$/, '');
 
 // items: רכיבים מנותחים ({ name, key, type, risk, nova }), nova: תוצאת הסיווג
-export function redFlags(items, nova) {
-  // כל רכיב בתווית → החומרים שהוא מכיל, בלי כפילויות
+// כל רכיב בתווית → החומרים שהוא מכיל, בלי כפילויות
+export function collectTerms(items) {
   const seen = new Map();
   for (const i of items) {
     const list = i.key ? termsOf(i.key).filter(Boolean) : [];
     if (list.length) list.forEach(t => seen.set(t.id, t));
     else if (i.type) seen.set('raw:' + (i.name || i.key), { id: 'raw', name: i.name || i.key, type: i.type, risk: i.risk, nova: i.nova });
   }
-  const terms = [...seen.values()];
+  return [...seen.values()];
+}
+
+export function redFlags(items, nova) {
+  const terms = collectTerms(items);
   const of = re => terms.filter(t => re.test(t.type || ''));
   const flags = [];
   const add = (weight, text) => { if (text && !flags.some(f => f.text === text)) flags.push({ weight, text }); };

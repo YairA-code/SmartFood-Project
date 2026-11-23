@@ -5,7 +5,7 @@
 // בקשות למאגר Open Food Facts לא נשמרות. מנוע קריאת התוויות נשמר רק אחרי שימוש ראשון.
 // ============================================================
 
-const VERSION = '34';
+const VERSION = '35';
 const CACHE = 'smartfood-v' + VERSION;
 const v = f => f + '?v=' + VERSION;
 const CORE = [
@@ -24,6 +24,7 @@ const CORE = [
   v('js/ingredients.js'),
   v('js/nova.js'),
   v('js/ocr.js'),
+  v('js/personal.js'),
   v('js/photos.js'),
   v('js/products-extra.js'),
   v('js/products-more.js'),

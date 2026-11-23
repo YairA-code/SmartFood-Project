@@ -1,0 +1,40 @@
+# בדיקה יומית: האם רשימות הרכיבים במקורות השתנו, והאם נמצאו ברקודים חדשים.
+# רץ בשעות ששופרסל מתירה ב-robots.txt (04:00-08:45 UTC). לא משנה את האתר:
+# פותח או מעדכן issue אחד, ותיקונים נעשים ידנית.
+name: Daily source check
+
+on:
+  schedule:
+    - cron: '5 4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: source-check
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 280
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Dump products
+        run: node .github/scripts/dump.mjs > /tmp/products.json
+      - name: Check sources
+        run: python3 .github/scripts/source_check.py /tmp/products.json /tmp/report.md
+      - name: Open or update issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$(cat /tmp/report.md.status)" != "findings" ]; then echo "nothing to report"; exit 0; fi
+          gh label create source-check --color 0E8A16 --description "בדיקת מקורות יומית" 2>/dev/null || true
+          num=$(gh issue list --label source-check --state open --json number --jq '.[0].number')
+          if [ -n "$num" ]; then gh issue comment "$num" --body-file /tmp/report.md
+          else gh issue create --title "בדיקת מקורות יומית: יש מוצרים לבדיקה" --label source-check --body-file /tmp/report.md; fi
