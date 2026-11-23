@@ -2,8 +2,8 @@
 // Smart Food — נתונים: קטגוריות, מוצרים ומילון רכיבים
 // ============================================================
 
-import { products } from './products.js?v=35';
-import { INGREDIENTS } from './ingredients.js?v=35';
+import { products } from './products.js?v=38';
+import { INGREDIENTS } from './ingredients.js?v=38';
 
 export { products };
 export const ingredientDB = INGREDIENTS;

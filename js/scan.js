@@ -5,14 +5,14 @@
 // (ללא מפתח API וללא הרשמה), ורשימת הרכיבים שלו מנותחת בדפדפן.
 // ============================================================
 
-import { products } from './data.js?v=35';
-import { escapeHtml } from './utils.js?v=35';
-import { breadcrumb, renderProductCard } from './components.js?v=35';
-import { analyzeLabel, labelResultHTML } from './widgets.js?v=35';
-import { redFlags } from './verdict.js?v=35';
-import { readLabel, myLabel, myLabelCount, saveMyLabel, removeMyLabel, offAddUrl, PIONEER_AT } from './ocr.js?v=35';
-import { avoidHTML, addHistory, historyHTML, clearHistory } from './personal.js?v=35';
-import { getNova } from './nova.js?v=35';
+import { products } from './data.js?v=38';
+import { escapeHtml } from './utils.js?v=38';
+import { breadcrumb, renderProductCard } from './components.js?v=38';
+import { analyzeLabel, labelResultHTML } from './widgets.js?v=38';
+import { redFlags } from './verdict.js?v=38';
+import { readLabel, myLabel, myLabelCount, saveMyLabel, removeMyLabel, offAddUrl, PIONEER_AT } from './ocr.js?v=38';
+import { avoidHTML, addHistory, historyHTML, clearHistory } from './personal.js?v=38';
+import { getNova } from './nova.js?v=38';
 
 const OFF_API = 'https://world.openfoodfacts.org/api/v2/product/';
 const OFF_PAGE = 'https://world.openfoodfacts.org/product/';
