@@ -5,10 +5,12 @@
 // (ללא מפתח API וללא הרשמה), ורשימת הרכיבים שלו מנותחת בדפדפן.
 // ============================================================
 
-import { products } from './data.js?v=33';
-import { escapeHtml } from './utils.js?v=33';
-import { breadcrumb, renderProductCard } from './components.js?v=33';
-import { analyzeLabel, labelResultHTML } from './widgets.js?v=33';
+import { products } from './data.js?v=34';
+import { escapeHtml } from './utils.js?v=34';
+import { breadcrumb, renderProductCard } from './components.js?v=34';
+import { analyzeLabel, labelResultHTML } from './widgets.js?v=34';
+import { redFlags } from './verdict.js?v=34';
+import { readLabel, myLabel, myLabelCount, saveMyLabel, removeMyLabel, offAddUrl, PIONEER_AT } from './ocr.js?v=34';
 
 const OFF_API = 'https://world.openfoodfacts.org/api/v2/product/';
 const OFF_PAGE = 'https://world.openfoodfacts.org/product/';
@@ -312,20 +314,131 @@ export function renderBarcode(raw) {
     <div class="barcode-loading" aria-busy="true"><span class="spinner" aria-hidden="true"></span><p>מחפשים את המוצר ${escapeHtml(code)}…</p></div>`);
 }
 
+// ——————————————————————————————————————
+// מוצר שלא נמצא: מצלמים את רשימת הרכיבים ומקבלים ציון מיד
+// ——————————————————————————————————————
+function pioneerHTML() {
+  const n = myLabelCount();
+  if (n >= PIONEER_AT) return `<p class="pioneer is-on"><span aria-hidden="true">🏅</span> <strong>חלוץ SmartFood</strong> · הוספתם ${n} מוצרים שלא היו במאגר</p>`;
+  return n ? `<p class="pioneer"><span aria-hidden="true">🌱</span> הוספתם ${n} ${n === 1 ? 'מוצר' : 'מוצרים'}. עוד ${PIONEER_AT - n} לתג „חלוץ SmartFood”</p>` : '';
+}
+
+function captureHTML(code, lead) {
+  return `
+    <section class="capture" id="capture" data-code="${escapeHtml(code)}">
+      <h2 class="capture-title">📸 ${lead || 'צלמו את רשימת הרכיבים'}</h2>
+      <p class="muted">צלמו מקרוב רק את רשימת הרכיבים שעל האריזה, באור טוב. הטקסט נקרא במכשיר שלכם, והתמונה לא נשלחת לשום מקום.</p>
+      <label class="btn btn-primary capture-btn">
+        <input type="file" accept="image/*" capture="environment" id="capture-file" hidden>
+        📷 צילום התווית
+      </label>
+      <p class="capture-progress" id="capture-progress" hidden aria-live="polite"></p>
+      <div class="capture-edit" id="capture-edit" hidden>
+        <label for="capture-name" class="label-title">שם המוצר (לא חובה)</label>
+        <input type="text" id="capture-name" maxlength="80" autocomplete="off" placeholder="למשל: חטיף תירס בטעם גבינה">
+        <label for="capture-text" class="label-title">זה מה שקראנו. תקנו טעויות אם יש, ולחצו על בדיקה</label>
+        <textarea id="capture-text" rows="5"></textarea>
+        <div class="label-actions"><button class="btn btn-primary" id="capture-run">בדיקה ושמירה</button></div>
+      </div>
+      <div id="capture-result" aria-live="polite"></div>
+    </section>`;
+}
+
+function flagsHTML(r) {
+  const flags = redFlags(r.items, r.nova);
+  return flags.length
+    ? `<ul class="verdict-flags capture-flags">${flags.map(f => `<li><span aria-hidden="true">🚩</span> ${escapeHtml(f)}</li>`).join('')}</ul>`
+    : '';
+}
+
+function savedResultHTML(code, entry) {
+  const r = analyzeLabel(entry.text);
+  return `
+    <section class="barcode-head"><div>
+      <p class="eyebrow">ברקוד <bdi>${escapeHtml(code)}</bdi> · נשמר במכשיר שלכם</p>
+      <h1 class="barcode-h">${escapeHtml(entry.name || 'מוצר שהוספתם')}</h1>
+    </div></section>
+    <p class="barcode-note">את המוצר הזה הוספתם בעצמכם מצילום התווית ב-<bdi>${escapeHtml(entry.savedAt || '')}</bdi>. הניתוח אוטומטי, ונשמר רק במכשיר הזה.</p>
+    ${r ? flagsHTML(r) + labelResultHTML(r) : ''}
+    <div class="barcode-actions">
+      <button class="btn btn-ghost btn-sm" id="capture-again">📸 צילום מחדש</button>
+      <button class="btn btn-ghost btn-sm" id="capture-forget">מחיקה מהמכשיר</button>
+      <a class="btn btn-ghost btn-sm" href="${offAddUrl(code)}" target="_blank" rel="noopener noreferrer">🌍 הוספה למאגר הפתוח</a>
+      ${again}
+    </div>
+    <div id="capture-slot"></div>`;
+}
+
+export function initCapture() {
+  const box = document.getElementById('capture');
+  const again2 = document.getElementById('capture-again');
+  if (again2) {
+    again2.addEventListener('click', () => {
+      const slot = document.getElementById('capture-slot');
+      slot.innerHTML = captureHTML(location.hash.slice(10), 'צילום מחדש של רשימת הרכיבים');
+      initCapture();
+    });
+    document.getElementById('capture-forget')?.addEventListener('click', () => {
+      removeMyLabel(location.hash.slice(10)); location.reload();
+    });
+  }
+  if (!box) return;
+  const code = box.dataset.code;
+  const file = document.getElementById('capture-file');
+  const prog = document.getElementById('capture-progress');
+  const edit = document.getElementById('capture-edit');
+  const text = document.getElementById('capture-text');
+  const name = document.getElementById('capture-name');
+  const out = document.getElementById('capture-result');
+  const run = () => {
+    const r = analyzeLabel(text.value);
+    if (!r) { out.innerHTML = labelResultHTML(null); return; }
+    const isNew = saveMyLabel(code, { text: text.value.trim(), name: name.value.trim() });
+    out.innerHTML = `
+      ${flagsHTML(r)}
+      ${labelResultHTML(r)}
+      <div class="capture-saved">
+        <p><strong>✓ נשמר במכשיר שלכם.</strong> בפעם הבאה שתסרקו את הברקוד הזה, התשובה תופיע מיד.</p>
+        ${isNew ? pioneerHTML() : ''}
+        <p class="muted small">רוצים שגם אחרים יקבלו תשובה על המוצר הזה? הוסיפו אותו למאגר הפתוח Open Food Facts, שממנו SmartFood בודק מוצרים שלא נמצאים אצלנו. ההוספה נעשית באתר שלהם, עם חשבון משלכם.</p>
+        <a class="btn btn-ghost btn-sm" href="${offAddUrl(code)}" target="_blank" rel="noopener noreferrer">🌍 הוספה למאגר הפתוח</a>
+      </div>`;
+    out.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+  file.addEventListener('change', async () => {
+    const f = file.files && file.files[0];
+    if (!f) return;
+    prog.hidden = false; prog.textContent = 'טוענים את מנוע הקריאה… (בפעם הראשונה זה לוקח כמה שניות)';
+    edit.hidden = true; out.innerHTML = '';
+    try {
+      const t = await readLabel(f, p => { prog.textContent = `קוראים את התווית… ${Math.round(p * 100)}%`; });
+      prog.hidden = true; edit.hidden = false;
+      text.value = t;
+      if (t && analyzeLabel(t)) run();
+      else out.innerHTML = '<div class="empty-note">לא הצלחנו לקרוא את הרכיבים מהתמונה. נסו לצלם שוב מקרוב ובאור טוב, או הקלידו אותם בתיבה.</div>';
+    } catch (e) {
+      prog.textContent = 'לא הצלחנו לקרוא את התמונה. אפשר להקליד את רשימת הרכיבים בתיבה.';
+      edit.hidden = false;
+    } finally { file.value = ''; }
+  });
+  document.getElementById('capture-run').addEventListener('click', run);
+}
+
 function notFoundHTML(code, why) {
+  if (why === 'offline') return `
+    <div class="empty-note big">
+      <h1 class="barcode-h">לא הצלחנו לבדוק את הברקוד</h1>
+      <p>אין כרגע חיבור למאגר המוצרים הפתוח. אפשר לצלם את רשימת הרכיבים ולקבל ציון גם בלי חיבור טוב.</p>
+    </div>
+    ${captureHTML(code)}
+    <div class="barcode-actions"><a class="btn btn-ghost btn-sm" href="#/products">חיפוש לפי שם</a>${again}</div>`;
   return `
     <div class="empty-note big">
-      <h1 class="barcode-h">${why === 'offline' ? 'לא הצלחנו לבדוק את הברקוד' : 'המוצר הזה עוד לא אצלנו'}</h1>
-      <p>${why === 'offline'
-        ? 'אין כרגע חיבור למאגר המוצרים הפתוח. בדקו את החיבור לאינטרנט ונסו שוב.'
-        : `לא מצאנו מוצר עם הברקוד <bdi>${escapeHtml(code)}</bdi>, לא במאגר שלנו ולא במאגר הפתוח Open Food Facts.`}</p>
-      <p>אפשר עדיין לבדוק אותו: העתיקו את רשימת הרכיבים מהאריזה אל בודק התווית, או חפשו אותו לפי שם.</p>
-      <div class="barcode-actions">
-        <a class="btn btn-primary btn-sm" href="#/label">🔬 בודק התווית</a>
-        <a class="btn btn-ghost btn-sm" href="#/products">חיפוש לפי שם</a>
-        ${again}
-      </div>
-    </div>`;
+      <h1 class="barcode-h">המוצר הזה עוד לא אצלנו</h1>
+      <p>לא מצאנו את הברקוד <bdi>${escapeHtml(code)}</bdi>, לא במאגר שלנו ולא במאגר הפתוח. צלמו את רשימת הרכיבים, ותקבלו ציון תוך כמה שניות.</p>
+    </div>
+    ${captureHTML(code)}
+    <div class="barcode-actions"><a class="btn btn-ghost btn-sm" href="#/products">חיפוש לפי שם</a>${again}</div>`;
 }
 
 function offProductHTML(code, p) {
@@ -349,11 +462,8 @@ function offProductHTML(code, p) {
     ${similar.length ? `
       <div class="section-head start"><h2 class="section-title">אולי זה אחד מאלה?</h2><p class="section-subtitle">מוצרים דומים מהמאגר שלנו, עם רשימת רכיבים שנבדקה והסבר לכל רכיב</p></div>
       <div class="products-grid">${similar.map(renderProductCard).join('')}</div>` : ''}
-    ${result ? labelResultHTML(result) : `
-      <div class="empty-note">
-        <p>למוצר הזה אין רשימת רכיבים בעברית במאגר הפתוח. אפשר להעתיק אותה מהאריזה אל בודק התווית.</p>
-        <div class="barcode-actions"><a class="btn btn-primary btn-sm" href="#/label">🔬 בודק התווית</a></div>
-      </div>`}
+    ${result ? flagsHTML(result) + labelResultHTML(result) : `
+      ${captureHTML(code, 'אין כאן רשימת רכיבים בעברית. צלמו אותה מהאריזה')}`}
     <p class="source-note">מקור הנתונים: <a href="${OFF_PAGE}${escapeHtml(code)}" target="_blank" rel="noopener noreferrer">Open Food Facts</a> (רישיון ODbL).</p>
     <div class="barcode-actions">${again}</div>`;
 }
@@ -363,6 +473,12 @@ export async function initBarcode(raw, onDone) {
   if (!validCode(code)) return;
   const local = findByBarcode(code);
   if (local) { location.replace(`#/product/${local.id}`); return; }
+  const mine = myLabel(code);
+  if (mine) {
+    const body = document.getElementById('barcode-body');
+    if (body) { body.innerHTML = savedResultHTML(code, mine); initCapture(); if (onDone) onDone(); }
+    return;
+  }
   const here = location.hash;
   let html;
   try {
@@ -379,5 +495,5 @@ export async function initBarcode(raw, onDone) {
   } catch (e) { html = notFoundHTML(code, 'offline'); }
   if (location.hash !== here) return;
   const body = document.getElementById('barcode-body');
-  if (body) { body.innerHTML = html; if (onDone) onDone(); }
+  if (body) { body.innerHTML = html; initCapture(); if (onDone) onDone(); }
 }

@@ -2,14 +2,15 @@
 // Smart Food — קומפוננטות רינדור
 // ============================================================
 
-import { categories, products, getStats } from './data.js?v=33';
-import { escapeHtml } from './utils.js?v=33';
-import { productArt } from './art.js?v=33';
-import { toolCards, TOOLS, facts } from './widgets.js?v=33';
-import { scanButton } from './scan.js?v=33';
-import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=33';
-import { PHOTOS } from './photos.js?v=33';
-import { attachProducts, allTerms, findTerms, termSearchText } from './glossary.js?v=33';
+import { categories, products, getStats } from './data.js?v=34';
+import { escapeHtml } from './utils.js?v=34';
+import { productArt } from './art.js?v=34';
+import { toolCards, TOOLS, facts } from './widgets.js?v=34';
+import { scanButton } from './scan.js?v=34';
+import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=34';
+import { PHOTOS } from './photos.js?v=34';
+import { redFlags } from './verdict.js?v=34';
+import { attachProducts, allTerms, findTerms, termSearchText } from './glossary.js?v=34';
 
 const CAT_HUE = { snacks: 38, sweets: 18, dairy: 205, drinks: 188, bread: 32, canned: 85, cereals: 46, spreads: 12, meat: 355, frozen: 198, instant: 26, fruits: 130 };
 export const RISK = {
@@ -418,6 +419,8 @@ export function renderProduct(productId) {
 
   const level = score <= 2 ? 'low' : score <= 5 ? 'mid' : 'high';
   const C = 2 * Math.PI * 54;
+  const flags = redFlags(items, nova);
+  const better = alts[0];
 
   return `
     <main class="page page-product" id="page-content">
@@ -444,6 +447,19 @@ export function renderProduct(productId) {
           </svg>
           <div class="gauge-center"><span class="gauge-number">${score}</span><span class="gauge-max">/10</span></div>
           <span class="gauge-label">ציון עיבוד</span>
+        </div>
+      </section>
+
+      <section class="container">
+        <div class="verdict" id="verdict">
+          <div class="verdict-main">
+            <p class="eyebrow">בשורה התחתונה</p>
+            ${flags.length
+              ? `<ul class="verdict-flags">${flags.map(f => `<li><span aria-hidden="true">🚩</span> ${escapeHtml(f)}</li>`).join('')}</ul>`
+              : `<p class="verdict-ok"><span aria-hidden="true">✅</span> לפי רשימת הרכיבים, אין כאן תוספים שמסומנים אצלנו כבעייתיים.</p>`}
+            ${better ? `<a class="verdict-alt" href="#/product/${better.id}"><span>חלופה מעובדת פחות:</span> <strong>${escapeHtml(better.name)}</strong> ${novaBadge(better)}</a>` : ''}
+          </div>
+          <button class="btn btn-primary btn-sm verdict-share" id="share-card" data-id="${product.id}">📤 שיתוף בוואטסאפ</button>
         </div>
       </section>
 
@@ -853,6 +869,9 @@ export function renderLegal() {
             <li>הסל, ערכת הנושא והגדרות דומות נשמרים רק בדפדפן שלכם (localStorage), ולא נשלחים לשום מקום. אפשר למחוק אותם בכל רגע דרך הגדרות הדפדפן.</li>
             <li>המחשבונים ובודק התווית מחשבים במכשיר שלכם בלבד.</li>
             <li>תמונת המצלמה בסורק הברקוד מעובדת במכשיר בלבד, ולא נשמרת ולא נשלחת.</li>
+            <li>כשמצלמים רשימת רכיבים של מוצר שלא נמצא, הטקסט נקרא מהתמונה במכשיר עצמו (בעזרת Tesseract, שמאוחסן באתר). התמונה לא נשלחת לשום מקום. הטקסט ושם המוצר נשמרים רק בדפדפן שלכם (localStorage), ואפשר למחוק אותם בכל רגע מדף המוצר.</li>
+            <li>כפתור „הוספה למאגר הפתוח” פותח את האתר של Open Food Facts. ההוספה נעשית שם, לפי תנאי השימוש שלהם ועם חשבון משלכם. אנחנו לא שולחים אליהם דבר.</li>
+            <li>כרטיס השיתוף לוואטסאפ נוצר במכשיר. הוא נשלח רק אם תבחרו לשתף אותו.</li>
             <li>כשסורקים ברקוד של מוצר שלא נמצא במאגר שלנו, מספר הברקוד (ורק הוא) נשלח למאגר הפתוח Open Food Facts כדי לחפש את המוצר. הבקשה נשלחת בלי עוגיות ובלי פרטים מזהים.</li>
             <li>האתר מאוחסן ב-GitHub Pages, שעשויה לשמור יומני גישה טכניים (כמו כתובת IP) לפי <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer">מדיניות הפרטיות של GitHub</a>.</li>
           </ul>

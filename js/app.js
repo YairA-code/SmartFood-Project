@@ -2,19 +2,22 @@
 // Smart Food — אפליקציה ראשית + ניתוב
 // ============================================================
 
-import { products } from './data.js?v=33';
-import { debounce, fillContactLinks } from './utils.js?v=33';
-import { getNova, getScore } from './nova.js?v=33';
+import { products } from './data.js?v=34';
+import { debounce, fillContactLinks } from './utils.js?v=34';
+import { getNova, getScore, lookupIngredient, getAlternatives } from './nova.js?v=34';
+import { redFlags } from './verdict.js?v=34';
+import { shareCard, SITE_URL } from './share.js?v=34';
+import { registerServiceWorker, initInstallPrompt } from './pwa.js?v=34';
 import {
   renderHeader, renderFooter, renderHome, renderCategory, renderProduct,
   renderCategoriesPage, renderAbout, renderNotFound, renderSearchResults,
   renderProductCard, renderNova, renderAllProducts, renderCompare, renderIngredients, renderIngredient, renderLegal,
-} from './components.js?v=33';
+} from './components.js?v=34';
 import {
   renderTools, renderLabel, initLabel, renderVs, initVs, renderQuiz, initQuiz,
   renderBasket, initBasket, renderInsights, renderTeam, renderCalcPage, initCalculators, toggleBasket, inBasket, basketCount, onBasket, facts,
-} from './widgets.js?v=33';
-import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=33';
+} from './widgets.js?v=34';
+import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=34';
 
 // פענוח בטוח של הכתובת: כתובת פגומה לא תפיל את האתר
 function safeDecode(str) {
@@ -167,6 +170,19 @@ class SmartFoodApp {
       paint();
       btn.addEventListener('click', () => { toggleBasket(btn.dataset.id); paint(); });
     }
+    const share = document.getElementById('share-card');
+    share?.addEventListener('click', async () => {
+      const p = products.find(x => x.id === share.dataset.id);
+      if (!p) return;
+      const nova = getNova(p);
+      const items = p.ingredients.map(i => ({ name: i, ...lookupIngredient(i) }));
+      const alt = getAlternatives(p)[0];
+      share.disabled = true; share.textContent = 'מכינים את התמונה…';
+      try {
+        await shareCard({ name: p.name, brand: p.brand, nova: { group: nova.group, ...nova }, score: getScore(p),
+          flags: redFlags(items, nova), alt: alt && alt.name, url: `${SITE_URL}#/product/${p.id}` });
+      } finally { share.disabled = false; share.textContent = '📤 שיתוף בוואטסאפ'; }
+    });
     const copy = document.getElementById('copy-link');
     copy?.addEventListener('click', async () => {
       try { await navigator.clipboard.writeText(location.href); copy.textContent = '✓ הקישור הועתק'; }
@@ -327,4 +343,5 @@ class SmartFoodApp {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => new SmartFoodApp());
+registerServiceWorker();
+document.addEventListener('DOMContentLoaded', () => { new SmartFoodApp(); initInstallPrompt(); });

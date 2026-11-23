@@ -4,9 +4,9 @@
 // מוצרים טריים או כלליים (פירות, ירקות, שמנים) מסומנים כ"מוצר כללי".
 // ============================================================
 
-import { EXTRA, EXTRA_LABEL } from './products-extra.js?v=33';
-import { BARCODES } from './barcodes.js?v=33';
-import { MORE } from './products-more.js?v=33';
+import { EXTRA, EXTRA_LABEL } from './products-extra.js?v=34';
+import { BARCODES } from './barcodes.js?v=34';
+import { MORE } from './products-more.js?v=34';
 
 const src = (label, url) => ({ label, url });
 
@@ -573,7 +573,7 @@ export const products = [
   },
   // בשר
   {
-    id: 'salami', kinds: ['meat', 'sandwich'], name: 'סלמי מעושן איטלקי', brand: 'זוגלובק', category: 'meat',
+    id: 'salami', kinds: ['meat', 'sandwich'], name: 'סלמי בסגנון איטלקי', brand: 'זוגלובק', category: 'meat',
     art: ['cut_of_meat', 'sandwich'],
     ingredients: ['בשר ושומן הודו, עוף ובקר (88%)', 'מים', 'מווסתי חומציות (אשלגן וסידן לקטט, נתרן דיאצטט, חומצה ציטרית)', 'סוכרים', 'תבלינים', 'צבע מאכל (רכז סלק)', 'מייצבים (די פוספטים)', 'מלח', 'עמילן', 'מסמיך (סיבים תזונתיים מצלולוז)', 'מלטודקסטרין', 'חומרי טעם וריח', 'הידרוליזט חלבון צמחי', 'תמצית שמרים', 'מעכב חימצון (חומצה אסקורבית)', 'חומר משמר (ניטריט הנתרן)'],
     summary: 'נקניק מעובד עם 16 רכיבים, כולל ניטריט, פוספטים, מלטודקסטרין, תמצית שמרים וחלבון צמחי מפורק. הסוכנות לחקר הסרטן של ארגון הבריאות העולמי מסווגת בשר מעובד כמסרטן לאדם.',
