@@ -858,3 +858,19 @@ a.stat-item:hover { background: var(--bg-soft); }
 .capture-saved p { margin: 0; }
 .pioneer { margin: 0; font-weight: 700; }
 .pioneer.is-on { color: var(--brand); }
+
+/* ——— העדפות אישיות והיסטוריה ——— */
+.prefs-box fieldset { border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; display: grid; gap: 10px; background: var(--surface); margin: 0; }
+.prefs-item { display: flex; align-items: center; gap: 10px; font-weight: 600; cursor: pointer; }
+.prefs-item input { width: 20px; height: 20px; accent-color: var(--brand); }
+.prefs-saved { color: var(--brand); font-weight: 700; min-height: 1.4em; }
+.prefs-hit { margin: 0; padding: 8px 12px; border-radius: 12px; background: color-mix(in srgb, var(--caution) 14%, var(--surface)); border: 1px solid color-mix(in srgb, var(--caution) 40%, transparent); }
+.prefs-ok { margin: 0; padding: 8px 12px; border-radius: 12px; background: color-mix(in srgb, var(--brand) 10%, var(--surface)); }
+.prefs-hint { font-size: .9rem; color: var(--ink-2); }
+.history { margin-top: 20px; }
+.history-head { display: flex; justify-content: space-between; align-items: center; }
+.history-list { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 6px; }
+.history-list a { display: flex; justify-content: space-between; gap: 10px; padding: 10px 14px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); text-decoration: none; color: var(--ink); }
+.history-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.history-nova { flex-shrink: 0; font-size: .8rem; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: var(--surface-2, rgba(127,127,127,.15)); }
+.history-nova.nova-4 { background: #fee2e2; color: #991b1b; } .history-nova.nova-1 { background: #dcfce7; color: #166534; }

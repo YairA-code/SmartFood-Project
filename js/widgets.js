@@ -3,12 +3,12 @@
 // תובנות מהמאגר, ודף הצוות
 // ============================================================
 
-import { products, categories } from './data.js?v=34';
-import { INGREDIENTS, getIngredient, canonicalName } from './ingredients.js?v=34';
-import { NOVA_GROUPS, getNova, getScore, getAlternatives, lookupIngredient, classifyItems, scoreItems, novaReason } from './nova.js?v=34';
-import { escapeHtml } from './utils.js?v=34';
-import { art, breadcrumb, novaBadge, scoreChip, renderProductCard, RISK, ROLE, catOf, ingLink } from './components.js?v=34';
-import { renderCalculators, initCalculators } from './calculators.js?v=34';
+import { products, categories } from './data.js?v=35';
+import { INGREDIENTS, getIngredient, canonicalName } from './ingredients.js?v=35';
+import { NOVA_GROUPS, getNova, getScore, getAlternatives, lookupIngredient, classifyItems, scoreItems, novaReason } from './nova.js?v=35';
+import { escapeHtml } from './utils.js?v=35';
+import { art, breadcrumb, novaBadge, scoreChip, renderProductCard, RISK, ROLE, catOf, ingLink } from './components.js?v=35';
+import { renderCalculators, initCalculators } from './calculators.js?v=35';
 
 const byId = id => products.find(p => p.id === id);
 const pageHero = (icon, title, text) => `
@@ -23,6 +23,7 @@ const pageHero = (icon, title, text) => `
 // ——————————————————————————————————————
 export const TOOLS = [
   { href: '#/scan', icon: '📷', title: 'סריקת ברקוד', text: 'סורקים את הברקוד שעל האריזה במצלמת הטלפון, ומגיעים ישר לדף המוצר.' },
+  { href: '#/prefs', icon: '⚙️', title: 'ההעדפות שלי', text: 'בוחרים ממה רוצים להימנע (ממתיקים, צבעי מאכל, שמן דקלים…), ובכל מוצר רואים מיד אם הוא מתאים.' },
   { href: '#/label', icon: '🔬', title: 'בודק התווית', text: 'מדביקים רשימת רכיבים מכל מוצר, ומקבלים סיווג NOVA, ציון עיבוד והסבר לכל רכיב.' },
   { href: '#/calculators', icon: '🧮', title: 'מחשבונים', text: 'כפיות סוכר במוצר, BMI, צריכת קלוריות יומית ויחס מותניים-ירכיים, לפי נוסחאות מקובלות.' },
   { href: '#/vs', icon: '⚖️', title: 'השוואה חופשית', text: 'בוחרים שני מוצרים מהמאגר ורואים אותם זה לצד זה, רכיב מול רכיב.' },

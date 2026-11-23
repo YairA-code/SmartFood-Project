@@ -4,9 +4,9 @@
 // מוצרים טריים או כלליים (פירות, ירקות, שמנים) מסומנים כ"מוצר כללי".
 // ============================================================
 
-import { EXTRA, EXTRA_LABEL } from './products-extra.js?v=34';
-import { BARCODES } from './barcodes.js?v=34';
-import { MORE } from './products-more.js?v=34';
+import { EXTRA, EXTRA_LABEL } from './products-extra.js?v=35';
+import { BARCODES } from './barcodes.js?v=35';
+import { MORE } from './products-more.js?v=35';
 
 const src = (label, url) => ({ label, url });
 
@@ -441,8 +441,8 @@ export const products = [
   {
     id: 'apropo', kinds: ['salty-snack'], name: 'אפרופו', brand: 'אסם', category: 'snacks',
     art: ['ear_of_corn', 'salt'],
-    ingredients: ['גריסי תירס (68%)', 'שמנים מהצומח', 'סוכר', 'מלח', 'חומר תפיחה (פוטסיום ביקרבונט)'],
-    summary: 'חטיף תירס עם רשימת רכיבים קצרה: תירס, שמן, סוכר ומלח. אין בו מחזקי טעם או צבעי מאכל, אבל הוא עדיין חטיף מטוגן ומלוח.',
+    ingredients: ['גריסי תירס (61%)', 'שמנים מהצומח', 'סוכר', 'עמילן מפורק חלקית', 'מלח', 'חומר תפיחה (פוטסיום ביקרבונט)', 'תמצית שמרים'],
+    summary: 'חטיף תירס עם רשימת רכיבים קצרה: תירס, שמן, סוכר ומלח, עם עמילן מפורק ותמצית שמרים. אין בו צבעי מאכל, אבל הוא עדיין חטיף מטוגן ומלוח.',
   },
   {
     id: 'cheetos', kinds: ['salty-snack'], name: "צ'יטוס קראנץ' בטעם גבינה", brand: 'עלית', category: 'snacks',
