@@ -874,3 +874,185 @@ a.stat-item:hover { background: var(--bg-soft); }
 .history-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
 .history-nova { flex-shrink: 0; font-size: .8rem; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: var(--surface-2, rgba(127,127,127,.15)); }
 .history-nova.nova-4 { background: #fee2e2; color: #991b1b; } .history-nova.nova-1 { background: #dcfce7; color: #166534; }
+
+/* ============================================================
+   שכבת עיצוב 2026: צבעים עזים, זכוכית, זוהר ותנועה עדינה.
+   כל הכללים כאן רק מוסיפים מראה, בלי לשנות מבנה או התנהגות.
+   ============================================================ */
+:root {
+  --grad: linear-gradient(135deg, #15803d 0%, #22c55e 48%, #a3e635 100%);
+  --grad-soft: linear-gradient(135deg, #dcfce7 0%, #ecfccb 100%);
+  --grad-warm: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+  --glass: color-mix(in srgb, var(--surface) 78%, transparent);
+  --glass-line: color-mix(in srgb, var(--ink) 9%, transparent);
+  --glow: 0 10px 30px -6px color-mix(in srgb, #22c55e 55%, transparent);
+  --radius: 22px;
+  --shadow: 0 1px 2px rgba(21, 38, 27, .04), 0 10px 30px -8px rgba(21, 38, 27, .12);
+  --shadow-lg: 0 24px 60px -18px rgba(21, 38, 27, .28);
+}
+[data-theme="dark"] {
+  --bg: #08110c;
+  --bg-soft: #0d1912;
+  --surface: #111f17;
+  --surface-2: #15261c;
+  --line: #213628;
+  --grad: linear-gradient(135deg, #22c55e 0%, #4ade80 45%, #bef264 100%);
+  --grad-soft: linear-gradient(135deg, #10301c 0%, #1f3311 100%);
+  --glow: 0 10px 34px -6px color-mix(in srgb, #4ade80 50%, transparent);
+  --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 12px 32px -10px rgba(0, 0, 0, .6);
+  --shadow-lg: 0 28px 70px -20px rgba(0, 0, 0, .75);
+}
+
+/* רקע חי עם כתמי צבע רכים */
+body {
+  background:
+    radial-gradient(900px 620px at 105% -10%, color-mix(in srgb, #22c55e 16%, transparent), transparent 62%),
+    radial-gradient(760px 520px at -12% 28%, color-mix(in srgb, #a3e635 14%, transparent), transparent 62%),
+    radial-gradient(720px 520px at 55% 115%, color-mix(in srgb, #f59e0b 10%, transparent), transparent 62%),
+    var(--bg);
+  background-attachment: fixed;
+}
+::selection { background: color-mix(in srgb, #22c55e 35%, transparent); }
+
+/* טקסט בצבעי המותג */
+.logo-highlight, .hero-title .hl, .stat-number, .page-hero h1 .hl {
+  background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.logo-mark { filter: drop-shadow(0 4px 10px color-mix(in srgb, #22c55e 45%, transparent)); transition: transform .4s var(--ease); }
+.logo:hover .logo-mark { transform: rotate(-12deg) scale(1.08); }
+
+/* כותרת עליונה מזכוכית */
+.main-header { background: var(--glass); border-bottom-color: var(--glass-line); }
+.nav-link.active { background: var(--grad); color: #062a12; box-shadow: var(--glow); }
+.icon-btn { border-color: var(--glass-line); background: var(--glass); }
+
+/* כפתורים */
+.btn { position: relative; overflow: hidden; isolation: isolate; }
+.btn-primary { background: var(--grad); color: #052e14; box-shadow: var(--glow); }
+[data-theme="dark"] .btn-primary { color: #052e14; }
+.btn-primary::after, .btn-scan::after {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.45) 50%, transparent 70%);
+  transform: translateX(-120%); transition: transform .7s var(--ease);
+}
+.btn-primary:hover::after, .btn-scan:hover::after { transform: translateX(120%); }
+.btn-primary:hover { box-shadow: 0 16px 36px -8px color-mix(in srgb, #22c55e 65%, transparent); }
+.btn-ghost { background: var(--glass); }
+.btn-ghost:hover { background: color-mix(in srgb, #22c55e 10%, var(--surface)); }
+
+/* כפתור הסריקה הראשי: הלב של האתר */
+.btn-scan { background: var(--grad); color: #052e14; box-shadow: var(--glow); }
+[data-theme="dark"] .btn-scan { background: var(--grad); color: #052e14; }
+.hero-scan .btn-scan { animation: scan-pulse 2.6s ease-in-out infinite; }
+@keyframes scan-pulse {
+  0%, 100% { box-shadow: 0 10px 30px -6px color-mix(in srgb, #22c55e 55%, transparent), 0 0 0 0 color-mix(in srgb, #22c55e 35%, transparent); }
+  50% { box-shadow: 0 10px 30px -6px color-mix(in srgb, #22c55e 55%, transparent), 0 0 0 12px transparent; }
+}
+
+/* Hero */
+.hero { background: transparent; border-bottom: 0; position: relative; }
+.hero::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background-image: radial-gradient(color-mix(in srgb, var(--ink) 10%, transparent) 1px, transparent 1.2px);
+  background-size: 22px 22px; mask-image: radial-gradient(70% 70% at 70% 30%, #000, transparent 75%);
+  -webkit-mask-image: radial-gradient(70% 70% at 70% 30%, #000, transparent 75%); opacity: .5;
+}
+.hero-inner { position: relative; }
+.hero-title { letter-spacing: -.03em; }
+.hero .eyebrow, .page-hero .eyebrow {
+  display: inline-block; padding: 5px 12px; border-radius: 999px; background: var(--grad-soft);
+  color: var(--brand-ink); border: 1px solid color-mix(in srgb, #22c55e 30%, transparent);
+}
+[data-theme="dark"] .hero .eyebrow { color: #bbf7d0; }
+.hero-glow { background: radial-gradient(closest-side, color-mix(in srgb, #22c55e 30%, transparent), transparent); }
+.search-wrapper { background: var(--glass); border-color: var(--glass-line); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.search-wrapper:focus-within { border-color: #22c55e; box-shadow: 0 0 0 4px color-mix(in srgb, #22c55e 18%, transparent), var(--shadow); }
+.hero-links .btn-ghost { background: var(--glass); border-color: var(--glass-line); }
+
+/* מספרים */
+.stats-bar { background: var(--glass); border-color: var(--glass-line); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.stat-number { font-size: 2.3rem; letter-spacing: -.02em; }
+
+/* כותרות של אזורים עם קו מודגש */
+.section-head:not(.start) .section-title::after {
+  content: ''; display: block; width: 56px; height: 5px; margin: 10px auto 0; border-radius: 999px; background: var(--grad);
+}
+.section-alt { background: color-mix(in srgb, var(--bg-soft) 70%, transparent); border-color: var(--glass-line); }
+
+/* כרטיסים: ריחוף ומסגרת צבעונית במעבר עכבר */
+.product-card, .category-card, .tool-card, .step-card, .teaser-card, .ing-card, .stat-tile, .prose-card, .calc-card, .team-card, .chart-card {
+  border-color: var(--glass-line); border-radius: var(--radius);
+}
+.product-card, .category-card, .tool-card, .teaser-card, .ing-card {
+  transition: transform .35s var(--ease), box-shadow .35s var(--ease), border-color .35s;
+}
+.product-card:hover, .category-card:hover, .tool-card:hover, .teaser-card:hover, .ing-card:hover {
+  border-color: transparent; transform: translateY(-6px);
+  background: linear-gradient(var(--surface), var(--surface)) padding-box, var(--grad) border-box;
+  box-shadow: var(--shadow-lg);
+}
+.product-card .art-card { transition: filter .35s; }
+.product-card:hover .art-card { filter: saturate(1.15); }
+.card-title { letter-spacing: -.01em; }
+.tool-icon { display: inline-grid; place-items: center; width: 52px; height: 52px; border-radius: 16px; background: var(--grad-soft); font-size: 1.6rem; box-shadow: inset 0 0 0 1px color-mix(in srgb, #22c55e 25%, transparent); }
+.step-num { background: var(--grad); color: #052e14; box-shadow: var(--glow); }
+[data-theme="dark"] .step-num { color: #052e14; }
+.category-card::before { opacity: .75; filter: blur(2px); }
+.category-count { background: var(--grad-soft); }
+
+/* תגיות NOVA עם נקודת צבע */
+.nova-badge { gap: 6px; box-shadow: 0 2px 8px -2px color-mix(in srgb, var(--nova) 40%, transparent); }
+.nova-badge::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--nova); box-shadow: 0 0 0 3px color-mix(in srgb, var(--nova) 22%, transparent); }
+
+/* כותרות דפים */
+.page-hero h1 { letter-spacing: -.03em; }
+.page-hero-icon { display: inline-grid; place-items: center; width: 76px; height: 76px; margin: 0 auto 10px; border-radius: 24px; background: var(--grad-soft); box-shadow: var(--shadow); font-size: 2.4rem; }
+
+/* דף מוצר */
+.product-hero { background: var(--glass); border: 1px solid var(--glass-line); border-radius: 28px; padding: 22px; box-shadow: var(--shadow); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); margin-top: 16px; }
+.art-hero { border-radius: 22px; }
+.gauge-svg { filter: drop-shadow(0 6px 14px rgba(0,0,0,.12)); }
+.gauge.score-high .gauge-svg { filter: drop-shadow(0 6px 16px color-mix(in srgb, #ef4444 40%, transparent)); }
+.gauge.score-low .gauge-svg { filter: drop-shadow(0 6px 16px color-mix(in srgb, #22c55e 40%, transparent)); }
+.verdict { position: relative; overflow: hidden; border-color: var(--glass-line); }
+.verdict::before { content: ''; position: absolute; inset-block: 0; inset-inline-start: 0; width: 6px; background: var(--grad-warm); }
+.verdict-flags li { box-shadow: 0 4px 12px -6px color-mix(in srgb, var(--danger) 50%, transparent); }
+.nova-panel { border-radius: var(--radius); box-shadow: var(--shadow); }
+
+/* סורק */
+.scan-box .scan-view { border-radius: 26px; box-shadow: var(--shadow-lg), 0 0 0 1px var(--glass-line); }
+.scan-line { box-shadow: 0 0 14px 2px #22c55e; }
+.capture { background: var(--glass); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-color: color-mix(in srgb, #22c55e 50%, transparent); }
+
+/* סרגל תחתון בטלפון: זכוכית וכפתור סריקה זוהר */
+@media (max-width: 768px) {
+  .tabbar { background: var(--glass) !important; backdrop-filter: saturate(1.5) blur(18px); -webkit-backdrop-filter: saturate(1.5) blur(18px); border-top: 1px solid var(--glass-line); }
+  .tab-fab { background: var(--grad); color: #052e14; box-shadow: var(--glow); }
+  [data-theme="dark"] .tab-fab { color: #052e14; }
+  .tab-link.active { color: var(--brand); }
+}
+
+/* כותרת תחתונה */
+.main-footer { background: linear-gradient(180deg, transparent, color-mix(in srgb, #22c55e 7%, var(--surface))); border-top-color: var(--glass-line); }
+
+/* הופעה רכה של תוכן בגלילה */
+.animate-item { transition: opacity .6s var(--ease), transform .6s var(--ease); }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-scan .btn-scan { animation: none; }
+  .btn-primary::after, .btn-scan::after { display: none; }
+  .product-card:hover, .category-card:hover, .tool-card:hover, .teaser-card:hover, .ing-card:hover { transform: none; }
+}
+
+/* כתם צבע מונפש מאחורי הפירות שבראש העמוד */
+.hero-art::before {
+  content: ''; position: absolute; inset: 6% 4%; border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%;
+  background: conic-gradient(from 210deg, #86efac, #bef264, #fcd34d, #fca5a5, #86efac);
+  filter: blur(34px); opacity: .7; animation: blob 16s ease-in-out infinite;
+}
+[data-theme="dark"] .hero-art::before { background: conic-gradient(from 210deg, #14532d, #3f6212, #713f12, #7f1d1d, #14532d); opacity: .6; }
+@keyframes blob {
+  0%, 100% { border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%; transform: rotate(0deg) scale(1); }
+  50% { border-radius: 58% 42% 37% 63% / 56% 59% 41% 44%; transform: rotate(18deg) scale(1.05); }
+}
+@media (prefers-reduced-motion: reduce) { .hero-art::before { animation: none; } }
