@@ -2,23 +2,23 @@
 // Smart Food — אפליקציה ראשית + ניתוב
 // ============================================================
 
-import { products } from './data.js?v=35';
-import { debounce, fillContactLinks } from './utils.js?v=35';
-import { getNova, getScore, lookupIngredient, getAlternatives } from './nova.js?v=35';
-import { redFlags } from './verdict.js?v=35';
-import { shareCard, SITE_URL } from './share.js?v=35';
-import { registerServiceWorker, initInstallPrompt } from './pwa.js?v=35';
-import { renderPrefs, initPrefs } from './personal.js?v=35';
+import { products } from './data.js?v=38';
+import { debounce, fillContactLinks } from './utils.js?v=38';
+import { getNova, getScore, lookupIngredient, getAlternatives } from './nova.js?v=38';
+import { redFlags } from './verdict.js?v=38';
+import { shareCard, SITE_URL } from './share.js?v=38';
+import { registerServiceWorker, initInstallPrompt } from './pwa.js?v=38';
+import { renderPrefs, initPrefs } from './personal.js?v=38';
 import {
   renderHeader, renderFooter, renderHome, renderCategory, renderProduct,
   renderCategoriesPage, renderAbout, renderNotFound, renderSearchResults,
   renderProductCard, renderNova, renderAllProducts, renderCompare, renderIngredients, renderIngredient, renderLegal, breadcrumb,
-} from './components.js?v=35';
+} from './components.js?v=38';
 import {
   renderTools, renderLabel, initLabel, renderVs, initVs, renderQuiz, initQuiz,
   renderBasket, initBasket, renderInsights, renderTeam, renderCalcPage, initCalculators, toggleBasket, inBasket, basketCount, onBasket, facts,
-} from './widgets.js?v=35';
-import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=35';
+} from './widgets.js?v=38';
+import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=38';
 
 // פענוח בטוח של הכתובת: כתובת פגומה לא תפיל את האתר
 function safeDecode(str) {
