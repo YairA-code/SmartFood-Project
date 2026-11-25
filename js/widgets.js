@@ -1,14 +1,14 @@
 // ============================================================
-// Smart Food — כלים: בודק תווית, השוואה חופשית, חידון, הסל שלי,
+// Tavitly — כלים: בודק תווית, השוואה חופשית, חידון, הסל שלי,
 // תובנות מהמאגר, ודף הצוות
 // ============================================================
 
-import { products, categories } from './data.js?v=40';
-import { INGREDIENTS, getIngredient, canonicalName } from './ingredients.js?v=40';
-import { NOVA_GROUPS, getNova, getScore, getAlternatives, lookupIngredient, classifyItems, scoreItems, novaReason } from './nova.js?v=40';
-import { escapeHtml } from './utils.js?v=40';
-import { art, breadcrumb, novaBadge, scoreChip, renderProductCard, RISK, ROLE, catOf, ingLink } from './components.js?v=40';
-import { renderCalculators, initCalculators } from './calculators.js?v=40';
+import { products, categories } from './data.js?v=41';
+import { INGREDIENTS, getIngredient, canonicalName } from './ingredients.js?v=41';
+import { NOVA_GROUPS, getNova, getScore, getAlternatives, lookupIngredient, classifyItems, scoreItems, novaReason } from './nova.js?v=41';
+import { escapeHtml } from './utils.js?v=41';
+import { art, breadcrumb, novaBadge, scoreChip, renderProductCard, RISK, ROLE, catOf, ingLink } from './components.js?v=41';
+import { renderCalculators, initCalculators } from './calculators.js?v=41';
 
 const byId = id => products.find(p => p.id === id);
 const pageHero = (icon, title, text) => `
@@ -582,7 +582,7 @@ export function renderTeam() {
   return `
     <main class="page" id="page-content">
       ${breadcrumb([['הצוות']])}
-      ${pageHero('👥', 'הצוות', 'האנשים שמאחורי Smart Food')}
+      ${pageHero('👥', 'הצוות', 'האנשים שמאחורי Tavitly')}
       <div class="container">
         <div class="team-grid">
           ${TEAM.map(m => `
@@ -593,8 +593,8 @@ export function renderTeam() {
             </article>`).join('')}
         </div>
         <section class="prose-card team-about">
-          <h2>למה הקמנו את Smart Food</h2>
-          <p>רובנו לא יודעים מה באמת יש באוכל שאנחנו קונים. הקמנו את Smart Food כדי שכל אחד יוכל לקרוא תווית רכיבים ולהבין אותה, בלי תואר בכימיה.</p>
+          <h2>למה הקמנו את Tavitly</h2>
+          <p>רובנו לא יודעים מה באמת יש באוכל שאנחנו קונים. הקמנו את Tavitly כדי שכל אחד יוכל לקרוא תווית רכיבים ולהבין אותה, בלי תואר בכימיה.</p>
           <p class="muted">חסר לכם מוצר באתר? מצאתם טעות? כתבו לנו: <a data-mail href="#/team">צרו קשר</a></p>
         </section>
       </div>

@@ -1,12 +1,12 @@
 // ============================================================
-// Smart Food — סיווג NOVA, ציון עיבוד והתאמת רכיבים
+// Tavitly — סיווג NOVA, ציון עיבוד והתאמת רכיבים
 // הסיווג נקבע לפי רשימת הרכיבים ולפי ההגדרות של מערכת NOVA
 // (Monteiro ועמיתיו, אוניברסיטת סאו פאולו). כל רכיב במילון מסומן
 // בתפקידו: מזון בסיסי, רכיב בישול, רכיב מעובד, תוסף, או סמן לעיבוד תעשייתי.
 // ============================================================
 
-import { products } from './data.js?v=40';
-import { INGREDIENTS, getIngredient, canonicalName } from './ingredients.js?v=40';
+import { products } from './data.js?v=41';
+import { INGREDIENTS, getIngredient, canonicalName } from './ingredients.js?v=41';
 
 export const NOVA_GROUPS = {
   1: {

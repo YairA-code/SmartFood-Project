@@ -1,12 +1,12 @@
 // ============================================================
-// Smart Food — מילון רכיבים מאוחד: ערך אחד לכל חומר
+// Tavitly — מילון רכיבים מאוחד: ערך אחד לכל חומר
 // על התוויות אותו חומר כתוב בהרבה צורות ("מתפיח (E500)", "סודה לשתייה",
 // "חומרי תפיחה (E500, E450)"). המילון המוצג באתר מאחד אותן לפי מספר E
 // ולפי שמות נרדפים, כך שכל חומר מופיע פעם אחת. ניתוח המוצרים עצמו
 // ממשיך להשתמש ברשימה המלאה שב-ingredients.js.
 // ============================================================
 
-import { INGREDIENTS, canonicalName } from './ingredients.js?v=40';
+import { INGREDIENTS, canonicalName } from './ingredients.js?v=41';
 
 const S = 'safe', CA = 'caution', D = 'danger';
 const A = 'additive', M = 'marker', C = 'culinary', W = 'whole', P = 'processed';

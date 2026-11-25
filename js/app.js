@@ -1,25 +1,25 @@
 // ============================================================
-// Smart Food — אפליקציה ראשית + ניתוב
+// Tavitly — אפליקציה ראשית + ניתוב
 // ============================================================
 
-import { products } from './data.js?v=40';
-import { debounce, fillContactLinks, escapeHtml } from './utils.js?v=40';
-import { searchCatalog, catalogMeta } from './catalog.js?v=40';
-import { getNova, getScore, lookupIngredient, getAlternatives } from './nova.js?v=40';
-import { redFlags } from './verdict.js?v=40';
-import { shareCard, SITE_URL } from './share.js?v=40';
-import { registerServiceWorker, initInstallPrompt } from './pwa.js?v=40';
-import { renderPrefs, initPrefs } from './personal.js?v=40';
+import { products } from './data.js?v=41';
+import { debounce, fillContactLinks, escapeHtml } from './utils.js?v=41';
+import { searchCatalog, catalogMeta } from './catalog.js?v=41';
+import { getNova, getScore, lookupIngredient, getAlternatives } from './nova.js?v=41';
+import { redFlags } from './verdict.js?v=41';
+import { shareCard, SITE_URL } from './share.js?v=41';
+import { registerServiceWorker, initInstallPrompt } from './pwa.js?v=41';
+import { renderPrefs, initPrefs } from './personal.js?v=41';
 import {
   renderHeader, renderFooter, renderHome, renderCategory, renderProduct,
   renderCategoriesPage, renderAbout, renderNotFound, renderSearchResults,
   renderProductCard, renderNova, renderAllProducts, renderCompare, renderIngredients, renderIngredient, renderLegal, breadcrumb,
-} from './components.js?v=40';
+} from './components.js?v=41';
 import {
   renderTools, renderLabel, initLabel, renderVs, initVs, renderQuiz, initQuiz,
   renderBasket, initBasket, renderInsights, renderTeam, renderCalcPage, initCalculators, toggleBasket, inBasket, basketCount, onBasket, facts,
-} from './widgets.js?v=40';
-import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=40';
+} from './widgets.js?v=41';
+import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=41';
 
 // פענוח בטוח של הכתובת: כתובת פגומה לא תפיל את האתר
 function safeDecode(str) {
@@ -27,25 +27,25 @@ function safeDecode(str) {
 }
 
 const TITLES = {
-  legal: 'תנאי שימוש, פרטיות ונגישות | Smart Food',
-  calculators: 'מחשבונים | Smart Food',
-  home: 'Smart Food | מה באמת יש בתווית',
-  categories: 'קטגוריות | Smart Food',
-  compare: 'מעובד מול פשוט | Smart Food',
-  nova: 'מה זה מדד NOVA | Smart Food',
-  ingredients: 'מילון רכיבים | Smart Food',
-  about: 'אודות | Smart Food',
-  tools: 'כלים | Smart Food',
-  products: 'כל המוצרים | Smart Food',
-  label: 'בודק התווית | Smart Food',
-  vs: 'השוואה חופשית | Smart Food',
-  quiz: 'חידון NOVA | Smart Food',
-  basket: 'הסל שלי | Smart Food',
-  insights: 'תובנות מהמאגר | Smart Food',
-  team: 'הצוות | Smart Food',
-  scan: 'סריקת ברקוד | Smart Food',
-  prefs: 'ההעדפות שלי | Smart Food',
-  barcode: 'תוצאת סריקה | Smart Food',
+  legal: 'תנאי שימוש, פרטיות ונגישות | Tavitly',
+  calculators: 'מחשבונים | Tavitly',
+  home: 'Tavitly | מה באמת יש בתווית',
+  categories: 'קטגוריות | Tavitly',
+  compare: 'מעובד מול פשוט | Tavitly',
+  nova: 'מה זה מדד NOVA | Tavitly',
+  ingredients: 'מילון רכיבים | Tavitly',
+  about: 'אודות | Tavitly',
+  tools: 'כלים | Tavitly',
+  products: 'כל המוצרים | Tavitly',
+  label: 'בודק התווית | Tavitly',
+  vs: 'השוואה חופשית | Tavitly',
+  quiz: 'חידון NOVA | Tavitly',
+  basket: 'הסל שלי | Tavitly',
+  insights: 'תובנות מהמאגר | Tavitly',
+  team: 'הצוות | Tavitly',
+  scan: 'סריקת ברקוד | Tavitly',
+  prefs: 'ההעדפות שלי | Tavitly',
+  barcode: 'תוצאת סריקה | Tavitly',
 };
 
 class SmartFoodApp {
@@ -110,7 +110,7 @@ class SmartFoodApp {
     else if (hash.startsWith('#/product/')) {
       const p = products.find(x => x.id === hash.slice(10));
       html = renderProduct(hash.slice(10)); this.page = 'product';
-      if (p) title = `${p.name} | Smart Food`;
+      if (p) title = `${p.name} | Tavitly`;
     }
     else if (hash.startsWith('#/ingredient/')) {
       const key = hash.slice(13);
@@ -121,7 +121,7 @@ class SmartFoodApp {
     else { html = renderNotFound(); this.page = '404'; }
 
     wrapper.innerHTML = html;
-    document.title = title || TITLES[this.page] || 'Smart Food';
+    document.title = title || TITLES[this.page] || 'Tavitly';
     window.scrollTo({ top: 0 });
     this.updateActiveNav();
     this.initSearch();
