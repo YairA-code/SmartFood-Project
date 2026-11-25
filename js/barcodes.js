@@ -206,6 +206,7 @@ export const BARCODES = {
   veg_hot_dogs: ['7290112968722'],
   pringles: ['038000232183'],
   tabasco: ['011210000094', '011210000032'],
+  tabasco_sriracha: ['011210698055'],
   actimel: ['7290006664655', '7290119380923'],
   onion_soup: ['7290107646062'],
   couscous_instant: ['7290003643325'],
