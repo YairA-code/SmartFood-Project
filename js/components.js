@@ -1,17 +1,17 @@
 // ============================================================
-// Smart Food — קומפוננטות רינדור
+// Tavitly — קומפוננטות רינדור
 // ============================================================
 
-import { categories, products, getStats } from './data.js?v=40';
-import { escapeHtml } from './utils.js?v=40';
-import { productArt } from './art.js?v=40';
-import { toolCards, TOOLS, facts } from './widgets.js?v=40';
-import { scanButton } from './scan.js?v=40';
-import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=40';
-import { PHOTOS } from './photos.js?v=40';
-import { redFlags } from './verdict.js?v=40';
-import { avoidHTML } from './personal.js?v=40';
-import { attachProducts, allTerms, findTerms, termSearchText } from './glossary.js?v=40';
+import { categories, products, getStats } from './data.js?v=41';
+import { escapeHtml } from './utils.js?v=41';
+import { productArt } from './art.js?v=41';
+import { toolCards, TOOLS, facts } from './widgets.js?v=41';
+import { scanButton } from './scan.js?v=41';
+import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=41';
+import { PHOTOS } from './photos.js?v=41';
+import { redFlags } from './verdict.js?v=41';
+import { avoidHTML } from './personal.js?v=41';
+import { attachProducts, allTerms, findTerms, termSearchText } from './glossary.js?v=41';
 
 const CAT_HUE = { snacks: 38, sweets: 18, dairy: 205, drinks: 188, bread: 32, canned: 85, cereals: 46, spreads: 12, meat: 355, frozen: 198, instant: 26, fruits: 130 };
 export const RISK = {
@@ -57,9 +57,9 @@ export function renderHeader() {
     <a class="skip-link" href="#page-wrapper">דלג לתוכן</a>
     <header class="main-header" id="main-header">
       <div class="header-inner">
-        <a href="#/" class="logo" aria-label="SmartFood, דף הבית">
+        <a href="#/" class="logo" aria-label="Tavitly, דף הבית">
           <img src="img/art/herb.webp" alt="" class="logo-mark" width="36" height="36">
-          <span class="logo-text">Smart<span class="logo-highlight">Food</span></span>
+          <span class="logo-text">Tavit<span class="logo-highlight">ly</span></span>
         </a>
         <nav class="main-nav" id="main-nav" aria-label="ניווט ראשי">
           <a href="#/" class="nav-link" data-page="home">דף הבית</a>
@@ -100,7 +100,7 @@ export function renderFooter() {
         <div class="footer-brand">
           <a href="#/" class="logo">
             <img src="img/art/herb.webp" alt="" class="logo-mark" width="32" height="32">
-            <span class="logo-text">Smart<span class="logo-highlight">Food</span></span>
+            <span class="logo-text">Tavit<span class="logo-highlight">ly</span></span>
           </a>
           <p>מה באמת יש בתווית: ניתוח של מוצרי מזון מהסופר בישראל לפי מדד NOVA, עם הסבר פשוט לכל רכיב. המידע כללי ואינו ייעוץ רפואי או תזונתי.</p>
           <p class="footer-mail">חסר מוצר? כתבו לנו: <a data-mail href="#/team">צרו קשר</a></p>
@@ -131,7 +131,7 @@ export function renderFooter() {
         </div>
       </div>
       <div class="footer-bottom">
-        <p>© ${new Date().getFullYear()} Smart Food · כל הזכויות שמורות · שמות המוצרים והמותגים שייכים לבעליהם, והאתר אינו קשור ליצרנים · איורים: Microsoft Fluent Emoji (רישיון MIT)</p>
+        <p>© ${new Date().getFullYear()} Tavitly · כל הזכויות שמורות · שמות המוצרים והמותגים שייכים לבעליהם, והאתר אינו קשור ליצרנים · איורים: Microsoft Fluent Emoji (רישיון MIT)</p>
       </div>
     </footer>
   `;
@@ -747,14 +747,14 @@ export function renderAbout() {
       ${breadcrumb([['אודות']])}
       <section class="page-hero">
         <span class="page-hero-icon" aria-hidden="true">🥦</span>
-        <h1>אודות Smart Food</h1>
+        <h1>אודות Tavitly</h1>
         <p>לדעת מה אנחנו מכניסים לפה, ומה אנחנו נותנים לילדים שלנו</p>
       </section>
       <div class="container about-grid">
         <section class="prose-card about-lead">
           <h2>🎯 למה אנחנו כאן</h2>
           <p>רשימת הרכיבים על האריזה אמורה לספר לנו מה יש באוכל. בפועל היא כתובה באותיות קטנות, מלאה במספרי E ובשמות כימיים, ורובנו מוותרים עליה ומכניסים את המוצר לעגלה.</p>
-          <p>הקמנו את Smart Food בגלל הפער הזה. ריכזנו במקום אחד את רוב סוגי החומרים שנמצאים במזון, והסברנו כל אחד מהם בשפה פשוטה, כדי שכל אחד יוכל לדעת מה הוא מכניס לפה שלו ולפה של הילדים שלו.</p>
+          <p>הקמנו את Tavitly בגלל הפער הזה. ריכזנו במקום אחד את רוב סוגי החומרים שנמצאים במזון, והסברנו כל אחד מהם בשפה פשוטה, כדי שכל אחד יוכל לדעת מה הוא מכניס לפה שלו ולפה של הילדים שלו.</p>
           <p>אנחנו לא אומרים לכם מה לאכול. אנחנו רוצים שתבחרו כשאתם יודעים.</p>
         </section>
         <section class="prose-card">
@@ -860,7 +860,7 @@ export function renderLegal() {
           <p><strong>מידע כללי בלבד.</strong> המידע באתר נועד להסביר רשימות רכיבים של מוצרי מזון. הוא אינו ייעוץ רפואי, תזונתי או מקצועי, ואינו תחליף להתייעצות עם רופא או דיאטנית.</p>
           <p><strong>המידע מוצג כמו שהוא.</strong> רשימות הרכיבים מבוססות על תוויות היצרנים במועד הבדיקה, וההסברים והסיווגים נכתבו בעזרת כלי בינה מלאכותית. ייתכנו טעויות או מידע שאינו עדכני, ויצרנים משנים מתכונים מדי פעם. <strong>התווית שעל האריזה היא הקובעת.</strong> השימוש במידע באתר הוא על אחריות המשתמש.</p>
           <p><strong>הסיווגים הם הערכה.</strong> סיווג NOVA וציון העיבוד מחושבים באתר מרשימת הרכיבים בלבד, לפי שיטה שמוסברת ב<a href="#/nova">דף מדד NOVA</a>. הם מתארים את מידת העיבוד התעשייתי, ואינם קביעה על בטיחות, איכות או חוקיות של מוצר כלשהו. כל המוצרים באתר הם מוצרים שנמכרים כחוק, וכל הרכיבים בהם מותרים לשימוש.</p>
-          <p><strong>סימני מסחר.</strong> שמות המוצרים, המותגים והיצרנים באתר שייכים לבעליהם, ומופיעים רק כדי לזהות את המוצר. Smart Food אינו קשור ליצרנים, ואינו מקבל מהם מימון או חסות. האיורים באתר הם איורים כלליים שנוצרו לאתר, ואינם תמונות האריזה הרשמיות או לוגו של יצרן.</p>
+          <p><strong>סימני מסחר.</strong> שמות המוצרים, המותגים והיצרנים באתר שייכים לבעליהם, ומופיעים רק כדי לזהות את המוצר. Tavitly אינו קשור ליצרנים, ואינו מקבל מהם מימון או חסות. האיורים באתר הם איורים כלליים שנוצרו לאתר, ואינם תמונות האריזה הרשמיות או לוגו של יצרן.</p>
           <p><strong>מקורות.</strong> כשיש מקור פתוח לרשימת הרכיבים, הוא מצוין בדף המוצר. מוצרים שרשימת הרכיבים שלהם עוד לא אומתה מול מקור עדכני מסומנים בדף המוצר בהערה בולטת. חלק מהמידע והברקודים מגיע מהמאגר הפתוח <a href="https://world.openfoodfacts.org" target="_blank" rel="noopener noreferrer">Open Food Facts</a> (רישיון ODbL), וחלק מהברקודים מקובצי המחירים שרשתות השיווק מפרסמות לפי חוק קידום התחרות בענף המזון. <strong>המאגר המורחב</strong> (מוצרים שמזוהים בסריקה ואין להם דף מוצר משלהם) מבוסס על קובצי המחירים האלה ועל Open Food Facts, והניתוח שלו אוטומטי ולא נבדק ידנית.</p>
           <p><strong>תיקונים והסרה.</strong> מצאתם טעות? יצרן שמבקש לתקן מידע על מוצר שלו? <a data-mail href="#/legal">כתבו לנו</a>, ונבדוק ונתקן או נסיר את המידע בהקדם.</p>
         </section>

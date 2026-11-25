@@ -1,12 +1,12 @@
 // ============================================================
-// Smart Food — מאגר המוצרים
+// Tavitly — מאגר המוצרים
 // רשימות הרכיבים לפי תוויות היצרנים. כשיש מקור פתוח (Open Food Facts) או אתר יצרן, הקישור בשדה source.
 // מוצרים טריים או כלליים (פירות, ירקות, שמנים) מסומנים כ"מוצר כללי".
 // ============================================================
 
-import { EXTRA, EXTRA_LABEL } from './products-extra.js?v=40';
-import { BARCODES } from './barcodes.js?v=40';
-import { MORE } from './products-more.js?v=40';
+import { EXTRA, EXTRA_LABEL } from './products-extra.js?v=41';
+import { BARCODES } from './barcodes.js?v=41';
+import { MORE } from './products-more.js?v=41';
 
 const src = (label, url) => ({ label, url });
 

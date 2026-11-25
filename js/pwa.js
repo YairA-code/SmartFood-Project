@@ -1,7 +1,7 @@
 // ============================================================
-// Smart Food — התקנה למסך הבית (PWA)
+// Tavitly — התקנה למסך הבית (PWA)
 // Service Worker שומר את האתר במכשיר, ובטלפון מופיעה הצעה להוסיף
-// את SmartFood למסך הבית, כך שייפתח במסך מלא ישר לסורק.
+// את Tavitly למסך הבית, כך שייפתח במסך מלא ישר לסורק.
 // ============================================================
 
 const KEY = 'smart-food-install-dismissed';
@@ -42,10 +42,10 @@ export function initInstallPrompt() {
   let deferred = null;
   window.addEventListener('beforeinstallprompt', e => {
     e.preventDefault(); deferred = e;
-    setTimeout(() => banner('<strong>SmartFood במסך הבית</strong><span>נפתח במסך מלא, ישר לסורק הברקודים. בלי חנות אפליקציות.</span>',
+    setTimeout(() => banner('<strong>Tavitly במסך הבית</strong><span>נפתח במסך מלא, ישר לסורק הברקודים. בלי חנות אפליקציות.</span>',
       async () => { deferred.prompt(); await deferred.userChoice.catch(() => {}); deferred = null; }), 4000);
   });
   if (isIOS()) {
-    setTimeout(() => banner('<strong>SmartFood במסך הבית</strong><span>לחצו על כפתור השיתוף <b aria-label="שיתוף">⬆︎</b> ואז על „הוספה למסך הבית”. האתר ייפתח במסך מלא, ישר לסורק.</span>'), 6000);
+    setTimeout(() => banner('<strong>Tavitly במסך הבית</strong><span>לחצו על כפתור השיתוף <b aria-label="שיתוף">⬆︎</b> ואז על „הוספה למסך הבית”. האתר ייפתח במסך מלא, ישר לסורק.</span>'), 6000);
   }
 }

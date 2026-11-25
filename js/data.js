@@ -1,9 +1,9 @@
 // ============================================================
-// Smart Food — נתונים: קטגוריות, מוצרים ומילון רכיבים
+// Tavitly — נתונים: קטגוריות, מוצרים ומילון רכיבים
 // ============================================================
 
-import { products } from './products.js?v=40';
-import { INGREDIENTS } from './ingredients.js?v=40';
+import { products } from './products.js?v=41';
+import { INGREDIENTS } from './ingredients.js?v=41';
 
 export { products };
 export const ingredientDB = INGREDIENTS;

@@ -1,5 +1,5 @@
 // ============================================================
-// Smart Food — כרטיס שיתוף לוואטסאפ
+// Tavitly — כרטיס שיתוף לוואטסאפ
 // התמונה נוצרת בדפדפן (canvas) ולא נשלחת לשום שרת. בטלפון היא
 // מצורפת דרך חלונית השיתוף של המכשיר; במחשב נפתח וואטסאפ עם טקסט
 // והתמונה יורדת למכשיר.
@@ -34,7 +34,7 @@ export async function drawCard(data) {
 
   ctx.fillStyle = '#f6f7f2'; ctx.fillRect(0, 0, W, H);
   ctx.fillStyle = '#14532d'; ctx.fillRect(0, 0, W, 150);
-  ctx.fillStyle = '#ffffff'; ctx.font = `800 64px ${FONT}`; ctx.fillText('SmartFood', R, 100);
+  ctx.fillStyle = '#ffffff'; ctx.font = `800 64px ${FONT}`; ctx.fillText('Tavitly', R, 100);
   ctx.font = `500 34px ${FONT}`; ctx.fillStyle = '#bbf7d0'; ctx.textAlign = 'left'; ctx.fillText('מה באמת יש בתווית', 80, 98); ctx.textAlign = 'right';
 
   let y = 250;
@@ -92,14 +92,14 @@ export function shareText(data) {
 export async function shareCard(data) {
   const text = shareText(data);
   const blob = await drawCard(data);
-  const file = blob && new File([blob], 'smartfood.png', { type: 'image/png' });
+  const file = blob && new File([blob], 'tavitly.png', { type: 'image/png' });
   if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
     try { await navigator.share({ files: [file], text }); return 'shared'; }
     catch (e) { if (e && e.name === 'AbortError') return 'cancelled'; }
   }
   // במחשב: הורדת התמונה ופתיחת וואטסאפ עם הטקסט
   if (blob) {
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'smartfood.png';
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'tavitly.png';
     document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
   }
   window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank', 'noopener');

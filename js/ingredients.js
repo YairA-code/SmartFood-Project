@@ -1,5 +1,5 @@
 // ============================================================
-// Smart Food — מילון הרכיבים
+// Tavitly — מילון הרכיבים
 // לכל רכיב: סוג, רמת סיכון (safe / caution / danger), הסבר,
 // ותפקיד בסיווג NOVA:
 //   whole     — מזון טבעי או מעובד מינימלית (NOVA 1)
@@ -11,7 +11,7 @@
 // המזון והמחקר הקיים. זה מידע לימודי ולא ייעוץ רפואי.
 // ============================================================
 
-import { MORE_INGREDIENTS } from './ingredients-more.js?v=40';
+import { MORE_INGREDIENTS } from './ingredients-more.js?v=41';
 
 const W = 'whole', C = 'culinary', P = 'processed', A = 'additive', M = 'marker';
 const S = 'safe', CA = 'caution', D = 'danger';

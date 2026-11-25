@@ -1,11 +1,11 @@
 // ============================================================
-// Smart Food — Service Worker
+// Tavitly — Service Worker
 // שומר את האתר במכשיר, כדי שייפתח מיד גם בקליטה חלשה בסופר.
 // גרסה חדשה: לעדכן את VERSION יחד עם ?v= בקבצים.
 // בקשות למאגר Open Food Facts לא נשמרות. מנוע קריאת התוויות נשמר רק אחרי שימוש ראשון.
 // ============================================================
 
-const VERSION = '40';
+const VERSION = '41';
 const CACHE = 'smartfood-v' + VERSION;
 const v = f => f + '?v=' + VERSION;
 const CORE = [

@@ -1,19 +1,19 @@
 // ============================================================
-// Smart Food — סורק ברקוד
+// Tavitly — סורק ברקוד
 // סורקים ברקוד במצלמה (או מקלידים אותו), ומגיעים ישר לדף המוצר.
 // מוצר שלא נמצא במאגר שלנו נבדק מול המאגר הפתוח Open Food Facts
 // (ללא מפתח API וללא הרשמה), ורשימת הרכיבים שלו מנותחת בדפדפן.
 // ============================================================
 
-import { products } from './data.js?v=40';
-import { escapeHtml } from './utils.js?v=40';
-import { breadcrumb, renderProductCard } from './components.js?v=40';
-import { analyzeLabel, labelResultHTML } from './widgets.js?v=40';
-import { redFlags } from './verdict.js?v=40';
-import { readLabel, myLabel, myLabelCount, saveMyLabel, removeMyLabel, offAddUrl, PIONEER_AT } from './ocr.js?v=40';
-import { avoidHTML, addHistory, historyHTML, clearHistory } from './personal.js?v=40';
-import { getNova } from './nova.js?v=40';
-import { lookupCatalog } from './catalog.js?v=40';
+import { products } from './data.js?v=41';
+import { escapeHtml } from './utils.js?v=41';
+import { breadcrumb, renderProductCard } from './components.js?v=41';
+import { analyzeLabel, labelResultHTML } from './widgets.js?v=41';
+import { redFlags } from './verdict.js?v=41';
+import { readLabel, myLabel, myLabelCount, saveMyLabel, removeMyLabel, offAddUrl, PIONEER_AT } from './ocr.js?v=41';
+import { avoidHTML, addHistory, historyHTML, clearHistory } from './personal.js?v=41';
+import { getNova } from './nova.js?v=41';
+import { lookupCatalog } from './catalog.js?v=41';
 
 const OFF_API = 'https://world.openfoodfacts.org/api/v2/product/';
 const OFF_PAGE = 'https://world.openfoodfacts.org/product/';
@@ -324,8 +324,8 @@ export function renderBarcode(raw) {
 // ——————————————————————————————————————
 function pioneerHTML() {
   const n = myLabelCount();
-  if (n >= PIONEER_AT) return `<p class="pioneer is-on"><span aria-hidden="true">🏅</span> <strong>חלוץ SmartFood</strong> · הוספתם ${n} מוצרים שלא היו במאגר</p>`;
-  return n ? `<p class="pioneer"><span aria-hidden="true">🌱</span> הוספתם ${n} ${n === 1 ? 'מוצר' : 'מוצרים'}. עוד ${PIONEER_AT - n} לתג „חלוץ SmartFood”</p>` : '';
+  if (n >= PIONEER_AT) return `<p class="pioneer is-on"><span aria-hidden="true">🏅</span> <strong>חלוץ Tavitly</strong> · הוספתם ${n} מוצרים שלא היו במאגר</p>`;
+  return n ? `<p class="pioneer"><span aria-hidden="true">🌱</span> הוספתם ${n} ${n === 1 ? 'מוצר' : 'מוצרים'}. עוד ${PIONEER_AT - n} לתג „חלוץ Tavitly”</p>` : '';
 }
 
 function captureHTML(code, lead) {
@@ -405,7 +405,7 @@ export function initCapture() {
       <div class="capture-saved">
         <p><strong>✓ נשמר במכשיר שלכם.</strong> בפעם הבאה שתסרקו את הברקוד הזה, התשובה תופיע מיד.</p>
         ${isNew ? pioneerHTML() : ''}
-        <p class="muted small">רוצים שגם אחרים יקבלו תשובה על המוצר הזה? הוסיפו אותו למאגר הפתוח Open Food Facts, שממנו SmartFood בודק מוצרים שלא נמצאים אצלנו. ההוספה נעשית באתר שלהם, עם חשבון משלכם.</p>
+        <p class="muted small">רוצים שגם אחרים יקבלו תשובה על המוצר הזה? הוסיפו אותו למאגר הפתוח Open Food Facts, שממנו Tavitly בודק מוצרים שלא נמצאים אצלנו. ההוספה נעשית באתר שלהם, עם חשבון משלכם.</p>
         <a class="btn btn-ghost btn-sm" href="${offAddUrl(code)}" target="_blank" rel="noopener noreferrer">🌍 הוספה למאגר הפתוח</a>
       </div>`;
     out.scrollIntoView({ behavior: 'smooth', block: 'start' });
