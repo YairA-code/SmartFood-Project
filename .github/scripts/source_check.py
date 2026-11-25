@@ -6,7 +6,7 @@
 התוצאה נכתבת לקובץ Markdown, וה-workflow פותח או מעדכן issue אחד. שום דבר באתר לא משתנה
 אוטומטית: כל תיקון עובר בדיקה ומיזוג ידני.
 """
-import json, re, sys, time, html, datetime, urllib.request, urllib.parse
+import json, re, sys, time, html, datetime, difflib, urllib.request, urllib.parse
 
 UA = {'User-Agent': 'Mozilla/5.0 (compatible; SmartFood-source-check; +https://yaira-code.github.io/SmartFood-Project/)'}
 products = json.load(open(sys.argv[1], encoding='utf-8'))
@@ -48,6 +48,8 @@ def readable(text):
     heb = re.findall(r'[\u0590-\u05FF]', text)
     return len(letters) > 15 and len(heb) / len(letters) > 0.85
 
+VITAMINS = set('ויטמין יטמין יאמין ויטמינ מינרל ניאצין פולית ריבופלאבין ריבולפלאבין תיאמין פנטותנית פאנטותנית ביוטין קובלמין ברזל אבץ סידן מגנזיום יוד אשלגן חומצה'.split())
+
 def compare(ours, theirs):
     """רכיבים שלנו שלא מופיעים במקור, ומילים מהמקור שאין אצלנו"""
     W, E = words(theirs), enums(theirs)
@@ -55,10 +57,15 @@ def compare(ours, theirs):
     for i in ours:
         iw, ie = words(i), enums(i)
         if ie and ie <= E: continue
+        iw = {w for w in iw if w not in VITAMINS}
         if not iw: continue
         if sum(1 for w in iw if any(w in x or x in w for x in W)) / len(iw) < 0.5: missing.append(i)
     OW = set().union(*[words(i) for i in ours]) if ours else set()
-    extra = sorted(w for w in W if not any(w in x or x in w for x in OW))
+    # מילה מהמקור נחשבת "חסרה אצלנו" רק אם אין לה מקבילה, גם לא עם שגיאת כתיב קטנה,
+    # ואם היא לא שם של ויטמין או מינרל (אצלנו לפעמים כתוב רק "ויטמינים")
+    def matched(w):
+        return any(w in x or x in w or difflib.SequenceMatcher(None, w, x).ratio() >= 0.75 for x in OW)
+    extra = sorted(w for w in W if w not in VITAMINS and not matched(w))
     return missing, extra
 
 def shuf_ingredients(page):
