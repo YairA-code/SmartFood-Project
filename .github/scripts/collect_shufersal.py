@@ -81,7 +81,10 @@ for f, entries in shards.items():
 allp = [e for entries in shards.values() for e in entries]
 names = [[e['c'], e['n'], e.get('b', ''), 1 if e.get('i') else 0] for e in sorted(allp, key=lambda e: e['n'])]
 json.dump(names, open(os.path.join(cat, 'names.json'), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
-meta = {'products': len(allp), 'with_ingredients': sum(1 for e in allp if e.get('i')), 'updated': TODAY.isoformat()}
+try: prev = json.load(open(os.path.join(cat, 'meta.json')))
+except Exception: prev = {}
+meta = {'products': len(allp), 'with_ingredients': sum(1 for e in allp if e.get('i')),
+        'updated': TODAY.isoformat() if (added or refreshed or missing) else prev.get('updated', TODAY.isoformat())}
 json.dump(meta, open(os.path.join(cat, 'meta.json'), 'w'), separators=(',', ':'))
 print(f'added={added} refreshed={refreshed} no_ingredients={missing}', meta, flush=True)
 out = os.environ.get('GITHUB_OUTPUT')
