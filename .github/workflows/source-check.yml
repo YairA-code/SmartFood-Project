@@ -1,6 +1,8 @@
-# בדיקה יומית: האם רשימות הרכיבים במקורות השתנו, והאם נמצאו ברקודים חדשים.
-# רץ בשעות ששופרסל מתירה ב-robots.txt (04:00-08:45 UTC). לא משנה את האתר:
-# פותח או מעדכן issue אחד, ותיקונים נעשים ידנית.
+# בדיקה יומית, בשעות ששופרסל מתירה ב-robots.txt (04:00-08:45 UTC, דף כל 10 שניות):
+# 1. check: האם רשימות הרכיבים של המוצרים שנבדקו השתנו, והאם נמצאו ברקודים חדשים.
+#    לא משנה את האתר: פותח או מעדכן issue אחד.
+# 2. collect: אחרי הבדיקה, אוסף רשימות רכיבים משופרסל למאגר המורחב (data/catalog)
+#    ושומר אותן לאתר. הניתוח של המוצרים האלה אוטומטי ומסומן ככזה באתר.
 name: Daily source check
 
 on:
@@ -38,3 +40,30 @@ jobs:
           num=$(gh issue list --label source-check --state open --json number --jq '.[0].number')
           if [ -n "$num" ]; then gh issue comment "$num" --body-file /tmp/report.md
           else gh issue create --title "בדיקת מקורות יומית: יש מוצרים לבדיקה" --label source-check --body-file /tmp/report.md; fi
+
+  collect:
+    needs: check
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 280
+    # הסוד שמור בסביבה catalog-bot, שמותרת רק לענף main: קוד מכל ענף אחר לא יכול לגשת אליו
+    environment: catalog-bot
+    permissions:
+      contents: read
+    steps:
+      # שמירה דרך מפתח פריסה (deploy key) שרשום ברשימת החריגים של חוק ההגנה.
+      # המפתח הפרטי שמור כסוד CATALOG_DEPLOY_KEY, שרק בעל המאגר יכול לראות או לשנות.
+      - uses: actions/checkout@v4
+        with:
+          ssh-key: ${{ secrets.CATALOG_DEPLOY_KEY }}
+      - name: Collect ingredient lists from Shufersal Online
+        run: python3 .github/scripts/collect_shufersal.py data/catalog
+      - name: Save to the site
+        run: |
+          if git diff --quiet -- data/catalog; then echo "no changes"; exit 0; fi
+          git config user.name "smartfood-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/catalog
+          git commit -m "מאגר מורחב: רשימות רכיבים משופרסל אונליין ($(date -u +%Y-%m-%d))"
+          for i in 1 2 3; do git pull --rebase -q && git push && break; sleep 10; done
+
