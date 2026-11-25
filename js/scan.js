@@ -5,15 +5,15 @@
 // (ללא מפתח API וללא הרשמה), ורשימת הרכיבים שלו מנותחת בדפדפן.
 // ============================================================
 
-import { products } from './data.js?v=39';
-import { escapeHtml } from './utils.js?v=39';
-import { breadcrumb, renderProductCard } from './components.js?v=39';
-import { analyzeLabel, labelResultHTML } from './widgets.js?v=39';
-import { redFlags } from './verdict.js?v=39';
-import { readLabel, myLabel, myLabelCount, saveMyLabel, removeMyLabel, offAddUrl, PIONEER_AT } from './ocr.js?v=39';
-import { avoidHTML, addHistory, historyHTML, clearHistory } from './personal.js?v=39';
-import { getNova } from './nova.js?v=39';
-import { lookupCatalog } from './catalog.js?v=39';
+import { products } from './data.js?v=40';
+import { escapeHtml } from './utils.js?v=40';
+import { breadcrumb, renderProductCard } from './components.js?v=40';
+import { analyzeLabel, labelResultHTML } from './widgets.js?v=40';
+import { redFlags } from './verdict.js?v=40';
+import { readLabel, myLabel, myLabelCount, saveMyLabel, removeMyLabel, offAddUrl, PIONEER_AT } from './ocr.js?v=40';
+import { avoidHTML, addHistory, historyHTML, clearHistory } from './personal.js?v=40';
+import { getNova } from './nova.js?v=40';
+import { lookupCatalog } from './catalog.js?v=40';
 
 const OFF_API = 'https://world.openfoodfacts.org/api/v2/product/';
 const OFF_PAGE = 'https://world.openfoodfacts.org/product/';
@@ -463,7 +463,8 @@ function identifiedHTML(code, e) {
     <div class="barcode-actions">${again}</div>`;
 }
 
-function offProductHTML(code, p) {
+function offProductHTML(code, p, src) {
+  src = src || { label: 'Open Food Facts', url: `${OFF_PAGE}${encodeURIComponent(code)}`, license: ' (רישיון ODbL)', note: 'הנתונים מגיעים מהמאגר הפתוח Open Food Facts, שנכתב על ידי מתנדבים' };
   const name = p.product_name_he || p.product_name || 'מוצר ללא שם';
   const brand = (p.brands || '').split(',')[0].trim();
   const text = HEBREW.test(p.ingredients_text_he || '') ? p.ingredients_text_he
@@ -480,13 +481,13 @@ function offProductHTML(code, p) {
         <p class="muted">${escapeHtml([brand, p.quantity].filter(Boolean).join(' · '))}</p>
       </div>
     </section>
-    <p class="barcode-note">המוצר הזה לא נמצא במאגר שנבדק על ידינו. הנתונים מגיעים מהמאגר הפתוח Open Food Facts, שנכתב על ידי מתנדבים, והניתוח נעשה אוטומטית. כדאי להשוות לרשימת הרכיבים שעל האריזה.</p>
+    <p class="barcode-note">המוצר הזה לא נמצא במאגר שנבדק על ידינו. ${escapeHtml(src.note)}, והניתוח נעשה אוטומטית ולא נבדק ידנית. כדאי להשוות לרשימת הרכיבים שעל האריזה.</p>
     ${similar.length ? `
       <div class="section-head start"><h2 class="section-title">אולי זה אחד מאלה?</h2><p class="section-subtitle">מוצרים דומים מהמאגר שלנו, עם רשימת רכיבים שנבדקה והסבר לכל רכיב</p></div>
       <div class="products-grid">${similar.map(renderProductCard).join('')}</div>` : ''}
     ${result ? flagsHTML(result) + labelResultHTML(result) : `
       ${captureHTML(code, 'אין כאן רשימת רכיבים בעברית. צלמו אותה מהאריזה')}`}
-    <p class="source-note">מקור הנתונים: <a href="${OFF_PAGE}${escapeHtml(code)}" target="_blank" rel="noopener noreferrer">Open Food Facts</a> (רישיון ODbL).</p>
+    <p class="source-note">מקור רשימת הרכיבים: <a href="${escapeHtml(src.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(src.label)}</a>${src.license || ''}.</p>
     <div class="barcode-actions">${again}</div>`;
 }
 
@@ -510,7 +511,10 @@ export async function initBarcode(raw, onDone) {
     addHistory({ code, name: cat.n });
     const body = document.getElementById('barcode-body');
     if (body && location.hash === here) {
-      body.innerHTML = offProductHTML(code, { product_name_he: cat.n, brands: cat.b, quantity: cat.q, ingredients_text_he: cat.i });
+      const src = cat.s === 'shufersal'
+        ? { label: 'שופרסל אונליין', url: `https://www.shufersal.co.il/online/he/x/p/P_${encodeURIComponent(cat.u || cat.c)}`, note: `רשימת הרכיבים נלקחה מדף המוצר בשופרסל אונליין${cat.d ? ` (${cat.d})` : ''}` }
+        : null;
+      body.innerHTML = offProductHTML(code, { product_name_he: cat.n, brands: cat.b, quantity: cat.q, ingredients_text_he: cat.i }, src);
       initCapture(); if (onDone) onDone();
     }
     return;

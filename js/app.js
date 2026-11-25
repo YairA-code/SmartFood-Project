@@ -2,24 +2,24 @@
 // Smart Food — אפליקציה ראשית + ניתוב
 // ============================================================
 
-import { products } from './data.js?v=39';
-import { debounce, fillContactLinks, escapeHtml } from './utils.js?v=39';
-import { searchCatalog, catalogMeta } from './catalog.js?v=39';
-import { getNova, getScore, lookupIngredient, getAlternatives } from './nova.js?v=39';
-import { redFlags } from './verdict.js?v=39';
-import { shareCard, SITE_URL } from './share.js?v=39';
-import { registerServiceWorker, initInstallPrompt } from './pwa.js?v=39';
-import { renderPrefs, initPrefs } from './personal.js?v=39';
+import { products } from './data.js?v=40';
+import { debounce, fillContactLinks, escapeHtml } from './utils.js?v=40';
+import { searchCatalog, catalogMeta } from './catalog.js?v=40';
+import { getNova, getScore, lookupIngredient, getAlternatives } from './nova.js?v=40';
+import { redFlags } from './verdict.js?v=40';
+import { shareCard, SITE_URL } from './share.js?v=40';
+import { registerServiceWorker, initInstallPrompt } from './pwa.js?v=40';
+import { renderPrefs, initPrefs } from './personal.js?v=40';
 import {
   renderHeader, renderFooter, renderHome, renderCategory, renderProduct,
   renderCategoriesPage, renderAbout, renderNotFound, renderSearchResults,
   renderProductCard, renderNova, renderAllProducts, renderCompare, renderIngredients, renderIngredient, renderLegal, breadcrumb,
-} from './components.js?v=39';
+} from './components.js?v=40';
 import {
   renderTools, renderLabel, initLabel, renderVs, initVs, renderQuiz, initQuiz,
   renderBasket, initBasket, renderInsights, renderTeam, renderCalcPage, initCalculators, toggleBasket, inBasket, basketCount, onBasket, facts,
-} from './widgets.js?v=39';
-import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=39';
+} from './widgets.js?v=40';
+import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=40';
 
 // פענוח בטוח של הכתובת: כתובת פגומה לא תפיל את האתר
 function safeDecode(str) {
