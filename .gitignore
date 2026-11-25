@@ -5,6 +5,8 @@ node_modules/
 *.zip
 *.log
 *.py
+# סקריפטי הבדיקה והאיסוף היומיים של GitHub Actions כן נכנסים למאגר
+!.github/scripts/*.py
 .env
 .env.*
 .surge/
