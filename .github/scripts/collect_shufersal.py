@@ -84,3 +84,8 @@ json.dump(names, open(os.path.join(cat, 'names.json'), 'w', encoding='utf-8'), e
 meta = {'products': len(allp), 'with_ingredients': sum(1 for e in allp if e.get('i')), 'updated': TODAY.isoformat()}
 json.dump(meta, open(os.path.join(cat, 'meta.json'), 'w'), separators=(',', ':'))
 print(f'added={added} refreshed={refreshed} no_ingredients={missing}', meta, flush=True)
+out = os.environ.get('GITHUB_OUTPUT')
+if out:
+    with open(out, 'a') as f:
+        f.write(f'added={added}\nrefreshed={refreshed}\nmissing={missing}\nqueue={len(queue)}\nwith_ingredients={meta["with_ingredients"]}\n')
+        f.write(f'window={"yes" if added + refreshed + missing else "no"}\n')

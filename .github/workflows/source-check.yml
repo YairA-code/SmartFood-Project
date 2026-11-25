@@ -55,6 +55,11 @@ jobs:
     environment: catalog-bot
     permissions:
       contents: read
+    outputs:
+      added: ${{ steps.collect.outputs.added }}
+      queue: ${{ steps.collect.outputs.queue }}
+      window: ${{ steps.collect.outputs.window }}
+      with_ingredients: ${{ steps.collect.outputs.with_ingredients }}
     steps:
       # שמירה דרך מפתח פריסה (deploy key) שרשום ברשימת החריגים של חוק ההגנה.
       # המפתח הפרטי שמור כסוד CATALOG_DEPLOY_KEY, שרק בעל המאגר יכול לראות או לשנות.
@@ -62,6 +67,7 @@ jobs:
         with:
           ssh-key: ${{ secrets.CATALOG_DEPLOY_KEY }}
       - name: Collect ingredient lists from Shufersal Online
+        id: collect
         run: python3 .github/scripts/collect_shufersal.py data/catalog
       - name: Save to the site
         run: |
@@ -71,4 +77,38 @@ jobs:
           git add data/catalog
           git commit -m "מאגר מורחב: רשימות רכיבים משופרסל אונליין ($(date -u +%Y-%m-%d))"
           for i in 1 2 3; do git pull --rebase -q && git push && break; sleep 10; done
+
+  # בקרה: אם הבדיקה או האיסוף נכשלו, או שהאיסוף רץ בחלון ולא הוסיף כלום,
+  # נפתח (או מתעדכן) issue עם התווית daily-health, ו-GitHub שולח מייל לבעל המאגר.
+  health:
+    needs: [check, collect]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Report problems
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          CHECK: ${{ needs.check.result }}
+          COLLECT: ${{ needs.collect.result }}
+          ADDED: ${{ needs.collect.outputs.added }}
+          QUEUE: ${{ needs.collect.outputs.queue }}
+          WINDOW: ${{ needs.collect.outputs.window }}
+          TOTAL: ${{ needs.collect.outputs.with_ingredients }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          problem=""
+          [ "$CHECK" != "success" ] && problem="$problem\n- הבדיקה היומית הסתיימה במצב: $CHECK"
+          [ "$COLLECT" != "success" ] && problem="$problem\n- האיסוף משופרסל הסתיים במצב: $COLLECT"
+          if [ "$COLLECT" = "success" ] && [ "$WINDOW" = "yes" ] && [ "${ADDED:-0}" = "0" ] && [ "${QUEUE:-0}" != "0" ]; then
+            problem="$problem\n- האיסוף רץ בשעות המותרות אבל לא הוסיף אף רשימת רכיבים (בתור: $QUEUE). ייתכן שמבנה הדף בשופרסל השתנה."
+          fi
+          if [ -z "$problem" ]; then echo "healthy: added=$ADDED total=$TOTAL window=$WINDOW"; exit 0; fi
+          body=$(printf "## בעיה בריצה היומית %s\n%b\n\nפרטים: %s" "$(date -u +%Y-%m-%d)" "$problem" "$RUN_URL")
+          gh label create daily-health --color D93F0B --description "תקלה בריצה היומית" 2>/dev/null || true
+          num=$(gh issue list --label daily-health --state open --json number --jq '.[0].number')
+          if [ -n "$num" ]; then gh issue comment "$num" --body "$body"
+          else gh issue create --title "תקלה בריצה היומית של האתר" --label daily-health --body "$body"; fi
 
