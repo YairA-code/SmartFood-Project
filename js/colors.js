@@ -131,7 +131,7 @@ export const COLORS = {
   pistachio_paste: ['#8ab54a', '#2f6a3a'], honey: ['#e9a33a', '#2f8a3a'], silan: ['#5a2a1a', '#2f8a3a'],
   hashachar: ['#5a2e1a', '#f2e3c4'], lotus_spread: ['#c9862a', '#c4232b'], dulce_de_leche: ['#c9862a', '#ffffff'],
   chocolate_syrup: ['#3a1f14', '#c4232b'], matbucha: ['#c4232b', '#ffffff'], eggplant_mayo: ['#ffffff', '#5a2a6a'],
-  soy_sauce: ['#3a1f14', '#c4232b'], teriyaki: ['#3a1f14', '#d6262f'], tabasco: ['#c4232b', '#2f8a3a'],
+  soy_sauce: ['#3a1f14', '#c4232b'], teriyaki: ['#3a1f14', '#d6262f'], tabasco: ['#c4232b', '#2f8a3a'], tabasco_sriracha: ['#b91c1c', '#2f8a3a'],
   thousand_island: ['#f2a26a', '#c4232b'], sweet_chili: ['#e2462a', '#ffffff'], bbq_sauce: ['#5a1f14', '#e2262f'],
   garlic_sauce: ['#f6f2e4', '#2f8a3a'], dijon_mustard: ['#e9c42a', '#1a1a1a'], schug: ['#2f6a2a', '#d6262f'],
   amba: ['#f2c21f', '#2f6a2a'], chopped_liver: ['#ffffff', '#7a3a1e'], coleslaw: ['#ffffff', '#2f8a3a'],

@@ -5,14 +5,15 @@
 // (ללא מפתח API וללא הרשמה), ורשימת הרכיבים שלו מנותחת בדפדפן.
 // ============================================================
 
-import { products } from './data.js?v=38';
-import { escapeHtml } from './utils.js?v=38';
-import { breadcrumb, renderProductCard } from './components.js?v=38';
-import { analyzeLabel, labelResultHTML } from './widgets.js?v=38';
-import { redFlags } from './verdict.js?v=38';
-import { readLabel, myLabel, myLabelCount, saveMyLabel, removeMyLabel, offAddUrl, PIONEER_AT } from './ocr.js?v=38';
-import { avoidHTML, addHistory, historyHTML, clearHistory } from './personal.js?v=38';
-import { getNova } from './nova.js?v=38';
+import { products } from './data.js?v=39';
+import { escapeHtml } from './utils.js?v=39';
+import { breadcrumb, renderProductCard } from './components.js?v=39';
+import { analyzeLabel, labelResultHTML } from './widgets.js?v=39';
+import { redFlags } from './verdict.js?v=39';
+import { readLabel, myLabel, myLabelCount, saveMyLabel, removeMyLabel, offAddUrl, PIONEER_AT } from './ocr.js?v=39';
+import { avoidHTML, addHistory, historyHTML, clearHistory } from './personal.js?v=39';
+import { getNova } from './nova.js?v=39';
+import { lookupCatalog } from './catalog.js?v=39';
 
 const OFF_API = 'https://world.openfoodfacts.org/api/v2/product/';
 const OFF_PAGE = 'https://world.openfoodfacts.org/product/';
@@ -445,6 +446,23 @@ function notFoundHTML(code, why) {
     <div class="barcode-actions"><a class="btn btn-ghost btn-sm" href="#/products">חיפוש לפי שם</a>${again}</div>`;
 }
 
+// מוצר שזיהינו מקובצי המחירים, אבל עוד אין לנו את רשימת הרכיבים שלו
+function identifiedHTML(code, e) {
+  const similar = similarProducts(e.n, e.b);
+  return `
+    <section class="barcode-head"><div>
+      <p class="eyebrow">זיהינו לפי ברקוד <bdi>${escapeHtml(code)}</bdi></p>
+      <h1 class="barcode-h">${escapeHtml(e.n)}</h1>
+      ${e.b ? `<p class="muted">${escapeHtml(e.b)}</p>` : ''}
+    </div></section>
+    <p class="barcode-note">המוצר מופיע בקובצי המחירים שהרשתות מפרסמות, אבל עוד אין לנו את רשימת הרכיבים שלו. צלמו אותה, ותקבלו ציון תוך כמה שניות.</p>
+    ${captureHTML(code)}
+    ${similar.length ? `
+      <div class="section-head start"><h2 class="section-title">מוצרים דומים שכבר בדקנו</h2></div>
+      <div class="products-grid">${similar.map(renderProductCard).join('')}</div>` : ''}
+    <div class="barcode-actions">${again}</div>`;
+}
+
 function offProductHTML(code, p) {
   const name = p.product_name_he || p.product_name || 'מוצר ללא שם';
   const brand = (p.brands || '').split(',')[0].trim();
@@ -487,20 +505,31 @@ export async function initBarcode(raw, onDone) {
   }
   const here = location.hash;
   let html;
+  const cat = await lookupCatalog(code);
+  if (cat && cat.i) {
+    addHistory({ code, name: cat.n });
+    const body = document.getElementById('barcode-body');
+    if (body && location.hash === here) {
+      body.innerHTML = offProductHTML(code, { product_name_he: cat.n, brands: cat.b, quantity: cat.q, ingredients_text_he: cat.i });
+      initCapture(); if (onDone) onDone();
+    }
+    return;
+  }
   try {
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(), 12000);
     const res = await fetch(`${OFF_API}${code}.json?fields=${OFF_FIELDS}`, { signal: ctrl.signal, credentials: 'omit', referrerPolicy: 'no-referrer' });
     clearTimeout(t);
-    if (res.status === 404) html = notFoundHTML(code);
-    else if (!res.ok) html = notFoundHTML(code, 'offline');
+    if (res.status === 404) { html = cat ? identifiedHTML(code, cat) : notFoundHTML(code); if (cat) addHistory({ code, name: cat.n }); }
+    else if (!res.ok) html = cat ? identifiedHTML(code, cat) : notFoundHTML(code, 'offline');
     else {
       const data = await res.json();
       const found = data && data.status === 1 && data.product;
-      html = found ? offProductHTML(code, data.product) : notFoundHTML(code);
-      if (found) addHistory({ code, name: data.product.product_name_he || data.product.product_name || '' });
+      const hasIng = found && HEBREW.test(data.product.ingredients_text_he || data.product.ingredients_text || '');
+      html = found && (hasIng || !cat) ? offProductHTML(code, data.product) : cat ? identifiedHTML(code, cat) : notFoundHTML(code);
+      if (found || cat) addHistory({ code, name: (cat && cat.n) || data.product.product_name_he || data.product.product_name || '' });
     }
-  } catch (e) { html = notFoundHTML(code, 'offline'); }
+  } catch (e) { html = cat ? identifiedHTML(code, cat) : notFoundHTML(code, 'offline'); }
   if (location.hash !== here) return;
   const body = document.getElementById('barcode-body');
   if (body) { body.innerHTML = html; initCapture(); if (onDone) onDone(); }

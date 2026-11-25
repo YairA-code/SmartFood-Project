@@ -2,23 +2,24 @@
 // Smart Food — אפליקציה ראשית + ניתוב
 // ============================================================
 
-import { products } from './data.js?v=38';
-import { debounce, fillContactLinks } from './utils.js?v=38';
-import { getNova, getScore, lookupIngredient, getAlternatives } from './nova.js?v=38';
-import { redFlags } from './verdict.js?v=38';
-import { shareCard, SITE_URL } from './share.js?v=38';
-import { registerServiceWorker, initInstallPrompt } from './pwa.js?v=38';
-import { renderPrefs, initPrefs } from './personal.js?v=38';
+import { products } from './data.js?v=39';
+import { debounce, fillContactLinks, escapeHtml } from './utils.js?v=39';
+import { searchCatalog, catalogMeta } from './catalog.js?v=39';
+import { getNova, getScore, lookupIngredient, getAlternatives } from './nova.js?v=39';
+import { redFlags } from './verdict.js?v=39';
+import { shareCard, SITE_URL } from './share.js?v=39';
+import { registerServiceWorker, initInstallPrompt } from './pwa.js?v=39';
+import { renderPrefs, initPrefs } from './personal.js?v=39';
 import {
   renderHeader, renderFooter, renderHome, renderCategory, renderProduct,
   renderCategoriesPage, renderAbout, renderNotFound, renderSearchResults,
   renderProductCard, renderNova, renderAllProducts, renderCompare, renderIngredients, renderIngredient, renderLegal, breadcrumb,
-} from './components.js?v=38';
+} from './components.js?v=39';
 import {
   renderTools, renderLabel, initLabel, renderVs, initVs, renderQuiz, initQuiz,
   renderBasket, initBasket, renderInsights, renderTeam, renderCalcPage, initCalculators, toggleBasket, inBasket, basketCount, onBasket, facts,
-} from './widgets.js?v=38';
-import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=38';
+} from './widgets.js?v=39';
+import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=39';
 
 // פענוח בטוח של הכתובת: כתובת פגומה לא תפיל את האתר
 function safeDecode(str) {
@@ -129,6 +130,8 @@ class SmartFoodApp {
     if (this.page === 'products') this.initAllProducts();
     if (this.page === 'label') initLabel();
     if (this.page === 'calculators') initCalculators();
+    const cc = document.getElementById('catalog-count');
+    if (cc) catalogMeta().then(m => { if (m && cc.isConnected) cc.textContent = ` · ${(m.products + products.length).toLocaleString('he-IL')} מוצרים מזוהים בסריקה`; });
     if (this.page === 'scan') initScan();
     if (this.page === 'prefs') initPrefs();
     if (this.page === 'barcode') initBarcode(hash.slice(10), () => this.animateElements());
@@ -209,9 +212,21 @@ class SmartFoodApp {
     const input = document.getElementById('global-search');
     const box = document.getElementById('search-results');
     if (!input || !box) return;
-    const run = debounce(q => {
+    let seq = 0;
+    const run = debounce(async q => {
+      const my = ++seq;
       box.innerHTML = renderSearchResults(q);
       box.classList.toggle('visible', box.innerHTML.trim().length > 0);
+      if (q.trim().length < 2 || /^\d{8,14}$/.test(q.trim())) return;
+      const more = await searchCatalog(q, 6);
+      if (my !== seq || !more.length) return;
+      if (box.querySelector('.search-empty')) box.innerHTML = '';
+      box.insertAdjacentHTML('beforeend', `<div class="search-group">מהמאגר המורחב · ניתוח אוטומטי</div>${more.map(m => `
+        <a href="#/barcode/${encodeURIComponent(m.c)}" class="search-result-item" role="option">
+          <span class="search-ing-icon" aria-hidden="true">${m.hasIng ? '🔎' : '📷'}</span>
+          <span class="search-result-info"><span class="search-result-name">${escapeHtml(m.n)}</span><span class="search-result-brand">${escapeHtml([m.b, m.hasIng ? 'יש רשימת רכיבים' : 'אפשר לצלם את התווית'].filter(Boolean).join(' · '))}</span></span>
+        </a>`).join('')}`);
+      box.classList.add('visible');
     }, 150);
     input.addEventListener('input', e => run(e.target.value));
     input.addEventListener('keydown', e => {

@@ -2,16 +2,16 @@
 // Smart Food — קומפוננטות רינדור
 // ============================================================
 
-import { categories, products, getStats } from './data.js?v=38';
-import { escapeHtml } from './utils.js?v=38';
-import { productArt } from './art.js?v=38';
-import { toolCards, TOOLS, facts } from './widgets.js?v=38';
-import { scanButton } from './scan.js?v=38';
-import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=38';
-import { PHOTOS } from './photos.js?v=38';
-import { redFlags } from './verdict.js?v=38';
-import { avoidHTML } from './personal.js?v=38';
-import { attachProducts, allTerms, findTerms, termSearchText } from './glossary.js?v=38';
+import { categories, products, getStats } from './data.js?v=39';
+import { escapeHtml } from './utils.js?v=39';
+import { productArt } from './art.js?v=39';
+import { toolCards, TOOLS, facts } from './widgets.js?v=39';
+import { scanButton } from './scan.js?v=39';
+import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=39';
+import { PHOTOS } from './photos.js?v=39';
+import { redFlags } from './verdict.js?v=39';
+import { avoidHTML } from './personal.js?v=39';
+import { attachProducts, allTerms, findTerms, termSearchText } from './glossary.js?v=39';
 
 const CAT_HUE = { snacks: 38, sweets: 18, dairy: 205, drinks: 188, bread: 32, canned: 85, cereals: 46, spreads: 12, meat: 355, frozen: 198, instant: 26, fruits: 130 };
 export const RISK = {
@@ -183,7 +183,7 @@ export function renderHome() {
             </div>
             <div class="hero-scan">
               ${scanButton()}
-              <span class="hero-scan-hint">עומדים מול המדף? סרקו את האריזה וקבלו תשובה מיד</span>
+              <span class="hero-scan-hint">עומדים מול המדף? סרקו את האריזה וקבלו תשובה מיד<span id="catalog-count"></span></span>
             </div>
             <div class="hero-links">
               <a href="#/products" class="btn btn-ghost btn-sm">🛒 כל המוצרים</a>
@@ -505,7 +505,7 @@ export function renderProduct(productId) {
         </ol>
         ${PHOTOS[product.id] ? `<p class="source-note">תמונת המוצר: מתנדבי <a href="https://world.openfoodfacts.org/product/${escapeHtml(PHOTOS[product.id])}" target="_blank" rel="noopener noreferrer">Open Food Facts</a>, ברישיון CC BY-SA 3.0. האריזה בחנות עשויה להיראות אחרת.</p>` : ''}
         <p class="source-note">${product.source
-          ? `מקור רשימת הרכיבים: <a href="${/^https:\/\//.test(product.source.url) ? escapeHtml(product.source.url) : '#'}" target="_blank" rel="noopener noreferrer">${escapeHtml(product.source.label)}</a>. יצרנים מעדכנים מתכונים מדי פעם, ולכן כדאי לבדוק תמיד את התווית שעל האריזה.`
+          ? `מקור רשימת הרכיבים: ${product.source.url ? `<a href="${/^https:\/\//.test(product.source.url) ? escapeHtml(product.source.url) : '#'}" target="_blank" rel="noopener noreferrer">${escapeHtml(product.source.label)}</a>` : escapeHtml(product.source.label)}. יצרנים מעדכנים מתכונים מדי פעם, ולכן כדאי לבדוק תמיד את התווית שעל האריזה.`
           : product.brand === 'מוצר כללי'
             ? 'מוצר כללי: רשימת הרכיבים מתארת את המוצר הבסיסי, בלי מותג מסוים.'
             : 'רשימת הרכיבים מבוססת על התווית של היצרן כפי שהופיעה בעבר, ועוד לא אומתה מול מקור פתוח עדכני. מצאתם הבדל? כתבו לנו ונתקן.'}</p>
@@ -861,7 +861,7 @@ export function renderLegal() {
           <p><strong>המידע מוצג כמו שהוא.</strong> רשימות הרכיבים מבוססות על תוויות היצרנים במועד הבדיקה, וההסברים והסיווגים נכתבו בעזרת כלי בינה מלאכותית. ייתכנו טעויות או מידע שאינו עדכני, ויצרנים משנים מתכונים מדי פעם. <strong>התווית שעל האריזה היא הקובעת.</strong> השימוש במידע באתר הוא על אחריות המשתמש.</p>
           <p><strong>הסיווגים הם הערכה.</strong> סיווג NOVA וציון העיבוד מחושבים באתר מרשימת הרכיבים בלבד, לפי שיטה שמוסברת ב<a href="#/nova">דף מדד NOVA</a>. הם מתארים את מידת העיבוד התעשייתי, ואינם קביעה על בטיחות, איכות או חוקיות של מוצר כלשהו. כל המוצרים באתר הם מוצרים שנמכרים כחוק, וכל הרכיבים בהם מותרים לשימוש.</p>
           <p><strong>סימני מסחר.</strong> שמות המוצרים, המותגים והיצרנים באתר שייכים לבעליהם, ומופיעים רק כדי לזהות את המוצר. Smart Food אינו קשור ליצרנים, ואינו מקבל מהם מימון או חסות. האיורים באתר הם איורים כלליים שנוצרו לאתר, ואינם תמונות האריזה הרשמיות או לוגו של יצרן.</p>
-          <p><strong>מקורות.</strong> כשיש מקור פתוח לרשימת הרכיבים, הוא מצוין בדף המוצר. מוצרים שרשימת הרכיבים שלהם עוד לא אומתה מול מקור עדכני מסומנים בדף המוצר בהערה בולטת. חלק מהמידע והברקודים מגיע מהמאגר הפתוח <a href="https://world.openfoodfacts.org" target="_blank" rel="noopener noreferrer">Open Food Facts</a> (רישיון ODbL), וחלק מהברקודים מקובצי המחירים שרשתות השיווק מפרסמות לפי חוק קידום התחרות בענף המזון.</p>
+          <p><strong>מקורות.</strong> כשיש מקור פתוח לרשימת הרכיבים, הוא מצוין בדף המוצר. מוצרים שרשימת הרכיבים שלהם עוד לא אומתה מול מקור עדכני מסומנים בדף המוצר בהערה בולטת. חלק מהמידע והברקודים מגיע מהמאגר הפתוח <a href="https://world.openfoodfacts.org" target="_blank" rel="noopener noreferrer">Open Food Facts</a> (רישיון ODbL), וחלק מהברקודים מקובצי המחירים שרשתות השיווק מפרסמות לפי חוק קידום התחרות בענף המזון. <strong>המאגר המורחב</strong> (מוצרים שמזוהים בסריקה ואין להם דף מוצר משלהם) מבוסס על קובצי המחירים האלה ועל Open Food Facts, והניתוח שלו אוטומטי ולא נבדק ידנית.</p>
           <p><strong>תיקונים והסרה.</strong> מצאתם טעות? יצרן שמבקש לתקן מידע על מוצר שלו? <a data-mail href="#/legal">כתבו לנו</a>, ונבדוק ונתקן או נסיר את המידע בהקדם.</p>
         </section>
         <section class="prose-card" id="privacy">
