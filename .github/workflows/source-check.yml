@@ -47,9 +47,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 280
     permissions:
-      contents: write
+      contents: read
     steps:
+      # שמירה דרך מפתח פריסה (deploy key) שרשום ברשימת החריגים של חוק ההגנה.
+      # המפתח הפרטי שמור כסוד CATALOG_DEPLOY_KEY, שרק בעל המאגר יכול לראות או לשנות.
       - uses: actions/checkout@v4
+        with:
+          ssh-key: ${{ secrets.CATALOG_DEPLOY_KEY }}
       - name: Collect ingredient lists from Shufersal Online
         run: python3 .github/scripts/collect_shufersal.py data/catalog
       - name: Save to the site
