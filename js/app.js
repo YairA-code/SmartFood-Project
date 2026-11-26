@@ -2,24 +2,26 @@
 // Tavitly — אפליקציה ראשית + ניתוב
 // ============================================================
 
-import { products } from './data.js?v=41';
-import { debounce, fillContactLinks, escapeHtml } from './utils.js?v=41';
-import { searchCatalog, catalogMeta } from './catalog.js?v=41';
-import { getNova, getScore, lookupIngredient, getAlternatives } from './nova.js?v=41';
-import { redFlags } from './verdict.js?v=41';
-import { shareCard, SITE_URL } from './share.js?v=41';
-import { registerServiceWorker, initInstallPrompt } from './pwa.js?v=41';
-import { renderPrefs, initPrefs } from './personal.js?v=41';
+import { products } from './data.js?v=42';
+import { debounce, fillContactLinks, escapeHtml } from './utils.js?v=42';
+import { searchCatalog, catalogMeta } from './catalog.js?v=42';
+import { getNova, getScore, lookupIngredient, getAlternatives } from './nova.js?v=42';
+import { redFlags } from './verdict.js?v=42';
+import { shareCard, SITE_URL } from './share.js?v=42';
+import { registerServiceWorker, initInstallPrompt } from './pwa.js?v=42';
+import { tr, EN, setLang } from './i18n.js?v=42';
+import { loadEnglish } from './i18n-data.js?v=42';
+import { renderPrefs, initPrefs } from './personal.js?v=42';
 import {
   renderHeader, renderFooter, renderHome, renderCategory, renderProduct,
   renderCategoriesPage, renderAbout, renderNotFound, renderSearchResults,
   renderProductCard, renderNova, renderAllProducts, renderCompare, renderIngredients, renderIngredient, renderLegal, breadcrumb,
-} from './components.js?v=41';
+} from './components.js?v=42';
 import {
   renderTools, renderLabel, initLabel, renderVs, initVs, renderQuiz, initQuiz,
   renderBasket, initBasket, renderInsights, renderTeam, renderCalcPage, initCalculators, toggleBasket, inBasket, basketCount, onBasket, facts,
-} from './widgets.js?v=41';
-import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=41';
+} from './widgets.js?v=42';
+import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=42';
 
 // פענוח בטוח של הכתובת: כתובת פגומה לא תפיל את האתר
 function safeDecode(str) {
@@ -27,25 +29,25 @@ function safeDecode(str) {
 }
 
 const TITLES = {
-  legal: 'תנאי שימוש, פרטיות ונגישות | Tavitly',
-  calculators: 'מחשבונים | Tavitly',
-  home: 'Tavitly | מה באמת יש בתווית',
-  categories: 'קטגוריות | Tavitly',
-  compare: 'מעובד מול פשוט | Tavitly',
-  nova: 'מה זה מדד NOVA | Tavitly',
-  ingredients: 'מילון רכיבים | Tavitly',
-  about: 'אודות | Tavitly',
-  tools: 'כלים | Tavitly',
-  products: 'כל המוצרים | Tavitly',
-  label: 'בודק התווית | Tavitly',
-  vs: 'השוואה חופשית | Tavitly',
-  quiz: 'חידון NOVA | Tavitly',
-  basket: 'הסל שלי | Tavitly',
-  insights: 'תובנות מהמאגר | Tavitly',
-  team: 'הצוות | Tavitly',
-  scan: 'סריקת ברקוד | Tavitly',
-  prefs: 'ההעדפות שלי | Tavitly',
-  barcode: 'תוצאת סריקה | Tavitly',
+  legal: tr('תנאי שימוש, פרטיות ונגישות', 'Terms, privacy & accessibility') + ' | Tavitly',
+  calculators: tr('מחשבונים', 'Calculators') + ' | Tavitly',
+  home: 'Tavitly | ' + tr('מה באמת יש בתווית', "What's really on the label"),
+  categories: tr('קטגוריות', 'Categories') + ' | Tavitly',
+  compare: tr('מעובד מול פשוט', 'Processed vs. simple') + ' | Tavitly',
+  nova: tr('מה זה מדד NOVA', 'What is the NOVA scale') + ' | Tavitly',
+  ingredients: tr('מילון רכיבים', 'Ingredient dictionary') + ' | Tavitly',
+  about: tr('אודות', 'About') + ' | Tavitly',
+  tools: tr('כלים', 'Tools') + ' | Tavitly',
+  products: tr('כל המוצרים', 'All products') + ' | Tavitly',
+  label: tr('בודק התווית', 'Label checker') + ' | Tavitly',
+  vs: tr('השוואה חופשית', 'Free comparison') + ' | Tavitly',
+  quiz: tr('חידון NOVA', 'NOVA quiz') + ' | Tavitly',
+  basket: tr('הסל שלי', 'My basket') + ' | Tavitly',
+  insights: tr('תובנות מהמאגר', 'Database insights') + ' | Tavitly',
+  team: tr('הצוות', 'The team') + ' | Tavitly',
+  scan: tr('סריקת ברקוד', 'Barcode scan') + ' | Tavitly',
+  prefs: tr('ההעדפות שלי', 'My preferences') + ' | Tavitly',
+  barcode: tr('תוצאת סריקה', 'Scan result') + ' | Tavitly',
 };
 
 class SmartFoodApp {
@@ -63,6 +65,7 @@ class SmartFoodApp {
       if (target) { if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1'); target.focus(); }
     });
     this.initTheme();
+    document.getElementById('lang-toggle')?.addEventListener('click', () => setLang(EN ? 'he' : 'en'));
     this.initMobileMenu();
     onBasket(() => this.updateBasketCount());
     this.updateBasketCount();
@@ -116,7 +119,7 @@ class SmartFoodApp {
       const key = hash.slice(13);
       html = renderIngredient(key); this.page = 'ingredient';
       const h1 = html.match(/<h1>([^<]*)/);
-      title = `${h1 ? h1[1].trim() : key} | מילון רכיבים`;
+      title = `${h1 ? h1[1].trim() : key} | ${tr('מילון רכיבים', 'Ingredient dictionary')}`;
     }
     else { html = renderNotFound(); this.page = '404'; }
 
@@ -131,7 +134,7 @@ class SmartFoodApp {
     if (this.page === 'label') initLabel();
     if (this.page === 'calculators') initCalculators();
     const cc = document.getElementById('catalog-count');
-    if (cc) catalogMeta().then(m => { if (m && cc.isConnected) cc.textContent = ` · ${(m.products + products.length).toLocaleString('he-IL')} מוצרים מזוהים בסריקה`; });
+    if (cc) catalogMeta().then(m => { if (m && cc.isConnected) cc.textContent = ` · ${(m.products + products.length).toLocaleString(tr('he-IL', 'en-US'))} ${tr('מוצרים מזוהים בסריקה', 'products recognized by scan')}`; });
     if (this.page === 'scan') initScan();
     if (this.page === 'prefs') initPrefs();
     if (this.page === 'barcode') initBarcode(hash.slice(10), () => this.animateElements());
@@ -161,7 +164,7 @@ class SmartFoodApp {
     const n = basketCount();
     el.textContent = n;
     el.hidden = n === 0;
-    document.getElementById('basket-btn')?.setAttribute('aria-label', `הסל שלי, ${n} מוצרים`);
+    document.getElementById('basket-btn')?.setAttribute('aria-label', tr(`הסל שלי, ${n} מוצרים`, `My basket, ${n} ${n === 1 ? 'product' : 'products'}`));
   }
 
   initProductActions() {
@@ -169,7 +172,7 @@ class SmartFoodApp {
     if (btn) {
       const paint = () => {
         const on = inBasket(btn.dataset.id);
-        btn.textContent = on ? '✓ בסל שלי' : '🛒 הוספה לסל';
+        btn.textContent = on ? tr('✓ בסל שלי', '✓ In my basket') : tr('🛒 הוספה לסל', '🛒 Add to basket');
         btn.setAttribute('aria-pressed', String(on));
         btn.classList.toggle('btn-primary', !on);
         btn.classList.toggle('btn-ghost', on);
@@ -184,17 +187,17 @@ class SmartFoodApp {
       const nova = getNova(p);
       const items = p.ingredients.map(i => ({ name: i, ...lookupIngredient(i) }));
       const alt = getAlternatives(p)[0];
-      share.disabled = true; share.textContent = 'מכינים את התמונה…';
+      share.disabled = true; share.textContent = tr('מכינים את התמונה…', 'Preparing the image…');
       try {
         await shareCard({ name: p.name, brand: p.brand, nova: { group: nova.group, ...nova }, score: getScore(p),
           flags: redFlags(items, nova), alt: alt && alt.name, url: `${SITE_URL}#/product/${p.id}` });
-      } finally { share.disabled = false; share.textContent = '📤 שיתוף בוואטסאפ'; }
+      } finally { share.disabled = false; share.textContent = tr('📤 שיתוף בוואטסאפ', '📤 Share on WhatsApp'); }
     });
     const copy = document.getElementById('copy-link');
     copy?.addEventListener('click', async () => {
-      try { await navigator.clipboard.writeText(location.href); copy.textContent = '✓ הקישור הועתק'; }
-      catch (e) { copy.textContent = 'לא הצלחנו להעתיק'; }
-      setTimeout(() => { copy.textContent = '🔗 העתקת קישור'; }, 2000);
+      try { await navigator.clipboard.writeText(location.href); copy.textContent = tr('✓ הקישור הועתק', '✓ Link copied'); }
+      catch (e) { copy.textContent = tr('לא הצלחנו להעתיק', "Couldn't copy"); }
+      setTimeout(() => { copy.textContent = tr('🔗 העתקת קישור', '🔗 Copy link'); }, 2000);
     });
   }
 
@@ -221,10 +224,10 @@ class SmartFoodApp {
       const more = await searchCatalog(q, 6);
       if (my !== seq || !more.length) return;
       if (box.querySelector('.search-empty')) box.innerHTML = '';
-      box.insertAdjacentHTML('beforeend', `<div class="search-group">מהמאגר המורחב · ניתוח אוטומטי</div>${more.map(m => `
+      box.insertAdjacentHTML('beforeend', `<div class="search-group">${tr('מהמאגר המורחב · ניתוח אוטומטי', 'Extended database · automatic analysis')}</div>${more.map(m => `
         <a href="#/barcode/${encodeURIComponent(m.c)}" class="search-result-item" role="option">
           <span class="search-ing-icon" aria-hidden="true">${m.hasIng ? '🔎' : '📷'}</span>
-          <span class="search-result-info"><span class="search-result-name">${escapeHtml(m.n)}</span><span class="search-result-brand">${escapeHtml([m.b, m.hasIng ? 'יש רשימת רכיבים' : 'אפשר לצלם את התווית'].filter(Boolean).join(' · '))}</span></span>
+          <span class="search-result-info"><span class="search-result-name">${escapeHtml(m.n)}</span><span class="search-result-brand">${escapeHtml([m.b, m.hasIng ? tr('יש רשימת רכיבים', 'Ingredient list available') : tr('אפשר לצלם את התווית', 'You can photograph the label')].filter(Boolean).join(' · '))}</span></span>
         </a>`).join('')}`);
       box.classList.add('visible');
     }, 150);
@@ -280,7 +283,7 @@ class SmartFoodApp {
       else if (s === 'ings') out.sort((a, b) => a.ingredients.length - b.ingredients.length || a.name.localeCompare(b.name, 'he'));
       else out.sort((a, b) => getNova(a).group - getNova(b).group || getScore(a) - getScore(b));
       grid.innerHTML = out.map(renderProductCard).join('');
-      count.textContent = `${out.length} מוצרים`;
+      count.textContent = tr(`${out.length} מוצרים`, `${out.length} ${out.length === 1 ? 'product' : 'products'}`);
       empty.hidden = out.length > 0;
       this.animateElements();
     };
@@ -306,7 +309,7 @@ class SmartFoodApp {
         const ok = (role === 'all' || c.dataset.role === role) && (!q || c.dataset.search.includes(q));
         c.hidden = !ok; if (ok) shown++;
       });
-      count.textContent = `${shown} רכיבים`;
+      count.textContent = tr(`${shown} רכיבים`, `${shown} ${shown === 1 ? 'ingredient' : 'ingredients'}`);
     };
     input.addEventListener('input', apply);
     document.querySelectorAll('[data-role]').forEach(btn => {
@@ -363,4 +366,4 @@ class SmartFoodApp {
 }
 
 registerServiceWorker();
-document.addEventListener('DOMContentLoaded', () => { new SmartFoodApp(); initInstallPrompt(); });
+document.addEventListener('DOMContentLoaded', async () => { await loadEnglish(); new SmartFoodApp(); initInstallPrompt(); });

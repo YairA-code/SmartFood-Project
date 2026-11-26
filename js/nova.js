@@ -5,37 +5,38 @@
 // בתפקידו: מזון בסיסי, רכיב בישול, רכיב מעובד, תוסף, או סמן לעיבוד תעשייתי.
 // ============================================================
 
-import { products } from './data.js?v=41';
-import { INGREDIENTS, getIngredient, canonicalName } from './ingredients.js?v=41';
+import { products } from './data.js?v=42';
+import { INGREDIENTS, getIngredient, canonicalName } from './ingredients.js?v=42';
+import { tr, loc } from './i18n.js?v=42';
 
 export const NOVA_GROUPS = {
   1: {
-    num: 1, name: 'לא מעובד או מעובד מינימלית', short: 'טבעי',
+    num: 1, name: tr('לא מעובד או מעובד מינימלית', 'Unprocessed or minimally processed foods'), short: tr('טבעי', 'Unprocessed'),
     color: '#0f7a4f', on: '#ffffff', bg: '#dcfce7',
-    desc: 'מזון כפי שהוא בטבע, או אחרי עיבוד פשוט כמו ניקוי, ייבוש, קירור, טחינה, פסטור או התססה.',
-    examples: 'ירקות, פירות, ביצים, קטניות, אורז, חלב, בשר טרי',
+    desc: tr('מזון כפי שהוא בטבע, או אחרי עיבוד פשוט כמו ניקוי, ייבוש, קירור, טחינה, פסטור או התססה.', 'Food as found in nature, or after simple processing such as cleaning, drying, chilling, grinding, pasteurizing or fermenting.'),
+    examples: tr('ירקות, פירות, ביצים, קטניות, אורז, חלב, בשר טרי', 'Vegetables, fruits, eggs, legumes, rice, milk, fresh meat'),
   },
   2: {
-    num: 2, name: 'רכיבי בישול מעובדים', short: 'רכיב בישול',
+    num: 2, name: tr('רכיבי בישול מעובדים', 'Processed culinary ingredients'), short: tr('רכיב בישול', 'Culinary ingredient'),
     color: '#a8a210', on: '#1c1a00', bg: '#f7f7c9',
-    desc: 'חומרים שמפיקים ממזון טבעי ומשמשים לבישול ולתיבול, ולא נאכלים לבד.',
-    examples: 'שמן זית, חמאה, סוכר, מלח, דבש',
+    desc: tr('חומרים שמפיקים ממזון טבעי ומשמשים לבישול ולתיבול, ולא נאכלים לבד.', 'Substances extracted from natural foods and used for cooking and seasoning, not eaten on their own.'),
+    examples: tr('שמן זית, חמאה, סוכר, מלח, דבש', 'Olive oil, butter, sugar, salt, honey'),
   },
   3: {
-    num: 3, name: 'מזון מעובד', short: 'מעובד',
+    num: 3, name: tr('מזון מעובד', 'Processed foods'), short: tr('מעובד', 'Processed'),
     color: '#e86a12', on: '#1f0b00', bg: '#ffedd5',
-    desc: 'מזון טבעי שהוסיפו לו מלח, סוכר, שמן או חומר משמר, כדי להאריך חיי מדף או לשפר טעם.',
-    examples: 'שימורים, גבינות, לחם פשוט, טונה בשמן',
+    desc: tr('מזון טבעי שהוסיפו לו מלח, סוכר, שמן או חומר משמר, כדי להאריך חיי מדף או לשפר טעם.', 'Natural food with added salt, sugar, oil or a preservative, to extend shelf life or improve taste.'),
+    examples: tr('שימורים, גבינות, לחם פשוט, טונה בשמן', 'Canned foods, cheese, simple bread, tuna in oil'),
   },
   4: {
-    num: 4, name: 'מזון אולטרה-מעובד', short: 'אולטרה-מעובד',
+    num: 4, name: tr('מזון אולטרה-מעובד', 'Ultra-processed foods'), short: tr('אולטרה-מעובד', 'Ultra-processed'),
     color: '#b42318', on: '#ffffff', bg: '#fee2e2',
-    desc: 'מוצר תעשייתי שמכיל רכיבים שלא משתמשים בהם במטבח הביתי: צבעי מאכל, חומרי טעם, מחזקי טעם, מתחלבים, מייצבים, ממתיקים, עמילן מעובד וחלבונים מבודדים.',
-    examples: 'חטיפים, משקאות ממותקים, נקניקיות, מנות מוכנות',
+    desc: tr('מוצר תעשייתי שמכיל רכיבים שלא משתמשים בהם במטבח הביתי: צבעי מאכל, חומרי טעם, מחזקי טעם, מתחלבים, מייצבים, ממתיקים, עמילן מעובד וחלבונים מבודדים.', 'Industrial products with ingredients not used in home cooking: food colorings, flavorings, flavor enhancers, emulsifiers, stabilizers, sweeteners, modified starch and protein isolates.'),
+    examples: tr('חטיפים, משקאות ממותקים, נקניקיות, מנות מוכנות', 'Snacks, sweetened drinks, hot dogs, ready meals'),
   },
 };
 
-const FALLBACK = { type: 'לא מסווג', risk: 'caution', nova: 'whole', reason: 'אין עדיין הסבר לרכיב הזה.' };
+const FALLBACK = { type: tr('לא מסווג', 'Unclassified'), risk: 'caution', nova: 'whole', reason: tr('אין עדיין הסבר לרכיב הזה.', 'No explanation for this ingredient yet.') };
 
 export function lookupIngredient(raw) {
   const hit = getIngredient(raw) || FALLBACK;
@@ -88,10 +89,12 @@ export function getNova(product) {
 
 export function novaReason(product) {
   const n = getNova(product);
-  if (n.group === 4) return `המוצר מכיל ${n.markers.length === 1 ? 'רכיב אחד' : n.markers.length + ' רכיבים'} שמאפיינים עיבוד תעשייתי: ${n.markers.join(', ')}.`;
-  if (n.group === 3) return 'מזון בסיסי שהוסיפו לו מלח, סוכר, שמן או תוספים לשימור. אין בו רכיבים שמאפיינים עיבוד תעשייתי.';
-  if (n.group === 2) return 'רכיב בישול בסיסי, שמשמש להכנת אוכל ולא נאכל לבד.';
-  return 'כל הרכיבים טבעיים או עברו עיבוד מינימלי בלבד.';
+  if (n.group === 4) return tr(
+    `המוצר מכיל ${n.markers.length === 1 ? 'רכיב אחד' : n.markers.length + ' רכיבים'} שמאפיינים עיבוד תעשייתי: ${n.markers.join(', ')}.`,
+    `This product contains ${n.markers.length === 1 ? 'one ingredient' : n.markers.length + ' ingredients'} typical of industrial processing: ${n.markers.map(loc).join(', ')}.`);
+  if (n.group === 3) return tr('מזון בסיסי שהוסיפו לו מלח, סוכר, שמן או תוספים לשימור. אין בו רכיבים שמאפיינים עיבוד תעשייתי.', 'A basic food with added salt, sugar, oil or preserving additives. It has no ingredients typical of industrial processing.');
+  if (n.group === 2) return tr('רכיב בישול בסיסי, שמשמש להכנת אוכל ולא נאכל לבד.', 'A basic culinary ingredient, used for cooking and not eaten on its own.');
+  return tr('כל הרכיבים טבעיים או עברו עיבוד מינימלי בלבד.', 'All ingredients are natural or only minimally processed.');
 }
 
 // ——————————————————————————————————————

@@ -1056,3 +1056,10 @@ body {
   50% { border-radius: 58% 42% 37% 63% / 56% 59% 41% 44%; transform: rotate(18deg) scale(1.05); }
 }
 @media (prefers-reduced-motion: reduce) { .hero-art::before { animation: none; } }
+
+/* ——— English (LTR) ——— */
+[dir="ltr"] .skip-link { right: auto; left: 16px; }
+[dir="ltr"] .tool-go { display: inline-block; transform: scaleX(-1); }
+[dir="ltr"] .tool-card:hover .tool-go { transform: scaleX(-1) translateX(-4px); }
+.lang-toggle { font-weight: 800; font-size: .8rem; letter-spacing: .02em; }
+.translation-note { margin-top: 8px; }
