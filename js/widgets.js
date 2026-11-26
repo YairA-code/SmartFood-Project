@@ -3,13 +3,13 @@
 // תובנות מהמאגר, ודף הצוות
 // ============================================================
 
-import { products, categories } from './data.js?v=44';
-import { INGREDIENTS, getIngredient, canonicalName } from './ingredients.js?v=44';
-import { NOVA_GROUPS, getNova, getScore, getAlternatives, lookupIngredient, classifyItems, scoreItems, novaReason } from './nova.js?v=44';
-import { escapeHtml } from './utils.js?v=44';
-import { art, breadcrumb, novaBadge, scoreChip, renderProductCard, RISK, ROLE, catOf, ingLink } from './components.js?v=44';
-import { renderCalculators, initCalculators } from './calculators.js?v=44';
-import { tr, EN, loc } from './i18n.js?v=44';
+import { products, categories } from './data.js?v=45';
+import { INGREDIENTS, getIngredient, canonicalName } from './ingredients.js?v=45';
+import { NOVA_GROUPS, getNova, getScore, getAlternatives, lookupIngredient, classifyItems, scoreItems, novaReason } from './nova.js?v=45';
+import { escapeHtml } from './utils.js?v=45';
+import { art, breadcrumb, novaBadge, scoreChip, renderProductCard, RISK, ROLE, catOf, ingLink } from './components.js?v=45';
+import { renderCalculators, initCalculators } from './calculators.js?v=45';
+import { tr, EN, loc } from './i18n.js?v=45';
 
 const byId = id => products.find(p => p.id === id);
 const pageHero = (icon, title, text) => `
