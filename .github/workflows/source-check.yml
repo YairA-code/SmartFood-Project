@@ -45,7 +45,8 @@ jobs:
             if gh run view "$id" --json jobs --jq '.jobs[] | select(.name=="check" and .conclusion=="success") | .name' | grep -q check; then checked=yes; break; fi
           done
           run_check=false
-          if [ "$EVENT" = "workflow_dispatch" ] || { [ "$in" = true ] && [ "$checked" = no ]; }; then run_check=true; fi
+          # הבדיקה רצה פעם ביום: בתוך החלון, או בהפעלה ידנית / מהגיבוי בענן, אם עוד לא רצה היום
+          if [ "$checked" = no ] && { [ "$in" = true ] || [ "$EVENT" = "workflow_dispatch" ]; }; then run_check=true; fi
           echo "in_window=$in" >> "$GITHUB_OUTPUT"
           echo "run_check=$run_check" >> "$GITHUB_OUTPUT"
           echo "in_window=$in checked_today=$checked run_check=$run_check"
