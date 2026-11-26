@@ -11,7 +11,7 @@ import json, re, sys, time, html, datetime, difflib, urllib.request, urllib.pars
 UA = {'User-Agent': 'Mozilla/5.0 (compatible; SmartFood-source-check; +https://yaira-code.github.io/SmartFood-Project/)'}
 products = json.load(open(sys.argv[1], encoding='utf-8'))
 out_path = sys.argv[2]
-STOP = set('מכיל מכילים מתוכו מתוך בטעם טבעי טבעיים מאכל חומר חומרי חומרים וריח רכיבים רכיב עשוי שונים מקור ממקור אחוז גלוטן ממשקל משקל פחות יותר נטחן בשלמותו מפוסטר מפוסטרת צמחי ממקור לפחות סך'.split())
+STOP = set('מכיל מכילים מתוכו מתוך בטעם טבעי טבעיים מאכל חומר חומרי חומרים וריח רכיבים רכיב עשוי שונים מקור ממקור אחוז גלוטן ממשקל משקל פחות יותר לצביעה נטחן בשלמותו מפוסטר מפוסטרת צמחי ממקור לפחות סך'.split())
 
 def allowed():
     n = datetime.datetime.now(datetime.timezone.utc)
