@@ -12,7 +12,8 @@
   try {
     var t = localStorage.getItem('smart-food-theme');
     if (t !== 'dark' && t !== 'light') t = null;
-    if (!t && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) t = 'dark';
+    // ברירת המחדל היא המצב הכהה (העיצוב של האתר); הכפתור שומר בחירה אחרת
+    if (!t) t = 'dark';
     if (t) document.documentElement.setAttribute('data-theme', t);
   } catch (e) {}
 
