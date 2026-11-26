@@ -5,9 +5,9 @@
 // התווית ואת סימון האלרגנים שעל האריזה.
 // ============================================================
 
-import { collectTerms } from './verdict.js?v=45';
-import { tr } from './i18n.js?v=45';
-import { products } from './data.js?v=45';
+import { collectTerms } from './verdict.js?v=46';
+import { tr } from './i18n.js?v=46';
+import { products } from './data.js?v=46';
 
 const PREFS_KEY = 'smart-food-avoid';
 const HIST_KEY = 'smart-food-history';

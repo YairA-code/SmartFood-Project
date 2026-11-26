@@ -2,26 +2,26 @@
 // Tavitly — אפליקציה ראשית + ניתוב
 // ============================================================
 
-import { products } from './data.js?v=45';
-import { debounce, fillContactLinks, escapeHtml } from './utils.js?v=45';
-import { searchCatalog, catalogMeta } from './catalog.js?v=45';
-import { getNova, getScore, lookupIngredient, getAlternatives } from './nova.js?v=45';
-import { redFlags } from './verdict.js?v=45';
-import { shareCard, SITE_URL } from './share.js?v=45';
-import { registerServiceWorker, initInstallPrompt } from './pwa.js?v=45';
-import { tr, EN, setLang } from './i18n.js?v=45';
-import { loadEnglish } from './i18n-data.js?v=45';
-import { renderPrefs, initPrefs } from './personal.js?v=45';
+import { products } from './data.js?v=46';
+import { debounce, fillContactLinks, escapeHtml } from './utils.js?v=46';
+import { searchCatalog, catalogMeta } from './catalog.js?v=46';
+import { getNova, getScore, lookupIngredient, getAlternatives } from './nova.js?v=46';
+import { redFlags } from './verdict.js?v=46';
+import { shareCard, SITE_URL } from './share.js?v=46';
+import { registerServiceWorker, initInstallPrompt } from './pwa.js?v=46';
+import { tr, EN, setLang } from './i18n.js?v=46';
+import { loadEnglish } from './i18n-data.js?v=46';
+import { renderPrefs, initPrefs } from './personal.js?v=46';
 import {
   renderHeader, renderFooter, renderHome, renderCategory, renderProduct,
   renderCategoriesPage, renderAbout, renderNotFound, renderSearchResults,
   renderProductCard, renderNova, renderAllProducts, renderCompare, renderIngredients, renderIngredient, renderLegal, breadcrumb,
-} from './components.js?v=45';
+} from './components.js?v=46';
 import {
   renderTools, renderLabel, initLabel, renderVs, initVs, renderQuiz, initQuiz,
   renderBasket, initBasket, renderInsights, renderTeam, renderCalcPage, initCalculators, toggleBasket, inBasket, basketCount, onBasket, facts,
-} from './widgets.js?v=45';
-import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=45';
+} from './widgets.js?v=46';
+import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=46';
 
 // פענוח בטוח של הכתובת: כתובת פגומה לא תפיל את האתר
 function safeDecode(str) {
@@ -341,7 +341,7 @@ class SmartFoodApp {
       document.documentElement.setAttribute('data-theme', t);
       if (meta) meta.content = t;
     };
-    const system = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    const system = 'dark';
     set(saved === 'dark' || saved === 'light' ? saved : system);
     toggle?.addEventListener('click', () => {
       const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
