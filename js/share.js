@@ -5,7 +5,7 @@
 // והתמונה יורדת למכשיר.
 // ============================================================
 
-import { tr, EN } from './i18n.js?v=47';
+import { tr, EN } from './i18n.js?v=48';
 
 const SITE = 'https://yaira-code.github.io/SmartFood-Project/';
 const W = 1080, H = 1200;
