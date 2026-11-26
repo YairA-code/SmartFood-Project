@@ -2,17 +2,17 @@
 // Tavitly — קומפוננטות רינדור
 // ============================================================
 
-import { categories, products, getStats } from './data.js?v=46';
-import { escapeHtml } from './utils.js?v=46';
-import { productArt } from './art.js?v=46';
-import { toolCards, TOOLS, facts } from './widgets.js?v=46';
-import { scanButton } from './scan.js?v=46';
-import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=46';
-import { PHOTOS } from './photos.js?v=46';
-import { redFlags } from './verdict.js?v=46';
-import { avoidHTML } from './personal.js?v=46';
-import { attachProducts, allTerms, findTerms, termSearchText } from './glossary.js?v=46';
-import { tr, EN, loc } from './i18n.js?v=46';
+import { categories, products, getStats } from './data.js?v=47';
+import { escapeHtml } from './utils.js?v=47';
+import { productArt } from './art.js?v=47';
+import { toolCards, TOOLS, facts } from './widgets.js?v=47';
+import { scanButton } from './scan.js?v=47';
+import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=47';
+import { PHOTOS } from './photos.js?v=47';
+import { redFlags } from './verdict.js?v=47';
+import { avoidHTML } from './personal.js?v=47';
+import { attachProducts, allTerms, findTerms, termSearchText } from './glossary.js?v=47';
+import { tr, EN, loc } from './i18n.js?v=47';
 
 const CAT_HUE = { snacks: 38, sweets: 18, dairy: 205, drinks: 188, bread: 32, canned: 85, cereals: 46, spreads: 12, meat: 355, frozen: 198, instant: 26, fruits: 130 };
 export const RISK = {
@@ -184,16 +184,6 @@ export function renderHome() {
               </div>
               <div class="search-results" id="search-results" role="listbox"></div>
             </div>
-            <div class="hero-scan">
-              ${scanButton()}
-              <span class="hero-scan-hint">${tr('עומדים מול המדף? סרקו את האריזה וקבלו תשובה מיד', 'Standing at the shelf? Scan the package and get an answer right away')}<span id="catalog-count"></span></span>
-            </div>
-            <div class="hero-links">
-              <a href="#/products" class="btn btn-ghost btn-sm">🛒 ${tr('כל המוצרים', 'All products')}</a>
-              <a href="#/random" class="btn btn-ghost btn-sm">🎲 ${tr('מוצר אקראי', 'Random product')}</a>
-              <a href="#/label" class="btn btn-ghost btn-sm">🔬 ${tr('בדיקת תווית', 'Check a label')}</a>
-              <a href="#/quiz" class="btn btn-ghost btn-sm">🎯 ${tr('חידון', 'Quiz')}</a>
-            </div>
           </div>
           <div class="hero-art" aria-hidden="true">
             <span class="hero-glow"></span>
@@ -208,11 +198,33 @@ export function renderHome() {
         </div>
       </section>
 
-      <section class="stats-bar" aria-label="${tr('המאגר במספרים', 'Our database in numbers')}">
+      <section class="action-wrap" aria-label="${tr('סריקה ומספרים', 'Scan and numbers')}">
+        <div class="action-card">
+            <div class="hero-scan">
+              ${scanButton()}
+              <span class="hero-scan-hint">${tr('עומדים מול המדף? סרקו את האריזה וקבלו תשובה מיד', 'Standing at the shelf? Scan the package and get an answer right away')}<span id="catalog-count"></span></span>
+            </div>
+          <div class="stats-bar" aria-label="${tr('המאגר במספרים', 'Our database in numbers')}">
         <a class="stat-item" href="#/products"><span class="stat-number">${stats.totalProducts}</span><span class="stat-label">${tr('מוצרים', 'products')}</span></a>
         <a class="stat-item" href="#/ingredients"><span class="stat-number">${stats.totalIngredients}</span><span class="stat-label">${tr('רכיבים מוסברים', 'ingredients explained')}</span></a>
         <a class="stat-item" href="#/categories"><span class="stat-number">${stats.totalCategories}</span><span class="stat-label">${tr('קטגוריות', 'categories')}</span></a>
         <a class="stat-item" href="#/nova"><span class="stat-number danger-color">${novaCounts[3]}</span><span class="stat-label">${tr('מוצרים אולטרה-מעובדים', 'ultra-processed products')}</span></a>
+      </div>
+        </div>
+        <div class="hero-links">
+              <a href="#/products" class="btn btn-ghost btn-sm">🛒 ${tr('כל המוצרים', 'All products')}</a>
+              <a href="#/random" class="btn btn-ghost btn-sm">🎲 ${tr('מוצר אקראי', 'Random product')}</a>
+              <a href="#/label" class="btn btn-ghost btn-sm">🔬 ${tr('בדיקת תווית', 'Check a label')}</a>
+              <a href="#/quiz" class="btn btn-ghost btn-sm">🎯 ${tr('חידון', 'Quiz')}</a>
+            </div>
+      </section>
+
+      <section class="section section-rail">
+        <div class="section-head start rail-head">
+          <h2 class="section-title">${tr('מכל מדף במאגר', 'A taste of every aisle')}</h2>
+          <a href="#/products" class="text-link">${tr('לכל המוצרים', 'All products')}</a>
+        </div>
+        <div class="product-rail">${railPicks().map(renderProductCard).join('')}</div>
       </section>
 
       <section class="section">
@@ -287,6 +299,11 @@ export function renderHome() {
       </section>
     </main>
   `;
+}
+
+// מוצר אחד או שניים מכל קטגוריה, לשורה הנגללת בדף הבית
+function railPicks() {
+  return activeCategories().flatMap(c => products.filter(p => p.category === c.id).slice(0, 1)).slice(0, 12);
 }
 
 function renderCategoryGrid() {

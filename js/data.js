@@ -2,9 +2,9 @@
 // Tavitly — נתונים: קטגוריות, מוצרים ומילון רכיבים
 // ============================================================
 
-import { products } from './products.js?v=46';
-import { INGREDIENTS } from './ingredients.js?v=46';
-import { tr } from './i18n.js?v=46';
+import { products } from './products.js?v=47';
+import { INGREDIENTS } from './ingredients.js?v=47';
+import { tr } from './i18n.js?v=47';
 
 export { products };
 
