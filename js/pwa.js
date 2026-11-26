@@ -4,7 +4,7 @@
 // את Tavitly למסך הבית, כך שייפתח במסך מלא ישר לסורק.
 // ============================================================
 
-import { tr } from './i18n.js?v=46';
+import { tr } from './i18n.js?v=48';
 
 const KEY = 'smart-food-install-dismissed';
 const DAYS = 21;
