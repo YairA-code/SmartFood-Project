@@ -6,13 +6,11 @@
 name: Daily source check
 
 on:
-  # GitHub לפעמים מעכב ריצות מתוזמנות בשעות. כמה מועדים בתוך חלון השעות של שופרסל
-  # מבטיחים שלפחות אחת תתחיל בזמן; הריצות לא רצות במקביל (concurrency), ומי שמתחילה
-  # אחרי שהחלון נסגר מסיימת מיד בלי לפנות לשופרסל.
+  # GitHub מעכב ריצות מתוזמנות לפעמים בשעות, ולפעמים מדלג עליהן. לכן הזרימה מתחילה כל
+  # חצי שעה סביב השעון, ושלב השער (gate) מחליט: מחוץ לחלון של שופרסל הריצה נגמרת תוך
+  # שניות בלי לפנות לשופרסל. בתוך החלון האיסוף ממשיך מאיפה שעצר, והבדיקה רצה פעם ביום.
   schedule:
-    - cron: '5 4 * * *'
-    - cron: '35 5 * * *'
-    - cron: '5 7 * * *'
+    - cron: '*/30 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -24,7 +22,37 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: read
+    outputs:
+      in_window: ${{ steps.g.outputs.in_window }}
+      run_check: ${{ steps.g.outputs.run_check }}
+    steps:
+      - id: g
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          now=$(( 10#$(date -u +%H) * 60 + 10#$(date -u +%M) ))
+          # 04:00-08:20 UTC: מספיק זמן לעבודה לפני שהחלון נסגר ב-08:40
+          if [ $now -ge 240 ] && [ $now -lt 500 ]; then in=true; else in=false; fi
+          checked=no
+          for id in $(gh run list --workflow source-check.yml --created ">=$(date -u +%F)" --status success --json databaseId --jq '.[].databaseId'); do
+            if gh run view "$id" --json jobs --jq '.jobs[] | select(.name=="check" and .conclusion=="success") | .name' | grep -q check; then checked=yes; break; fi
+          done
+          run_check=false
+          if [ "$EVENT" = "workflow_dispatch" ] || { [ "$in" = true ] && [ "$checked" = no ]; }; then run_check=true; fi
+          echo "in_window=$in" >> "$GITHUB_OUTPUT"
+          echo "run_check=$run_check" >> "$GITHUB_OUTPUT"
+          echo "in_window=$in checked_today=$checked run_check=$run_check"
+
   check:
+    needs: gate
+    if: ${{ needs.gate.outputs.run_check == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 280
     steps:
@@ -47,8 +75,8 @@ jobs:
           else gh issue create --title "בדיקת מקורות יומית: יש מוצרים לבדיקה" --label source-check --body-file /tmp/report.md; fi
 
   collect:
-    needs: check
-    if: ${{ always() }}
+    needs: [gate, check]
+    if: ${{ always() && needs.gate.result == 'success' && (needs.gate.outputs.in_window == 'true' || github.event_name == 'workflow_dispatch') }}
     runs-on: ubuntu-latest
     timeout-minutes: 280
     # הסוד שמור בסביבה catalog-bot, שמותרת רק לענף main: קוד מכל ענף אחר לא יכול לגשת אליו
@@ -81,8 +109,8 @@ jobs:
   # בקרה: אם הבדיקה או האיסוף נכשלו, או שהאיסוף רץ בחלון ולא הוסיף כלום,
   # נפתח (או מתעדכן) issue עם התווית daily-health, ו-GitHub שולח מייל לבעל המאגר.
   health:
-    needs: [check, collect]
-    if: ${{ always() }}
+    needs: [gate, check, collect]
+    if: ${{ always() && (needs.gate.outputs.in_window == 'true' || github.event_name == 'workflow_dispatch' || needs.gate.result != 'success') }}
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -91,6 +119,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
+          GATE: ${{ needs.gate.result }}
           CHECK: ${{ needs.check.result }}
           COLLECT: ${{ needs.collect.result }}
           ADDED: ${{ needs.collect.outputs.added }}
@@ -100,8 +129,9 @@ jobs:
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           problem=""
-          [ "$CHECK" != "success" ] && problem="$problem\n- הבדיקה היומית הסתיימה במצב: $CHECK"
-          [ "$COLLECT" != "success" ] && problem="$problem\n- האיסוף משופרסל הסתיים במצב: $COLLECT"
+          [ "$GATE" != "success" ] && problem="$problem\n- שלב השער הסתיים במצב: $GATE"
+          [ "$CHECK" != "success" ] && [ "$CHECK" != "skipped" ] && problem="$problem\n- הבדיקה היומית הסתיימה במצב: $CHECK"
+          [ "$COLLECT" != "success" ] && [ "$COLLECT" != "skipped" ] && problem="$problem\n- האיסוף משופרסל הסתיים במצב: $COLLECT"
           if [ "$COLLECT" = "success" ] && [ "$WINDOW" = "yes" ] && [ "${ADDED:-0}" = "0" ] && [ "${QUEUE:-0}" != "0" ]; then
             problem="$problem\n- האיסוף רץ בשעות המותרות אבל לא הוסיף אף רשימת רכיבים (בתור: $QUEUE). ייתכן שמבנה הדף בשופרסל השתנה."
           fi
