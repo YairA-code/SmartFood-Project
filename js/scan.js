@@ -5,19 +5,20 @@
 // (ללא מפתח API וללא הרשמה), ורשימת הרכיבים שלו מנותחת בדפדפן.
 // ============================================================
 
-import { products } from './data.js?v=41';
-import { escapeHtml } from './utils.js?v=41';
-import { breadcrumb, renderProductCard } from './components.js?v=41';
-import { analyzeLabel, labelResultHTML } from './widgets.js?v=41';
-import { redFlags } from './verdict.js?v=41';
-import { readLabel, myLabel, myLabelCount, saveMyLabel, removeMyLabel, offAddUrl, PIONEER_AT } from './ocr.js?v=41';
-import { avoidHTML, addHistory, historyHTML, clearHistory } from './personal.js?v=41';
-import { getNova } from './nova.js?v=41';
-import { lookupCatalog } from './catalog.js?v=41';
+import { products } from './data.js?v=42';
+import { escapeHtml } from './utils.js?v=42';
+import { breadcrumb, renderProductCard } from './components.js?v=42';
+import { analyzeLabel, labelResultHTML } from './widgets.js?v=42';
+import { redFlags } from './verdict.js?v=42';
+import { readLabel, myLabel, myLabelCount, saveMyLabel, removeMyLabel, offAddUrl, PIONEER_AT } from './ocr.js?v=42';
+import { avoidHTML, addHistory, historyHTML, clearHistory } from './personal.js?v=42';
+import { getNova } from './nova.js?v=42';
+import { lookupCatalog } from './catalog.js?v=42';
+import { tr, EN } from './i18n.js?v=42';
 
 const OFF_API = 'https://world.openfoodfacts.org/api/v2/product/';
 const OFF_PAGE = 'https://world.openfoodfacts.org/product/';
-const OFF_FIELDS = 'code,product_name,product_name_he,brands,quantity,ingredients_text_he,ingredients_text,image_front_small_url';
+const OFF_FIELDS = 'code,product_name,product_name_he,product_name_en,brands,quantity,ingredients_text_he,ingredients_text,ingredients_text_en,image_front_small_url';
 const HEBREW = /[֐-׿]/;
 
 // ——————————————————————————————————————
@@ -53,10 +54,10 @@ export function similarProducts(name, brand, limit = 3) {
   const words = new Set(n.split(' ').filter(w => w.length > 1));
   return products
     .map(p => {
-      const pw = norm(p.name).split(' ').filter(w => w.length > 1);
+      const pw = norm(p.he ? p.he.name : p.name).split(' ').filter(w => w.length > 1);
       const hit = pw.filter(w => words.has(w)).length;
       if (!hit || hit < Math.ceil(pw.length / 2)) return null;
-      const sameBrand = b && p.brand !== 'מוצר כללי' && (b.includes(norm(p.brand)) || norm(p.brand).includes(b));
+      const sameBrand = b && !p.generic && (b.includes(norm(p.he ? p.he.brand : p.brand)) || norm(p.he ? p.he.brand : p.brand).includes(b));
       return { p, rank: hit / pw.length + (sameBrand ? 1 : 0) + hit / 10 };
     })
     .filter(Boolean)
@@ -69,43 +70,43 @@ export function similarProducts(name, brand, limit = 3) {
 // דף הסריקה
 // ——————————————————————————————————————
 export function scanButton(cls = '') {
-  return `<a href="#/scan" class="btn btn-scan ${cls}"><span class="scan-ico" aria-hidden="true"></span>סריקת ברקוד</a>`;
+  return `<a href="#/scan" class="btn btn-scan ${cls}"><span class="scan-ico" aria-hidden="true"></span>${tr('סריקת ברקוד', 'Scan barcode')}</a>`;
 }
 
 export function renderScan() {
   return `
     <main class="page page-scan" id="page-content">
-      ${breadcrumb([['סריקת ברקוד']])}
+      ${breadcrumb([[tr('סריקת ברקוד', 'Barcode scan')]])}
       <section class="page-hero compact">
-        <h1>סריקת ברקוד</h1>
-        <p>כוונו את המצלמה אל הברקוד שעל האריזה, ונקפיץ אתכם ישר לדף המוצר</p>
+        <h1>${tr('סריקת ברקוד', 'Barcode scan')}</h1>
+        <p>${tr('כוונו את המצלמה אל הברקוד שעל האריזה, ונקפיץ אתכם ישר לדף המוצר', 'Point your camera at the barcode on the package, and we’ll take you straight to the product page')}</p>
       </section>
       <div class="container narrow">
         <div class="scan-box">
           <div class="scan-view" id="scan-view">
-            <video id="scan-video" playsinline muted autoplay aria-label="תצוגת המצלמה"></video>
+            <video id="scan-video" playsinline muted autoplay aria-label="${tr('תצוגת המצלמה', 'Camera view')}"></video>
             <div class="scan-frame" aria-hidden="true"><span class="scan-line"></span></div>
             <div class="scan-idle" id="scan-idle">
               <span class="scan-idle-ico" aria-hidden="true"></span>
-              <button class="btn btn-primary" id="scan-start">הפעלת המצלמה</button>
-              <p class="small">התמונה מהמצלמה נשארת במכשיר שלכם ולא נשלחת לשום מקום</p>
+              <button class="btn btn-primary" id="scan-start">${tr('הפעלת המצלמה', 'Turn on camera')}</button>
+              <p class="small">${tr('התמונה מהמצלמה נשארת במכשיר שלכם ולא נשלחת לשום מקום', 'The camera image stays on your device and is never sent anywhere')}</p>
             </div>
           </div>
           <p class="scan-status" id="scan-status" role="status" aria-live="polite"></p>
           <div class="scan-controls">
-            <button class="btn btn-ghost btn-sm" id="scan-torch" hidden>🔦 פנס</button>
-            <button class="btn btn-ghost btn-sm" id="scan-stop" hidden>עצירה</button>
-            <label class="btn btn-ghost btn-sm scan-file">📷 סריקה מתמונה
+            <button class="btn btn-ghost btn-sm" id="scan-torch" hidden>🔦 ${tr('פנס', 'Flashlight')}</button>
+            <button class="btn btn-ghost btn-sm" id="scan-stop" hidden>${tr('עצירה', 'Stop')}</button>
+            <label class="btn btn-ghost btn-sm scan-file">📷 ${tr('סריקה מתמונה', 'Scan from photo')}
               <input type="file" id="scan-file" accept="image/*" capture="environment" class="visually-hidden">
             </label>
           </div>
         </div>
 
         <form class="scan-manual" id="scan-form" novalidate>
-          <label for="scan-code">או הקלידו את המספר שמתחת לברקוד</label>
+          <label for="scan-code">${tr('או הקלידו את המספר שמתחת לברקוד', 'Or type the number under the barcode')}</label>
           <div class="scan-manual-row">
-            <input id="scan-code" inputmode="numeric" pattern="[0-9]*" autocomplete="off" maxlength="14" placeholder="לדוגמה: 7290000066318" dir="ltr">
-            <button class="btn btn-primary" type="submit">חיפוש</button>
+            <input id="scan-code" inputmode="numeric" pattern="[0-9]*" autocomplete="off" maxlength="14" placeholder="${tr('לדוגמה: 7290000066318', 'For example: 7290000066318')}" dir="ltr">
+            <button class="btn btn-primary" type="submit">${tr('חיפוש', 'Search')}</button>
           </div>
           <p class="scan-error" id="scan-error" role="alert" hidden></p>
         </form>
@@ -202,10 +203,10 @@ export function initScan() {
   const start = async () => {
     if (running) return;
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      say('הדפדפן הזה לא מאפשר גישה למצלמה. אפשר לצלם את הברקוד או להקליד את המספר.');
+      say(tr('הדפדפן הזה לא מאפשר גישה למצלמה. אפשר לצלם את הברקוד או להקליד את המספר.', 'This browser doesn’t allow camera access. You can take a photo of the barcode or type the number.'));
       return;
     }
-    say('מפעילים את המצלמה…');
+    say(tr('מפעילים את המצלמה…', 'Starting the camera…'));
     try {
       stream = await navigator.mediaDevices.getUserMedia({
         audio: false,
@@ -213,8 +214,8 @@ export function initScan() {
       });
     } catch (e) {
       say(e && e.name === 'NotAllowedError'
-        ? 'אין הרשאה למצלמה. אפשר לאשר אותה בהגדרות הדפדפן, לצלם את הברקוד או להקליד את המספר.'
-        : 'לא הצלחנו להפעיל את המצלמה. אפשר לצלם את הברקוד או להקליד את המספר.');
+        ? tr('אין הרשאה למצלמה. אפשר לאשר אותה בהגדרות הדפדפן, לצלם את הברקוד או להקליד את המספר.', 'No camera permission. You can allow it in your browser settings, take a photo of the barcode or type the number.')
+        : tr('לא הצלחנו להפעיל את המצלמה. אפשר לצלם את הברקוד או להקליד את המספר.', 'We couldn’t start the camera. You can take a photo of the barcode or type the number.'));
       return;
     }
     // ייתכן שהמשתמש עזב את הדף בזמן בקשת ההרשאה
@@ -235,8 +236,8 @@ export function initScan() {
 
     let detect;
     try { detect = await createDetector(); }
-    catch (e) { say('לא הצלחנו לטעון את הסורק. אפשר להקליד את המספר שמתחת לברקוד.'); reset(); return; }
-    say('מחפשים ברקוד… החזיקו את האריזה יציבה ובאור טוב');
+    catch (e) { say(tr('לא הצלחנו לטעון את הסורק. אפשר להקליד את המספר שמתחת לברקוד.', 'We couldn’t load the scanner. You can type the number under the barcode.')); reset(); return; }
+    say(tr('מחפשים ברקוד… החזיקו את האריזה יציבה ובאור טוב', 'Looking for a barcode… Hold the package steady in good light'));
 
     let last = '', streak = 0;
     const tick = async () => {
@@ -266,7 +267,7 @@ export function initScan() {
     const file = e.target.files && e.target.files[0];
     e.target.value = '';
     if (!file) return;
-    say('קוראים את התמונה…');
+    say(tr('קוראים את התמונה…', 'Reading the image…'));
     const url = URL.createObjectURL(file);
     try {
       const img = new Image();
@@ -274,9 +275,9 @@ export function initScan() {
       const detect = await createDetector();
       const code = cleanCode(await detect(img));
       if (code && validCode(code)) go(code);
-      else say('לא מצאנו ברקוד בתמונה. נסו לצלם מקרוב ובאור טוב, או הקלידו את המספר.');
+      else say(tr('לא מצאנו ברקוד בתמונה. נסו לצלם מקרוב ובאור טוב, או הקלידו את המספר.', 'We didn’t find a barcode in the image. Try a close-up in good light, or type the number.'));
     } catch (err) {
-      say('לא הצלחנו לקרוא את התמונה. אפשר להקליד את המספר שמתחת לברקוד.');
+      say(tr('לא הצלחנו לקרוא את התמונה. אפשר להקליד את המספר שמתחת לברקוד.', 'We couldn’t read the image. You can type the number under the barcode.'));
     } finally { URL.revokeObjectURL(url); }
   });
 
@@ -288,7 +289,7 @@ export function initScan() {
     e.preventDefault();
     const code = cleanCode(input.value);
     if (!validCode(code)) {
-      error.textContent = 'המספר לא נראה כמו ברקוד תקין. ברקוד של מוצר הוא בדרך כלל 13 ספרות (לפעמים 8 או 12). בדקו שלא התפספסה ספרה.';
+      error.textContent = tr('המספר לא נראה כמו ברקוד תקין. ברקוד של מוצר הוא בדרך כלל 13 ספרות (לפעמים 8 או 12). בדקו שלא התפספסה ספרה.', 'That number doesn’t look like a valid barcode. Product barcodes usually have 13 digits (sometimes 8 or 12). Check that no digit is missing.');
       error.hidden = false; input.focus();
       return;
     }
@@ -301,22 +302,22 @@ export function initScan() {
 // ——————————————————————————————————————
 const shell = (code, inner) => `
   <main class="page page-barcode" id="page-content">
-    ${breadcrumb([['סריקת ברקוד', '#/scan'], [code]])}
+    ${breadcrumb([[tr('סריקת ברקוד', 'Barcode scan'), '#/scan'], [code]])}
     <div class="container narrow" id="barcode-body">${inner}</div>
   </main>`;
 
-const again = '<a class="btn btn-ghost btn-sm" href="#/scan">סריקת מוצר נוסף</a>';
+const again = `<a class="btn btn-ghost btn-sm" href="#/scan">${tr('סריקת מוצר נוסף', 'Scan another product')}</a>`;
 
 export function renderBarcode(raw) {
   const code = cleanCode(raw);
   if (!validCode(code)) {
-    return shell(code || 'ברקוד', `
-      <div class="empty-note big"><h1 class="barcode-h">הברקוד לא תקין</h1>
-      <p>המספר ${escapeHtml(code)} לא עובר את בדיקת התקינות של ברקוד. נסו לסרוק שוב.</p>
+    return shell(code || tr('ברקוד', 'Barcode'), `
+      <div class="empty-note big"><h1 class="barcode-h">${tr('הברקוד לא תקין', 'Invalid barcode')}</h1>
+      <p>${tr(`המספר ${escapeHtml(code)} לא עובר את בדיקת התקינות של ברקוד. נסו לסרוק שוב.`, `The number ${escapeHtml(code)} doesn’t pass the barcode check. Try scanning again.`)}</p>
       <div class="barcode-actions">${again}</div></div>`);
   }
   return shell(code, `
-    <div class="barcode-loading" aria-busy="true"><span class="spinner" aria-hidden="true"></span><p>מחפשים את המוצר ${escapeHtml(code)}…</p></div>`);
+    <div class="barcode-loading" aria-busy="true"><span class="spinner" aria-hidden="true"></span><p>${tr(`מחפשים את המוצר ${escapeHtml(code)}…`, `Looking up product ${escapeHtml(code)}…`)}</p></div>`);
 }
 
 // ——————————————————————————————————————
@@ -324,26 +325,26 @@ export function renderBarcode(raw) {
 // ——————————————————————————————————————
 function pioneerHTML() {
   const n = myLabelCount();
-  if (n >= PIONEER_AT) return `<p class="pioneer is-on"><span aria-hidden="true">🏅</span> <strong>חלוץ Tavitly</strong> · הוספתם ${n} מוצרים שלא היו במאגר</p>`;
-  return n ? `<p class="pioneer"><span aria-hidden="true">🌱</span> הוספתם ${n} ${n === 1 ? 'מוצר' : 'מוצרים'}. עוד ${PIONEER_AT - n} לתג „חלוץ Tavitly”</p>` : '';
+  if (n >= PIONEER_AT) return `<p class="pioneer is-on"><span aria-hidden="true">🏅</span> <strong>${tr('חלוץ Tavitly', 'Tavitly Pioneer')}</strong> · ${tr(`הוספתם ${n} מוצרים שלא היו במאגר`, `You’ve added ${n} products that weren’t in the database`)}</p>`;
+  return n ? `<p class="pioneer"><span aria-hidden="true">🌱</span> ${tr(`הוספתם ${n} ${n === 1 ? 'מוצר' : 'מוצרים'}. עוד ${PIONEER_AT - n} לתג „חלוץ Tavitly”`, `You’ve added ${n} ${n === 1 ? 'product' : 'products'}. ${PIONEER_AT - n} more to earn the “Tavitly Pioneer” badge`)}</p>` : '';
 }
 
 function captureHTML(code, lead) {
   return `
     <section class="capture" id="capture" data-code="${escapeHtml(code)}">
-      <h2 class="capture-title">📸 ${lead || 'צלמו את רשימת הרכיבים'}</h2>
-      <p class="muted">צלמו מקרוב רק את רשימת הרכיבים שעל האריזה, באור טוב. הטקסט נקרא במכשיר שלכם, והתמונה לא נשלחת לשום מקום.</p>
+      <h2 class="capture-title">📸 ${lead || tr('צלמו את רשימת הרכיבים', 'Photograph the ingredient list')}</h2>
+      <p class="muted">${tr('צלמו מקרוב רק את רשימת הרכיבים שעל האריזה, באור טוב. הטקסט נקרא במכשיר שלכם, והתמונה לא נשלחת לשום מקום.', 'Take a close-up of just the ingredient list on the package, in good light. Reads ingredient lists printed in Hebrew. The text is read on your device, and the photo is never sent anywhere.')}</p>
       <label class="btn btn-primary capture-btn">
         <input type="file" accept="image/*" capture="environment" id="capture-file" hidden>
-        📷 צילום התווית
+        📷 ${tr('צילום התווית', 'Photograph the label')}
       </label>
       <p class="capture-progress" id="capture-progress" hidden aria-live="polite"></p>
       <div class="capture-edit" id="capture-edit" hidden>
-        <label for="capture-name" class="label-title">שם המוצר (לא חובה)</label>
-        <input type="text" id="capture-name" maxlength="80" autocomplete="off" placeholder="למשל: חטיף תירס בטעם גבינה">
-        <label for="capture-text" class="label-title">זה מה שקראנו. תקנו טעויות אם יש, ולחצו על בדיקה</label>
+        <label for="capture-name" class="label-title">${tr('שם המוצר (לא חובה)', 'Product name (optional)')}</label>
+        <input type="text" id="capture-name" maxlength="80" autocomplete="off" placeholder="${tr('למשל: חטיף תירס בטעם גבינה', 'For example: cheese-flavored corn snack')}">
+        <label for="capture-text" class="label-title">${tr('זה מה שקראנו. תקנו טעויות אם יש, ולחצו על בדיקה', 'Here’s what we read. Fix any mistakes, then tap Check')}</label>
         <textarea id="capture-text" rows="5"></textarea>
-        <div class="label-actions"><button class="btn btn-primary" id="capture-run">בדיקה ושמירה</button></div>
+        <div class="label-actions"><button class="btn btn-primary" id="capture-run">${tr('בדיקה ושמירה', 'Check and save')}</button></div>
       </div>
       <div id="capture-result" aria-live="polite"></div>
     </section>`;
@@ -360,15 +361,15 @@ function savedResultHTML(code, entry) {
   const r = analyzeLabel(entry.text);
   return `
     <section class="barcode-head"><div>
-      <p class="eyebrow">ברקוד <bdi>${escapeHtml(code)}</bdi> · נשמר במכשיר שלכם</p>
-      <h1 class="barcode-h">${escapeHtml(entry.name || 'מוצר שהוספתם')}</h1>
+      <p class="eyebrow">${tr('ברקוד', 'Barcode')} <bdi>${escapeHtml(code)}</bdi> · ${tr('נשמר במכשיר שלכם', 'Saved on your device')}</p>
+      <h1 class="barcode-h">${escapeHtml(entry.name || tr('מוצר שהוספתם', 'Product you added'))}</h1>
     </div></section>
-    <p class="barcode-note">את המוצר הזה הוספתם בעצמכם מצילום התווית ב-<bdi>${escapeHtml(entry.savedAt || '')}</bdi>. הניתוח אוטומטי, ונשמר רק במכשיר הזה.</p>
+    <p class="barcode-note">${tr('את המוצר הזה הוספתם בעצמכם מצילום התווית ב-', 'You added this product yourself from a photo of the label on ')}<bdi>${escapeHtml(entry.savedAt || '')}</bdi>${tr('. הניתוח אוטומטי, ונשמר רק במכשיר הזה.', '. The analysis is automatic and is saved only on this device.')}</p>
     ${r ? flagsHTML(r) + labelResultHTML(r) : ''}
     <div class="barcode-actions">
-      <button class="btn btn-ghost btn-sm" id="capture-again">📸 צילום מחדש</button>
-      <button class="btn btn-ghost btn-sm" id="capture-forget">מחיקה מהמכשיר</button>
-      <a class="btn btn-ghost btn-sm" href="${offAddUrl(code)}" target="_blank" rel="noopener noreferrer">🌍 הוספה למאגר הפתוח</a>
+      <button class="btn btn-ghost btn-sm" id="capture-again">📸 ${tr('צילום מחדש', 'Retake photo')}</button>
+      <button class="btn btn-ghost btn-sm" id="capture-forget">${tr('מחיקה מהמכשיר', 'Delete from device')}</button>
+      <a class="btn btn-ghost btn-sm" href="${offAddUrl(code)}" target="_blank" rel="noopener noreferrer">🌍 ${tr('הוספה למאגר הפתוח', 'Add to the open database')}</a>
       ${again}
     </div>
     <div id="capture-slot"></div>`;
@@ -380,7 +381,7 @@ export function initCapture() {
   if (again2) {
     again2.addEventListener('click', () => {
       const slot = document.getElementById('capture-slot');
-      slot.innerHTML = captureHTML(location.hash.slice(10), 'צילום מחדש של רשימת הרכיבים');
+      slot.innerHTML = captureHTML(location.hash.slice(10), tr('צילום מחדש של רשימת הרכיבים', 'Retake the ingredient list photo'));
       initCapture();
     });
     document.getElementById('capture-forget')?.addEventListener('click', () => {
@@ -403,26 +404,26 @@ export function initCapture() {
       ${flagsHTML(r)}
       ${labelResultHTML(r)}
       <div class="capture-saved">
-        <p><strong>✓ נשמר במכשיר שלכם.</strong> בפעם הבאה שתסרקו את הברקוד הזה, התשובה תופיע מיד.</p>
+        <p><strong>${tr('✓ נשמר במכשיר שלכם.', '✓ Saved on your device.')}</strong> ${tr('בפעם הבאה שתסרקו את הברקוד הזה, התשובה תופיע מיד.', 'Next time you scan this barcode, the answer will appear right away.')}</p>
         ${isNew ? pioneerHTML() : ''}
-        <p class="muted small">רוצים שגם אחרים יקבלו תשובה על המוצר הזה? הוסיפו אותו למאגר הפתוח Open Food Facts, שממנו Tavitly בודק מוצרים שלא נמצאים אצלנו. ההוספה נעשית באתר שלהם, עם חשבון משלכם.</p>
-        <a class="btn btn-ghost btn-sm" href="${offAddUrl(code)}" target="_blank" rel="noopener noreferrer">🌍 הוספה למאגר הפתוח</a>
+        <p class="muted small">${tr('רוצים שגם אחרים יקבלו תשובה על המוצר הזה? הוסיפו אותו למאגר הפתוח Open Food Facts, שממנו Tavitly בודק מוצרים שלא נמצאים אצלנו. ההוספה נעשית באתר שלהם, עם חשבון משלכם.', 'Want others to get an answer for this product too? Add it to the open Open Food Facts database, which Tavitly checks for products we don’t have. You add it on their site, with your own account.')}</p>
+        <a class="btn btn-ghost btn-sm" href="${offAddUrl(code)}" target="_blank" rel="noopener noreferrer">🌍 ${tr('הוספה למאגר הפתוח', 'Add to the open database')}</a>
       </div>`;
     out.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
   file.addEventListener('change', async () => {
     const f = file.files && file.files[0];
     if (!f) return;
-    prog.hidden = false; prog.textContent = 'טוענים את מנוע הקריאה… (בפעם הראשונה זה לוקח כמה שניות)';
+    prog.hidden = false; prog.textContent = tr('טוענים את מנוע הקריאה… (בפעם הראשונה זה לוקח כמה שניות)', 'Loading the text reader… (the first time takes a few seconds)');
     edit.hidden = true; out.innerHTML = '';
     try {
-      const t = await readLabel(f, p => { prog.textContent = `קוראים את התווית… ${Math.round(p * 100)}%`; });
+      const t = await readLabel(f, p => { prog.textContent = `${tr('קוראים את התווית…', 'Reading the label…')} ${Math.round(p * 100)}%`; });
       prog.hidden = true; edit.hidden = false;
       text.value = t;
       if (t && analyzeLabel(t)) run();
-      else out.innerHTML = '<div class="empty-note">לא הצלחנו לקרוא את הרכיבים מהתמונה. נסו לצלם שוב מקרוב ובאור טוב, או הקלידו אותם בתיבה.</div>';
+      else out.innerHTML = `<div class="empty-note">${tr('לא הצלחנו לקרוא את הרכיבים מהתמונה. נסו לצלם שוב מקרוב ובאור טוב, או הקלידו אותם בתיבה.', 'We couldn’t read the ingredients from the photo. Try again with a close-up in good light, or type them in the box.')}</div>`;
     } catch (e) {
-      prog.textContent = 'לא הצלחנו לקרוא את התמונה. אפשר להקליד את רשימת הרכיבים בתיבה.';
+      prog.textContent = tr('לא הצלחנו לקרוא את התמונה. אפשר להקליד את רשימת הרכיבים בתיבה.', 'We couldn’t read the image. You can type the ingredient list in the box.');
       edit.hidden = false;
     } finally { file.value = ''; }
   });
@@ -432,18 +433,18 @@ export function initCapture() {
 function notFoundHTML(code, why) {
   if (why === 'offline') return `
     <div class="empty-note big">
-      <h1 class="barcode-h">לא הצלחנו לבדוק את הברקוד</h1>
-      <p>אין כרגע חיבור למאגר המוצרים הפתוח. אפשר לצלם את רשימת הרכיבים ולקבל ציון גם בלי חיבור טוב.</p>
+      <h1 class="barcode-h">${tr('לא הצלחנו לבדוק את הברקוד', 'We couldn’t check this barcode')}</h1>
+      <p>${tr('אין כרגע חיבור למאגר המוצרים הפתוח. אפשר לצלם את רשימת הרכיבים ולקבל ציון גם בלי חיבור טוב.', 'We can’t reach the open product database right now. You can photograph the ingredient list and get a score even without a good connection.')}</p>
     </div>
     ${captureHTML(code)}
-    <div class="barcode-actions"><a class="btn btn-ghost btn-sm" href="#/products">חיפוש לפי שם</a>${again}</div>`;
+    <div class="barcode-actions"><a class="btn btn-ghost btn-sm" href="#/products">${tr('חיפוש לפי שם', 'Search by name')}</a>${again}</div>`;
   return `
     <div class="empty-note big">
-      <h1 class="barcode-h">המוצר הזה עוד לא אצלנו</h1>
-      <p>לא מצאנו את הברקוד <bdi>${escapeHtml(code)}</bdi>, לא במאגר שלנו ולא במאגר הפתוח. צלמו את רשימת הרכיבים, ותקבלו ציון תוך כמה שניות.</p>
+      <h1 class="barcode-h">${tr('המוצר הזה עוד לא אצלנו', 'We don’t have this product yet')}</h1>
+      <p>${tr('לא מצאנו את הברקוד ', 'We didn’t find barcode ')}<bdi>${escapeHtml(code)}</bdi>${tr(', לא במאגר שלנו ולא במאגר הפתוח. צלמו את רשימת הרכיבים, ותקבלו ציון תוך כמה שניות.', ' in our database or in the open database. Photograph the ingredient list and get a score in seconds.')}</p>
     </div>
     ${captureHTML(code)}
-    <div class="barcode-actions"><a class="btn btn-ghost btn-sm" href="#/products">חיפוש לפי שם</a>${again}</div>`;
+    <div class="barcode-actions"><a class="btn btn-ghost btn-sm" href="#/products">${tr('חיפוש לפי שם', 'Search by name')}</a>${again}</div>`;
 }
 
 // מוצר שזיהינו מקובצי המחירים, אבל עוד אין לנו את רשימת הרכיבים שלו
@@ -451,43 +452,58 @@ function identifiedHTML(code, e) {
   const similar = similarProducts(e.n, e.b);
   return `
     <section class="barcode-head"><div>
-      <p class="eyebrow">זיהינו לפי ברקוד <bdi>${escapeHtml(code)}</bdi></p>
+      <p class="eyebrow">${tr('זיהינו לפי ברקוד', 'Identified by barcode')} <bdi>${escapeHtml(code)}</bdi></p>
       <h1 class="barcode-h">${escapeHtml(e.n)}</h1>
       ${e.b ? `<p class="muted">${escapeHtml(e.b)}</p>` : ''}
+      ${EN ? '<p class="muted small">Product name as published by the Israeli retailer.</p>' : ''}
     </div></section>
-    <p class="barcode-note">המוצר מופיע בקובצי המחירים שהרשתות מפרסמות, אבל עוד אין לנו את רשימת הרכיבים שלו. צלמו אותה, ותקבלו ציון תוך כמה שניות.</p>
+    <p class="barcode-note">${tr('המוצר מופיע בקובצי המחירים שהרשתות מפרסמות, אבל עוד אין לנו את רשימת הרכיבים שלו. צלמו אותה, ותקבלו ציון תוך כמה שניות.', 'This product appears in the price files published by retail chains, but we don’t have its ingredient list yet. Photograph it and get a score in seconds.')}</p>
     ${captureHTML(code)}
     ${similar.length ? `
-      <div class="section-head start"><h2 class="section-title">מוצרים דומים שכבר בדקנו</h2></div>
+      <div class="section-head start"><h2 class="section-title">${tr('מוצרים דומים שכבר בדקנו', 'Similar products we’ve already checked')}</h2></div>
       <div class="products-grid">${similar.map(renderProductCard).join('')}</div>` : ''}
     <div class="barcode-actions">${again}</div>`;
 }
 
-function offProductHTML(code, p, src) {
-  src = src || { label: 'Open Food Facts', url: `${OFF_PAGE}${encodeURIComponent(code)}`, license: ' (רישיון ODbL)', note: 'הנתונים מגיעים מהמאגר הפתוח Open Food Facts, שנכתב על ידי מתנדבים' };
-  const name = p.product_name_he || p.product_name || 'מוצר ללא שם';
+// שם המוצר מ-Open Food Facts: בעברית כמו תמיד; באנגלית מעדיפים את השם באנגלית
+const offName = p => (EN ? p.product_name_en || p.product_name || p.product_name_he : p.product_name_he || p.product_name);
+// רשימת הרכיבים באנגלית, רק במצב אנגלית (להצגה בלבד; הניתוח מבין עברית בלבד)
+const enIngredients = p => {
+  const t = EN ? String(p.ingredients_text_en || '').trim() : '';
+  return t && !HEBREW.test(t) ? t : '';
+};
+
+function offProductHTML(code, p, src, retailer) {
+  src = src || { label: 'Open Food Facts', url: `${OFF_PAGE}${encodeURIComponent(code)}`, license: tr(' (רישיון ODbL)', ' (ODbL license)'), note: tr('הנתונים מגיעים מהמאגר הפתוח Open Food Facts, שנכתב על ידי מתנדבים', 'The data comes from the open Open Food Facts database, written by volunteers') };
+  const name = offName(p) || tr('מוצר ללא שם', 'Unnamed product');
   const brand = (p.brands || '').split(',')[0].trim();
   const text = HEBREW.test(p.ingredients_text_he || '') ? p.ingredients_text_he
     : HEBREW.test(p.ingredients_text || '') ? p.ingredients_text : '';
   const result = text ? analyzeLabel(text) : null;
+  // באנגלית: מציגים את הרשימה באנגלית אם יש, אבל הניתוח נשאר על הטקסט העברי
+  const en = retailer ? '' : enIngredients(p);
+  const enList = en ? `<p class="barcode-note"><strong>Ingredients:</strong> ${escapeHtml(en)}</p>` : '';
   const similar = similarProducts(name, brand);
   const img = /^https:\/\/images\.openfoodfacts\.org\//.test(p.image_front_small_url || '') ? p.image_front_small_url : '';
   return `
     <section class="barcode-head">
       ${img ? `<img class="barcode-img" src="${escapeHtml(img)}" alt="" width="96" height="96" loading="lazy" referrerpolicy="no-referrer">` : ''}
       <div>
-        <p class="eyebrow">נמצא לפי ברקוד <bdi>${escapeHtml(code)}</bdi></p>
+        <p class="eyebrow">${tr('נמצא לפי ברקוד', 'Found by barcode')} <bdi>${escapeHtml(code)}</bdi></p>
         <h1 class="barcode-h">${escapeHtml(name)}</h1>
         <p class="muted">${escapeHtml([brand, p.quantity].filter(Boolean).join(' · '))}</p>
+        ${retailer ? `${EN ? '<p class="muted small">Product name as published by the Israeli retailer.</p>' : ''}` : ''}
       </div>
     </section>
-    <p class="barcode-note">המוצר הזה לא נמצא במאגר שנבדק על ידינו. ${escapeHtml(src.note)}, והניתוח נעשה אוטומטית ולא נבדק ידנית. כדאי להשוות לרשימת הרכיבים שעל האריזה.</p>
+    <p class="barcode-note">${tr('המוצר הזה לא נמצא במאגר שנבדק על ידינו. ', 'This product isn’t in our reviewed database. ')}${escapeHtml(src.note)}${tr(', והניתוח נעשה אוטומטית ולא נבדק ידנית. כדאי להשוות לרשימת הרכיבים שעל האריזה.', ', and the analysis is automatic, not checked by hand. Compare it with the ingredient list on the package.')}</p>
     ${similar.length ? `
-      <div class="section-head start"><h2 class="section-title">אולי זה אחד מאלה?</h2><p class="section-subtitle">מוצרים דומים מהמאגר שלנו, עם רשימת רכיבים שנבדקה והסבר לכל רכיב</p></div>
+      <div class="section-head start"><h2 class="section-title">${tr('אולי זה אחד מאלה?', 'Is it one of these?')}</h2><p class="section-subtitle">${tr('מוצרים דומים מהמאגר שלנו, עם רשימת רכיבים שנבדקה והסבר לכל רכיב', 'Similar products from our database, with a reviewed ingredient list and an explanation for every ingredient')}</p></div>
       <div class="products-grid">${similar.map(renderProductCard).join('')}</div>` : ''}
+    ${enList}
     ${result ? flagsHTML(result) + labelResultHTML(result) : `
-      ${captureHTML(code, 'אין כאן רשימת רכיבים בעברית. צלמו אותה מהאריזה')}`}
-    <p class="source-note">מקור רשימת הרכיבים: <a href="${escapeHtml(src.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(src.label)}</a>${src.license || ''}.</p>
+      ${en ? '<p class="barcode-note">Automatic analysis is available for Hebrew ingredient lists only.</p>' : ''}
+      ${captureHTML(code, tr('אין כאן רשימת רכיבים בעברית. צלמו אותה מהאריזה', 'No Hebrew ingredient list here. Photograph it from the package'))}`}
+    <p class="source-note">${tr('מקור רשימת הרכיבים:', 'Ingredient list source:')} <a href="${escapeHtml(src.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(src.label)}</a>${src.license || ''}.</p>
     <div class="barcode-actions">${again}</div>`;
 }
 
@@ -499,7 +515,7 @@ export async function initBarcode(raw, onDone) {
   const mine = myLabel(code);
   if (mine) {
     const mr = analyzeLabel(mine.text);
-    addHistory({ code, name: mine.name || 'מוצר שהוספתם', nova: mr && mr.nova.group });
+    addHistory({ code, name: mine.name || tr('מוצר שהוספתם', 'Product you added'), nova: mr && mr.nova.group });
     const body = document.getElementById('barcode-body');
     if (body) { body.innerHTML = savedResultHTML(code, mine); initCapture(); if (onDone) onDone(); }
     return;
@@ -512,9 +528,9 @@ export async function initBarcode(raw, onDone) {
     const body = document.getElementById('barcode-body');
     if (body && location.hash === here) {
       const src = cat.s === 'shufersal'
-        ? { label: 'שופרסל אונליין', url: `https://www.shufersal.co.il/online/he/x/p/P_${encodeURIComponent(cat.u || cat.c)}`, note: `רשימת הרכיבים נלקחה מדף המוצר בשופרסל אונליין${cat.d ? ` (${cat.d})` : ''}` }
+        ? { label: tr('שופרסל אונליין', 'Shufersal Online'), url: `https://www.shufersal.co.il/online/he/x/p/P_${encodeURIComponent(cat.u || cat.c)}`, note: `${tr('רשימת הרכיבים נלקחה מדף המוצר בשופרסל אונליין', 'The ingredient list was taken from the product page on Shufersal Online')}${cat.d ? ` (${cat.d})` : ''}` }
         : null;
-      body.innerHTML = offProductHTML(code, { product_name_he: cat.n, brands: cat.b, quantity: cat.q, ingredients_text_he: cat.i }, src);
+      body.innerHTML = offProductHTML(code, { product_name_he: cat.n, brands: cat.b, quantity: cat.q, ingredients_text_he: cat.i }, src, true);
       initCapture(); if (onDone) onDone();
     }
     return;
@@ -529,9 +545,9 @@ export async function initBarcode(raw, onDone) {
     else {
       const data = await res.json();
       const found = data && data.status === 1 && data.product;
-      const hasIng = found && HEBREW.test(data.product.ingredients_text_he || data.product.ingredients_text || '');
+      const hasIng = found && (HEBREW.test(data.product.ingredients_text_he || data.product.ingredients_text || '') || !!enIngredients(data.product));
       html = found && (hasIng || !cat) ? offProductHTML(code, data.product) : cat ? identifiedHTML(code, cat) : notFoundHTML(code);
-      if (found || cat) addHistory({ code, name: (cat && cat.n) || data.product.product_name_he || data.product.product_name || '' });
+      if (found || cat) addHistory({ code, name: (cat && cat.n) || offName(data.product) || '' });
     }
   } catch (e) { html = cat ? identifiedHTML(code, cat) : notFoundHTML(code, 'offline'); }
   if (location.hash !== here) return;

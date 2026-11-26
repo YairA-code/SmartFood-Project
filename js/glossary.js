@@ -6,7 +6,7 @@
 // ממשיך להשתמש ברשימה המלאה שב-ingredients.js.
 // ============================================================
 
-import { INGREDIENTS, canonicalName } from './ingredients.js?v=41';
+import { INGREDIENTS, canonicalName } from './ingredients.js?v=42';
 
 const S = 'safe', CA = 'caution', D = 'danger';
 const A = 'additive', M = 'marker', C = 'culinary', W = 'whole', P = 'processed';
@@ -232,7 +232,9 @@ const byE = new Map();         // E500 → id
 const aliases = [];            // [שם נרדף, id], מהארוך לקצר
 const groupWord = new Map();   // מילת קבוצה → [id, mode]
 
-const add = t => { terms.set(t.id, { ...t, keys: [], products: new Set() }); return t.id; };
+let localize = null;          // באנגלית: פונקציית תרגום לערכים, גם לאלה שנוצרים מאוחר יותר
+const localizeOne = x => { if (!localize || x.heName) return; x.heName = x.name; x.name = localize(x.name); x.reason = localize(x.reason); };
+const add = t => { const x = { ...t, keys: [], products: new Set() }; terms.set(t.id, x); localizeOne(x); return t.id; };
 
 for (const [es, name, al, type, risk, nova, reason] of ADDITIVES) {
   const id = es[0] || name;
@@ -335,4 +337,11 @@ export function findTerms(q) {
   return t;
 }
 
-export const termSearchText = t => [t.name, ...t.e, ...t.aliases, t.type].join(' ').toLowerCase();
+export const termSearchText = t => [t.name, t.heName || '', ...t.e, ...t.aliases, t.type].join(' ').toLowerCase();
+
+// באנגלית: שם והסבר מתורגמים לתצוגה. הסוג (type) נשאר בעברית, כי הניתוח
+// והדגלים נשענים עליו; בתצוגה הוא עובר דרך loc().
+export function localizeTerms(t) {
+  localize = t;
+  terms.forEach(localizeOne);
+}

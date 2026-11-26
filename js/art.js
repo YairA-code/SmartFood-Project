@@ -5,9 +5,12 @@
 // האיורים כלליים ולא מעתיקים לוגו או עיצוב של יצרן.
 // ============================================================
 
-import { escapeHtml } from './utils.js?v=41';
-import { PHOTOS } from './photos.js?v=41';
-import { COLORS } from './colors.js?v=41';
+import { escapeHtml } from './utils.js?v=42';
+import { PHOTOS } from './photos.js?v=42';
+import { COLORS } from './colors.js?v=42';
+import { EN } from './i18n.js?v=42';
+
+const DIR = EN ? 'ltr' : 'rtl';
 
 // סוג האריזה לכל מוצר
 const PACK = {
@@ -209,7 +212,8 @@ const SHAPES = {
 
 // פיצול שם המוצר לשתי שורות לכל היותר
 function labelLines(p) {
-  const name = SHORT[p.id] || p.short || p.name;
+  // השמות הקצרים ב-SHORT הם בעברית; באנגלית משתמשים בשם המתורגם של המוצר
+  const name = (!EN && SHORT[p.id]) || p.short || p.name;
   const words = name.split(' ');
   if (name.length <= 11 || words.length === 1) return [name];
   let best = [name], bestDiff = Infinity;
@@ -235,19 +239,19 @@ function labelSVG(p, [x, y, w, h], icon, edge, band) {
   // באריזה בהירה התווית מקבלת מסגרת בצבע המשני, כדי שתבלוט
   let out = `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${small ? 6 : 10}" fill="#fffdf7" opacity=".97"${edge ? ` stroke="${edge}" stroke-width="3"` : ''}/>`;
   if (iconS) { out += `<image href="img/art/${icon}.webp" x="${x + w / 2 - iconS / 2}" y="${cy}" width="${iconS}" height="${iconS}"/>`; cy += iconS + 3; }
-  if (brandFs && p.brand !== 'מוצר כללי') {
+  if (brandFs && !p.generic) {
     if (band) {
       // פס בצבע המותג עם שם היצרן, כמו על האריזה (בלי להעתיק לוגו)
       out += `<rect x="${x + 4}" y="${cy - 2}" width="${w - 8}" height="${brandFs + 7}" rx="4" fill="${band}"/>`;
-      out += `<text x="${x + w / 2}" y="${cy + brandFs * 0.85 + 1}" font-size="${brandFs}" fill="#fff" text-anchor="middle" direction="rtl" font-weight="700">${escapeHtml(p.brand)}</text>`;
+      out += `<text x="${x + w / 2}" y="${cy + brandFs * 0.85 + 1}" font-size="${brandFs}" fill="#fff" text-anchor="middle" direction="${DIR}" font-weight="700">${escapeHtml(p.brand)}</text>`;
       cy += brandFs + 8;
     } else {
-      out += `<text x="${x + w / 2}" y="${cy + brandFs * 0.85}" font-size="${brandFs}" fill="#6b7280" text-anchor="middle" direction="rtl" font-weight="500">${escapeHtml(p.brand)}</text>`;
+      out += `<text x="${x + w / 2}" y="${cy + brandFs * 0.85}" font-size="${brandFs}" fill="#6b7280" text-anchor="middle" direction="${DIR}" font-weight="500">${escapeHtml(p.brand)}</text>`;
       cy += brandFs + 3;
     }
   }
   lines.forEach((l, i) => {
-    out += `<text x="${x + w / 2}" y="${cy + fs * (0.86 + i * 1.08)}" font-size="${fs.toFixed(1)}" fill="#1f2a24" text-anchor="middle" direction="rtl" font-weight="800">${escapeHtml(l)}</text>`;
+    out += `<text x="${x + w / 2}" y="${cy + fs * (0.86 + i * 1.08)}" font-size="${fs.toFixed(1)}" fill="#1f2a24" text-anchor="middle" direction="${DIR}" font-weight="800">${escapeHtml(l)}</text>`;
   });
   return out;
 }
