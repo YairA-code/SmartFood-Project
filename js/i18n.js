@@ -16,8 +16,12 @@ export const EN = LANG === 'en';
 export const tr = (he, en) => (EN ? en : he);
 
 export function setLang(lang) {
-  try { localStorage.setItem(KEY, lang === 'en' ? 'en' : 'he'); } catch (e) {}
-  location.reload();
+  const l = lang === 'en' ? 'en' : 'he';
+  try { localStorage.setItem(KEY, l); } catch (e) {}
+  // אם הגיעו מקישור עם ?lang=, הכתובת מתעדכנת לשפה החדשה, אחרת היא הייתה מחזירה את השפה הקודמת
+  const url = new URL(location.href);
+  if (url.searchParams.has('lang')) { url.searchParams.set('lang', l); location.replace(url.href); }
+  else location.reload();
 }
 
 // מילון תרגום לנתונים (שמות רכיבים, סוגים, הסברים). מתמלא באנגלית
