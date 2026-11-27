@@ -5,15 +5,15 @@
 // כי הניתוח (NOVA, דגלים, מילון) נשען עליהם, ומתורגמים בתצוגה עם loc().
 // ============================================================
 
-import { EN, DICT } from './i18n.js?v=49';
-import { products } from './data.js?v=49';
-import { INGREDIENTS } from './ingredients.js?v=49';
-import { localizeTerms } from './glossary.js?v=49';
+import { EN, DICT } from './i18n.js?v=50';
+import { products } from './data.js?v=50';
+import { INGREDIENTS } from './ingredients.js?v=50';
+import { localizeTerms } from './glossary.js?v=50';
 
 export async function loadEnglish() {
   if (!EN) return;
   try {
-    const res = await fetch('data/i18n/en.json?v=49', { credentials: 'omit' });
+    const res = await fetch('data/i18n/en.json?v=50', { credentials: 'omit' });
     if (!res.ok) return;
     for (const [he, en] of Object.entries(await res.json())) DICT.set(he, en);
   } catch (e) { return; }

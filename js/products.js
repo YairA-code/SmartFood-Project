@@ -4,9 +4,9 @@
 // מוצרים טריים או כלליים (פירות, ירקות, שמנים) מסומנים כ"מוצר כללי".
 // ============================================================
 
-import { EXTRA, EXTRA_LABEL } from './products-extra.js?v=49';
-import { BARCODES } from './barcodes.js?v=49';
-import { MORE } from './products-more.js?v=49';
+import { EXTRA, EXTRA_LABEL } from './products-extra.js?v=50';
+import { BARCODES, MORE_SIZES } from './barcodes.js?v=50';
+import { MORE } from './products-more.js?v=50';
 
 const src = (label, url) => ({ label, url });
 
@@ -1256,4 +1256,7 @@ const UNVERIFIED = new Set([
   'yoplait_strawberry_melon',
 ]);
 products.forEach(p => { if (UNVERIFIED.has(p.id)) p.unverified = true; });
-products.forEach(p => { if (BARCODES[p.id]) p.barcodes = [...(p.barcodes || []), ...BARCODES[p.id]]; });
+products.forEach(p => {
+  const extra = [...(BARCODES[p.id] || []), ...(MORE_SIZES[p.id] || [])];
+  if (extra.length) p.barcodes = [...new Set([...(p.barcodes || []), ...extra])];
+});
