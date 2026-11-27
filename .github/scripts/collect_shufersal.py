@@ -42,7 +42,9 @@ def ingredients(page):
     m = re.search(r'\nרכיבים\n(.*?)\n(מאפיינים נוספים|מכיל|עלול להכיל|ערכים תזונתיים)', t, re.S)
     text = m.group(1).strip() if m else ''
     text = re.split(r'(מידע על אלרגנים|עלול להכיל|יכול להכיל)', text)[0]
-    return name, re.sub(r'\s+', ' ', text).strip()
+    text = re.sub(r'\s+', ' ', text).strip()
+    text = re.sub(r'(\s*\.|\s)\\?n$', '', text).strip(' .')  # שארית "n." שמופיעה בסוף חלק מהרשימות בשופרסל
+    return name, text
 
 def readable(text):
     letters = re.findall(r'[A-Za-z֐-׿؀-ۿ]', text)
@@ -92,7 +94,9 @@ for f, entries in shards.items():
     for e in entries:
         if not e.get('i') and age(e.get('x', '')) > 30: queue.append((0, e))            # עוד לא נבדק
         elif e.get('s') == 'shufersal' and age(e.get('d', '')) > 60: queue.append((1, e))  # רענון
-queue.sort(key=lambda q: (q[0], q[1]['c']))
+# מוצרים ישראליים (ברקוד 729) קודם: הם אלה שנמכרים בשופרסל. מוצרי יבוא, שרובם
+# לא באתר, נבדקים אחריהם, כדי שהריצה היומית לא תתבזבז על דפים שלא קיימים.
+queue.sort(key=lambda q: (q[0], not q[1]['c'].startswith('729'), q[1]['c']))
 print('queue', len(queue), flush=True)
 
 added = refreshed = missing = from_off_count = rejected = 0
