@@ -118,9 +118,9 @@ for kind, e in queue:
         st, page, final = get(f'https://www.shufersal.co.il/online/he/x/p/P_{code}')
         time.sleep(10)
         if st == 200 and page:
-            k = category(final)
-            if k: e['k'] = k
             name, ing = ingredients(page)
+            k = category(final)
+            if k and same_product(e['n'], name): e['k'] = k  # רק כשהדף הוא באמת אותו מוצר
             if ing and readable(ing) and looks_like_ingredients(ing):
                 if same_product(e['n'], name): found = (code, ing); break
                 rejected += 1; print('identity mismatch', c, e['n'], '|', name, flush=True)
