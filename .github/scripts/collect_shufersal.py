@@ -12,7 +12,7 @@
 
 usage: python3 collect_shufersal.py <catalog-dir> [max-minutes]
 """
-import json, os, re, sys, time, html, glob, datetime, urllib.request
+import json, os, re, sys, time, html, glob, datetime, urllib.request, urllib.parse
 
 cat = sys.argv[1]
 budget = float(sys.argv[2]) * 60 if len(sys.argv) > 2 else None
@@ -63,6 +63,14 @@ def looks_like_ingredients(text):
     # רשימה של כמה רכיבים, או רכיב יחיד קצר (מים, שיבולת שועל, סוכר)
     return len(items) >= 2 or len(t.split()) <= 4
 
+def category(final_url):
+    # הקטגוריה של המוצר באתר שופרסל, מתוך כתובת הדף אחרי ההפניה:
+    # .../online/he/קטגוריות/סופרמרקט/משקאות/משקאות-קלים/<שם>/p/P_<ברקוד>
+    parts = urllib.parse.unquote(final_url).split('/')
+    if 'קטגוריות' not in parts or 'p' not in parts: return ''
+    a, b = parts.index('קטגוריות') + 1, len(parts) - 1 - parts[::-1].index('p') - 1
+    return '/'.join(parts[a:b])[:200]
+
 SIZE = re.compile(r'\d+([.,]\d+)?|ליטר|מ"ל|מל|גרם|גר|ג|ק"ג|יח|מארז|בקבוק|פחית')
 def words(s):
     s = SIZE.sub(' ', str(s).lower().replace('-', ' '))
@@ -110,6 +118,8 @@ for kind, e in queue:
         st, page, final = get(f'https://www.shufersal.co.il/online/he/x/p/P_{code}')
         time.sleep(10)
         if st == 200 and page:
+            k = category(final)
+            if k: e['k'] = k
             name, ing = ingredients(page)
             if ing and readable(ing) and looks_like_ingredients(ing):
                 if same_product(e['n'], name): found = (code, ing); break
