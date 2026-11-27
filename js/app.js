@@ -2,26 +2,26 @@
 // Tavitly — אפליקציה ראשית + ניתוב
 // ============================================================
 
-import { products } from './data.js?v=48';
-import { debounce, fillContactLinks, escapeHtml } from './utils.js?v=48';
-import { searchCatalog, catalogMeta } from './catalog.js?v=48';
-import { getNova, getScore, lookupIngredient, getAlternatives } from './nova.js?v=48';
-import { redFlags } from './verdict.js?v=48';
-import { shareCard, SITE_URL } from './share.js?v=48';
-import { registerServiceWorker, initInstallPrompt } from './pwa.js?v=48';
-import { tr, EN, setLang } from './i18n.js?v=48';
-import { loadEnglish } from './i18n-data.js?v=48';
-import { renderPrefs, initPrefs } from './personal.js?v=48';
+import { products } from './data.js?v=49';
+import { debounce, fillContactLinks, escapeHtml } from './utils.js?v=49';
+import { searchCatalog, catalogMeta } from './catalog.js?v=49';
+import { getNova, getScore, lookupIngredient, getAlternatives } from './nova.js?v=49';
+import { redFlags } from './verdict.js?v=49';
+import { shareCard, SITE_URL } from './share.js?v=49';
+import { registerServiceWorker, initInstallPrompt } from './pwa.js?v=49';
+import { tr, EN, setLang } from './i18n.js?v=49';
+import { loadEnglish } from './i18n-data.js?v=49';
+import { renderPrefs, initPrefs } from './personal.js?v=49';
 import {
   renderHeader, renderFooter, renderHome, renderCategory, renderProduct,
   renderCategoriesPage, renderAbout, renderNotFound, renderSearchResults,
   renderProductCard, renderNova, renderAllProducts, renderCompare, renderIngredients, renderIngredient, renderLegal, breadcrumb,
-} from './components.js?v=48';
+} from './components.js?v=49';
 import {
   renderTools, renderLabel, initLabel, renderVs, initVs, renderQuiz, initQuiz,
   renderBasket, initBasket, renderInsights, renderTeam, renderCalcPage, initCalculators, toggleBasket, inBasket, basketCount, onBasket, facts,
-} from './widgets.js?v=48';
-import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=48';
+} from './widgets.js?v=49';
+import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=49';
 
 // פענוח בטוח של הכתובת: כתובת פגומה לא תפיל את האתר
 function safeDecode(str) {
