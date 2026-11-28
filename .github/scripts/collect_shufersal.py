@@ -26,7 +26,12 @@ def allowed():
     n = datetime.datetime.now(datetime.timezone.utc)
     return (4, 0) <= (n.hour, n.minute) < (8, 40)
 
+STATUS = {}
 def get(url):
+    st = _get(url); STATUS[st[0]] = STATUS.get(st[0], 0) + 1
+    return st
+
+def _get(url):
     try:
         with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=30) as r:
             return r.status, r.read().decode('utf-8', 'replace'), r.geturl()
@@ -146,6 +151,7 @@ except Exception: prev = {}
 meta = {'products': len(allp), 'with_ingredients': sum(1 for e in allp if e.get('i')),
         'updated': TODAY.isoformat() if (added or refreshed or missing) else prev.get('updated', TODAY.isoformat())}
 json.dump(meta, open(os.path.join(cat, 'meta.json'), 'w'), separators=(',', ':'))
+print('shufersal status codes', dict(sorted(STATUS.items())), flush=True)
 print(f'added={added} (from OFF {from_off_count}) refreshed={refreshed} no_ingredients={missing} rejected={rejected}', meta, flush=True)
 out = os.environ.get('GITHUB_OUTPUT')
 if out:
