@@ -4,8 +4,8 @@
 // כדי שבסופר אפשר יהיה להבין את המוצר בשתי שניות.
 // ============================================================
 
-import { termsOf } from './glossary.js?v=50';
-import { tr, loc } from './i18n.js?v=50';
+import { termsOf } from './glossary.js?v=51';
+import { tr, loc } from './i18n.js?v=51';
 
 const plural = (n, one, many) => (n === 1 ? one : `${n} ${many}`);
 const short = name => String(name).replace(/\s*\(.*\)$/, '');
