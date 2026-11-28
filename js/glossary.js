@@ -6,7 +6,7 @@
 // ממשיך להשתמש ברשימה המלאה שב-ingredients.js.
 // ============================================================
 
-import { INGREDIENTS, canonicalName } from './ingredients.js?v=53';
+import { INGREDIENTS, canonicalName } from './ingredients.js?v=54';
 
 const S = 'safe', CA = 'caution', D = 'danger';
 const A = 'additive', M = 'marker', C = 'culinary', W = 'whole', P = 'processed';

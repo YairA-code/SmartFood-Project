@@ -3,13 +3,13 @@
 // תובנות מהמאגר, ודף הצוות
 // ============================================================
 
-import { products, categories } from './data.js?v=53';
-import { INGREDIENTS, getIngredient, canonicalName } from './ingredients.js?v=53';
-import { NOVA_GROUPS, getNova, getScore, getAlternatives, lookupIngredient, classifyItems, scoreItems, novaReason } from './nova.js?v=53';
-import { escapeHtml } from './utils.js?v=53';
-import { art, breadcrumb, novaBadge, scoreChip, renderProductCard, RISK, ROLE, catOf, ingLink } from './components.js?v=53';
-import { renderCalculators, initCalculators } from './calculators.js?v=53';
-import { tr, EN, loc } from './i18n.js?v=53';
+import { products, categories } from './data.js?v=54';
+import { INGREDIENTS, getIngredient, canonicalName } from './ingredients.js?v=54';
+import { NOVA_GROUPS, getNova, getScore, getAlternatives, lookupIngredient, classifyItems, scoreItems, novaReason } from './nova.js?v=54';
+import { escapeHtml } from './utils.js?v=54';
+import { art, breadcrumb, novaBadge, scoreChip, renderProductCard, RISK, ROLE, catOf, ingLink } from './components.js?v=54';
+import { renderCalculators, initCalculators } from './calculators.js?v=54';
+import { tr, EN, loc } from './i18n.js?v=54';
 
 const byId = id => products.find(p => p.id === id);
 const pageHero = (icon, title, text) => `
@@ -607,10 +607,10 @@ export function facts() {
 // הצוות
 // ——————————————————————————————————————
 const TEAM = [
-  { name: tr('יאיר אברישמן', 'Yair Abrishman'), role: tr('מוביל הצוות, יזם הרעיון, איש פיתוח', 'Team lead, idea founder, developer'), initials: tr('יא', 'YA'), hue: 145 },
-  { name: tr('ליאם כהן', 'Liam Cohen'), role: tr('חבר צוות, איש חידושים', 'Team member, innovation'), initials: tr('לכ', 'LC'), hue: 205 },
-  { name: tr('אוהד קראוזמן', 'Ohad Krauzman'), role: tr('חבר צוות, פיתוח', 'Team member, development'), initials: tr('אק', 'OK'), hue: 28 },
-  { name: tr('נועה אברהמי', 'Noa Avrahami'), role: tr('סושיאל, פרסום, חברת צוות', 'Social media, marketing, team member'), initials: tr('נא', 'NA'), hue: 330 },
+  { name: tr('יאיר אברישמן', 'Yair Abrishman'), role: tr('מייסד ומנכ״ל · מוביל פיתוח', 'Founder & CEO · Lead Developer'), initials: tr('יא', 'YA'), hue: 145 },
+  { name: tr('ליאם כהן', 'Liam Cohen'), role: tr('מוביל חדשנות', 'Head of Innovation'), initials: tr('לכ', 'LC'), hue: 205 },
+  { name: tr('אוהד קראוזמן', 'Ohad Krauzman'), role: tr('מפתח תוכנה', 'Software Developer'), initials: tr('אק', 'OK'), hue: 28 },
+  { name: tr('נועה אברהמי', 'Noa Avrahami'), role: tr('מנהלת שיווק ומדיה חברתית', 'Marketing & Social Media Lead'), initials: tr('נא', 'NA'), hue: 330 },
 ];
 
 export function renderTeam() {
