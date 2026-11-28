@@ -21,7 +21,7 @@ export function escapeHtml(text) {
 }
 
 // כתובת הקשר מורכבת רק בדפדפן, כדי שרובוטים שאוספים כתובות מקוד המקור לא ימצאו אותה
-const CONTACT = ['yairavr57', ['gmail', 'com'].join('.')];
+const CONTACT = ['tavitlyinc', ['gmail', 'com'].join('.')];
 export function fillContactLinks(root = document) {
   root.querySelectorAll('[data-mail]').forEach(a => {
     const m = CONTACT.join('@');
