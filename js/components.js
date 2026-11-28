@@ -2,17 +2,17 @@
 // Tavitly — קומפוננטות רינדור
 // ============================================================
 
-import { categories, products, getStats } from './data.js?v=54';
-import { escapeHtml } from './utils.js?v=54';
-import { productArt } from './art.js?v=54';
-import { toolCards, TOOLS, facts } from './widgets.js?v=54';
-import { scanButton } from './scan.js?v=54';
-import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=54';
-import { PHOTOS } from './photos.js?v=54';
-import { redFlags } from './verdict.js?v=54';
-import { avoidHTML } from './personal.js?v=54';
-import { attachProducts, allTerms, findTerms, termSearchText } from './glossary.js?v=54';
-import { tr, EN, loc } from './i18n.js?v=54';
+import { categories, products, getStats } from './data.js?v=55';
+import { escapeHtml } from './utils.js?v=55';
+import { productArt } from './art.js?v=55';
+import { toolCards, TOOLS, facts } from './widgets.js?v=55';
+import { scanButton } from './scan.js?v=55';
+import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=55';
+import { PHOTOS } from './photos.js?v=55';
+import { redFlags } from './verdict.js?v=55';
+import { avoidHTML } from './personal.js?v=55';
+import { attachProducts, allTerms, findTerms, termSearchText } from './glossary.js?v=55';
+import { tr, EN, loc } from './i18n.js?v=55';
 
 const CAT_HUE = { snacks: 38, sweets: 18, dairy: 205, drinks: 188, bread: 32, canned: 85, cereals: 46, spreads: 12, meat: 355, frozen: 198, instant: 26, fruits: 130 };
 export const RISK = {
@@ -206,7 +206,7 @@ export function renderHome() {
             </div>
           <div class="stats-bar" aria-label="${tr('המאגר במספרים', 'Our database in numbers')}">
         <a class="stat-item" href="#/products"><span class="stat-number">${stats.totalProducts}</span><span class="stat-label">${tr('מוצרים', 'products')}</span></a>
-        <a class="stat-item" href="#/ingredients"><span class="stat-number">${stats.totalIngredients}</span><span class="stat-label">${tr('רכיבים מוסברים', 'ingredients explained')}</span></a>
+        <a class="stat-item" href="#/ingredients"><span class="stat-number">${terms().length}</span><span class="stat-label">${tr('רכיבים מוסברים', 'ingredients explained')}</span></a>
         <a class="stat-item" href="#/categories"><span class="stat-number">${stats.totalCategories}</span><span class="stat-label">${tr('קטגוריות', 'categories')}</span></a>
         <a class="stat-item" href="#/nova"><span class="stat-number danger-color">${novaCounts[3]}</span><span class="stat-label">${tr('מוצרים אולטרה-מעובדים', 'ultra-processed products')}</span></a>
       </div>

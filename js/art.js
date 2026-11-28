@@ -5,10 +5,10 @@
 // האיורים כלליים ולא מעתיקים לוגו או עיצוב של יצרן.
 // ============================================================
 
-import { escapeHtml } from './utils.js?v=54';
-import { PHOTOS } from './photos.js?v=54';
-import { COLORS } from './colors.js?v=54';
-import { EN } from './i18n.js?v=54';
+import { escapeHtml } from './utils.js?v=55';
+import { PHOTOS } from './photos.js?v=55';
+import { COLORS } from './colors.js?v=55';
+import { EN } from './i18n.js?v=55';
 
 const DIR = EN ? 'ltr' : 'rtl';
 
