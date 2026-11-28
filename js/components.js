@@ -2,17 +2,17 @@
 // Tavitly — קומפוננטות רינדור
 // ============================================================
 
-import { categories, products, getStats } from './data.js?v=53';
-import { escapeHtml } from './utils.js?v=53';
-import { productArt } from './art.js?v=53';
-import { toolCards, TOOLS, facts } from './widgets.js?v=53';
-import { scanButton } from './scan.js?v=53';
-import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=53';
-import { PHOTOS } from './photos.js?v=53';
-import { redFlags } from './verdict.js?v=53';
-import { avoidHTML } from './personal.js?v=53';
-import { attachProducts, allTerms, findTerms, termSearchText } from './glossary.js?v=53';
-import { tr, EN, loc } from './i18n.js?v=53';
+import { categories, products, getStats } from './data.js?v=54';
+import { escapeHtml } from './utils.js?v=54';
+import { productArt } from './art.js?v=54';
+import { toolCards, TOOLS, facts } from './widgets.js?v=54';
+import { scanButton } from './scan.js?v=54';
+import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=54';
+import { PHOTOS } from './photos.js?v=54';
+import { redFlags } from './verdict.js?v=54';
+import { avoidHTML } from './personal.js?v=54';
+import { attachProducts, allTerms, findTerms, termSearchText } from './glossary.js?v=54';
+import { tr, EN, loc } from './i18n.js?v=54';
 
 const CAT_HUE = { snacks: 38, sweets: 18, dairy: 205, drinks: 188, bread: 32, canned: 85, cereals: 46, spreads: 12, meat: 355, frozen: 198, instant: 26, fruits: 130 };
 export const RISK = {

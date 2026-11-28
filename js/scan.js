@@ -5,16 +5,16 @@
 // (ללא מפתח API וללא הרשמה), ורשימת הרכיבים שלו מנותחת בדפדפן.
 // ============================================================
 
-import { products } from './data.js?v=53';
-import { escapeHtml } from './utils.js?v=53';
-import { breadcrumb, renderProductCard } from './components.js?v=53';
-import { analyzeLabel, labelResultHTML } from './widgets.js?v=53';
-import { redFlags } from './verdict.js?v=53';
-import { readLabel, myLabel, myLabelCount, saveMyLabel, removeMyLabel, offAddUrl, PIONEER_AT } from './ocr.js?v=53';
-import { avoidHTML, addHistory, historyHTML, clearHistory } from './personal.js?v=53';
-import { getNova } from './nova.js?v=53';
-import { lookupCatalog } from './catalog.js?v=53';
-import { tr, EN } from './i18n.js?v=53';
+import { products } from './data.js?v=54';
+import { escapeHtml } from './utils.js?v=54';
+import { breadcrumb, renderProductCard } from './components.js?v=54';
+import { analyzeLabel, labelResultHTML } from './widgets.js?v=54';
+import { redFlags } from './verdict.js?v=54';
+import { readLabel, myLabel, myLabelCount, saveMyLabel, removeMyLabel, offAddUrl, PIONEER_AT } from './ocr.js?v=54';
+import { avoidHTML, addHistory, historyHTML, clearHistory } from './personal.js?v=54';
+import { getNova } from './nova.js?v=54';
+import { lookupCatalog } from './catalog.js?v=54';
+import { tr, EN } from './i18n.js?v=54';
 
 const OFF_API = 'https://world.openfoodfacts.org/api/v2/product/';
 const OFF_PAGE = 'https://world.openfoodfacts.org/product/';
