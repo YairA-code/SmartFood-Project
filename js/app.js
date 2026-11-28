@@ -2,26 +2,26 @@
 // Tavitly — אפליקציה ראשית + ניתוב
 // ============================================================
 
-import { products } from './data.js?v=54';
-import { debounce, fillContactLinks, escapeHtml } from './utils.js?v=54';
-import { searchCatalog, catalogMeta } from './catalog.js?v=54';
-import { getNova, getScore, lookupIngredient, getAlternatives } from './nova.js?v=54';
-import { redFlags } from './verdict.js?v=54';
-import { shareCard, SITE_URL } from './share.js?v=54';
-import { registerServiceWorker, initInstallPrompt } from './pwa.js?v=54';
-import { tr, EN, setLang } from './i18n.js?v=54';
-import { loadEnglish } from './i18n-data.js?v=54';
-import { renderPrefs, initPrefs } from './personal.js?v=54';
+import { products, categories } from './data.js?v=55';
+import { debounce, fillContactLinks, escapeHtml } from './utils.js?v=55';
+import { searchCatalog, catalogMeta } from './catalog.js?v=55';
+import { getNova, getScore, lookupIngredient, getAlternatives } from './nova.js?v=55';
+import { redFlags } from './verdict.js?v=55';
+import { shareCard, SITE_URL } from './share.js?v=55';
+import { registerServiceWorker, initInstallPrompt } from './pwa.js?v=55';
+import { tr, EN, setLang } from './i18n.js?v=55';
+import { loadEnglish } from './i18n-data.js?v=55';
+import { renderPrefs, initPrefs } from './personal.js?v=55';
 import {
   renderHeader, renderFooter, renderHome, renderCategory, renderProduct,
   renderCategoriesPage, renderAbout, renderNotFound, renderSearchResults,
   renderProductCard, renderNova, renderAllProducts, renderCompare, renderIngredients, renderIngredient, renderLegal, breadcrumb,
-} from './components.js?v=54';
+} from './components.js?v=55';
 import {
   renderTools, renderLabel, initLabel, renderVs, initVs, renderQuiz, initQuiz,
   renderBasket, initBasket, renderInsights, renderTeam, renderCalcPage, initCalculators, toggleBasket, inBasket, basketCount, onBasket, facts,
-} from './widgets.js?v=54';
-import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=54';
+} from './widgets.js?v=55';
+import { renderScan, initScan, stopScan, renderBarcode, initBarcode } from './scan.js?v=55';
 
 // פענוח בטוח של הכתובת: כתובת פגומה לא תפיל את האתר
 function safeDecode(str) {
@@ -109,7 +109,11 @@ class SmartFoodApp {
       html = renderVs(a && a !== '-' ? a : '', b && b !== '-' ? b : '');
       this.page = 'vs';
     }
-    else if (hash.startsWith('#/category/')) { html = renderCategory(hash.slice(11)); this.page = 'category'; }
+    else if (hash.startsWith('#/category/')) {
+      html = renderCategory(hash.slice(11)); this.page = 'category';
+      const c = categories.find(x => x.id === hash.slice(11));
+      if (c) title = `${c.name} | Tavitly`;
+    }
     else if (hash.startsWith('#/product/')) {
       const p = products.find(x => x.id === hash.slice(10));
       html = renderProduct(hash.slice(10)); this.page = 'product';
@@ -121,7 +125,7 @@ class SmartFoodApp {
       const h1 = html.match(/<h1>([^<]*)/);
       title = `${h1 ? h1[1].trim() : key} | ${tr('מילון רכיבים', 'Ingredient dictionary')}`;
     }
-    else { html = renderNotFound(); this.page = '404'; }
+    else { html = renderNotFound(); this.page = '404'; title = `${tr('הדף לא נמצא', 'Page not found')} | Tavitly`; }
 
     wrapper.innerHTML = html;
     document.title = title || TITLES[this.page] || 'Tavitly';
