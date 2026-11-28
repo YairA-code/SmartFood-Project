@@ -5,7 +5,7 @@
 // התוצאות הן הערכה כללית למבוגרים, ולא אבחנה או ייעוץ רפואי.
 // ============================================================
 
-import { tr } from './i18n.js?v=51';
+import { tr } from './i18n.js?v=52';
 
 const num = id => {
   const v = parseFloat(String(document.getElementById(id)?.value || '').replace(',', '.'));
