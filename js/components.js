@@ -2,17 +2,17 @@
 // Tavitly — קומפוננטות רינדור
 // ============================================================
 
-import { categories, products, getStats } from './data.js?v=52';
-import { escapeHtml } from './utils.js?v=52';
-import { productArt } from './art.js?v=52';
-import { toolCards, TOOLS, facts } from './widgets.js?v=52';
-import { scanButton } from './scan.js?v=52';
-import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=52';
-import { PHOTOS } from './photos.js?v=52';
-import { redFlags } from './verdict.js?v=52';
-import { avoidHTML } from './personal.js?v=52';
-import { attachProducts, allTerms, findTerms, termSearchText } from './glossary.js?v=52';
-import { tr, EN, loc } from './i18n.js?v=52';
+import { categories, products, getStats } from './data.js?v=53';
+import { escapeHtml } from './utils.js?v=53';
+import { productArt } from './art.js?v=53';
+import { toolCards, TOOLS, facts } from './widgets.js?v=53';
+import { scanButton } from './scan.js?v=53';
+import { NOVA_GROUPS, getNova, novaReason, lookupIngredient, getScore, getAlternatives } from './nova.js?v=53';
+import { PHOTOS } from './photos.js?v=53';
+import { redFlags } from './verdict.js?v=53';
+import { avoidHTML } from './personal.js?v=53';
+import { attachProducts, allTerms, findTerms, termSearchText } from './glossary.js?v=53';
+import { tr, EN, loc } from './i18n.js?v=53';
 
 const CAT_HUE = { snacks: 38, sweets: 18, dairy: 205, drinks: 188, bread: 32, canned: 85, cereals: 46, spreads: 12, meat: 355, frozen: 198, instant: 26, fruits: 130 };
 export const RISK = {
@@ -809,7 +809,7 @@ export function renderAbout() {
         </section>
         <section class="prose-card">
           <h2>👥 ${tr('הצוות', 'The team')}</h2>
-          <p>${tr('יאיר אברישמן, ליאם כהן, אוהד קראוזמן ונעה אברהמי.', 'Yair Abrishman, Liam Cohen, Ohad Krauzman and Noa Avrahami.')} <a href="#/team">${tr('לדף הצוות', 'Meet the team')}</a></p>
+          <p>${tr('יאיר אברישמן, ליאם כהן, אוהד קראוזמן ונועה אברהמי.', 'Yair Abrishman, Liam Cohen, Ohad Krauzman and Noa Avrahami.')} <a href="#/team">${tr('לדף הצוות', 'Meet the team')}</a></p>
           <p class="muted small">${tr('האיורים באתר: Microsoft Fluent Emoji, ברישיון MIT.', 'Illustrations on this site: Microsoft Fluent Emoji, under the MIT license.')}</p>
         </section>
         <section class="prose-card">
