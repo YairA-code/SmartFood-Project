@@ -861,6 +861,8 @@ a.stat-item:hover { background: var(--bg-soft); }
 
 /* ——— העדפות אישיות והיסטוריה ——— */
 .prefs-box fieldset { border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; display: grid; gap: 10px; background: var(--surface); margin: 0; }
+/* הכותרת בתוך המסגרת ולא על הקו שלה (legend צף מתנהג כאלמנט רגיל) */
+.prefs-box legend { float: inline-start; width: 100%; padding: 0; margin: 0 0 4px; }
 .prefs-item { display: flex; align-items: center; gap: 10px; font-weight: 600; cursor: pointer; }
 .prefs-item input { width: 20px; height: 20px; accent-color: var(--brand); }
 .prefs-saved { color: var(--brand); font-weight: 700; min-height: 1.4em; }
